@@ -22,7 +22,7 @@ const Sidebar = ({mobile, visibility, setVisibility, compact, setCompact }) => {
         "nk-sidebar-mobile": mobile,
         "is-compact": compact,
         "has-hover": compact && mouseEnter,
-        [`dark`]: theme.sidebar === "dark"
+        // [`dark`]: theme.sidebar === "dark"
     });
 
   return (
