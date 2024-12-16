@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import Simplebar from 'simplebar-react';
-import {Link} from 'react-router-dom';
+import Simplebar from "simplebar-react";
+import { Link } from "react-router-dom";
 import classNames from "classnames";
-import Menu from './Menu';
+import Menu from "./Menu";
 
-import { useTheme } from "../context"
+import { useTheme } from "../context";
 import SidebarToggle from "../components/SidebarToggle";
 import { Icon } from "../../componenets";
 
-const Sidebar = ({mobile, visibility, setVisibility, compact, setCompact }) => {
-    const theme = useTheme();
+const Sidebar = ({ mobile, visibility, setVisibility, compact, setCompact }) => {
+    const theme = useTheme(); // Access the current theme context
 
     const [mouseEnter, setMouseEnter] = useState(false);
 
@@ -22,41 +22,108 @@ const Sidebar = ({mobile, visibility, setVisibility, compact, setCompact }) => {
         "nk-sidebar-mobile": mobile,
         "is-compact": compact,
         "has-hover": compact && mouseEnter,
-        // [`dark`]: theme.sidebar === "dark"
+        "bg-senato text-white": theme.sidebar === "senato", // Apply Senato theme
+        "bg-white dark:bg-gray-950 text-slate-600 dark:text-slate-300": theme.sidebar !== "senato", // Default styles
     });
 
-  return (
-    <>
-    <div className={classes}>
-        <div className="flex items-center min-w-full w-72 h-16 border-b border-e bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-900 px-6 py-3 overflow-hidden">
-            <div className="-ms-1 me-4">
-                <div className="hidden xl:block">
-                    <a href="#sidebar" onClick={(ev) => { ev.preventDefault(); setCompact(!compact) }} className="sidebar-compact-toggle [&>*]:pointer-events-none inline-flex items-center isolate relative h-9 w-9 px-1.5 before:content-[''] before:absolute before:-z-[1] before:h-5 before:w-5 hover:before:h-10 hover:before:w-10 before:rounded-full before:opacity-0 hover:before:opacity-100 before:transition-all before:duration-300 before:-translate-x-1/2  before:-translate-y-1/2 before:top-1/2 before:left-1/2 before:bg-gray-200 dark:before:bg-gray-900">
-                        <Icon className="text-2xl text-slate-600 dark:text-slate-300" name="menu" />
-                    </a>
+    return (
+        <>
+            <div className={classes}>
+                <div
+                    className="flex items-center min-w-full w-72 h-16 border-b border-e bg-senato text-white px-6 py-3 overflow-hidden"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                >
+                    <div className="-ms-1 me-4">
+                        <div className="hidden xl:block">
+                            <a
+                                href="#sidebar"
+                                onClick={(ev) => {
+                                    ev.preventDefault();
+                                    setCompact(!compact);
+                                }}
+                                className="sidebar-compact-toggle [&>*]:pointer-events-none inline-flex items-center isolate relative h-9 w-9 px-1.5 before:content-[''] before:absolute before:-z-[1] before:h-5 before:w-5 hover:before:h-10 hover:before:w-10 before:rounded-full before:opacity-0 hover:before:opacity-100 before:transition-all before:duration-300 before:-translate-x-1/2 before:-translate-y-1/2 before:top-1/2 before:left-1/2 before:bg-gray-200 dark:before:bg-gray-900"
+                            >
+                                <Icon
+                                    className="text-2xl text-white hover:text-white"
+                                    name="menu"
+                                />
+                            </a>
+                        </div>
+                        <div className="xl:hidden">
+                            <SidebarToggle
+                                icon="arrow-left"
+                                onClick={() => setVisibility(!visibility)}
+                            />
+                        </div>
+                    </div>
+                    <div className="relative flex flex-shrink-0 items-center">
+                        <Link
+                            to="/home"
+                            className="relative inline-block transition-opacity duration-300 h-9 group-[&.is-compact:not(.has-hover)]/sidebar:opacity-0"
+                        >
+                            <img
+                                className="h-full opacity-0 dark:opacity-100"
+                                src="/logo.png"
+                                srcSet="/logo2.png 2x"
+                                alt="logo"
+                            />
+                            <img
+                                className="h-full opacity-100 dark:opacity-0 absolute start-0 top-0"
+                                src="/logo.png"
+                                srcSet="/logo.png 2x"
+                                alt="logo"
+                            />
+                        </Link>
+                        {/* Add Tabulas and Version Text in One Line */}
+                        <div className="ml-2 flex items-baseline space-x-2">
+                            <span className="text-lg font-semibold text-white">Tabulas</span>
+                            <span className="text-sm text-gray-300">v4.0.1</span>
+                        </div>
+                    </div>
                 </div>
-                <div className="xl:hidden">
-                    <SidebarToggle icon="arrow-left"  onClick={()=> setVisibility(!visibility)} />
-                </div>
-            </div>
-            <div className="relative flex flex-shrink-0">
-                <Link to="/home" className="relative inline-block transition-opacity duration-300 h-9 group-[&.is-compact:not(.has-hover)]/sidebar:opacity-0">
-                    <img className="h-full opacity-0 dark:opacity-100" src="/logo.png" srcSet="/logo2x.png 2x" alt="logo" />
-                    <img className="h-full opacity-100 dark:opacity-0 absolute start-0 top-0" src="/logo-dark.png" srcSet="/logo-dark2x.png 2x" alt="logo" />
-                </Link>
-            </div>
-        </div>
-        <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className="nk-sidebar-body max-h-full relative overflow-hidden w-full bg-white dark:bg-gray-950 border-e border-gray-200 dark:border-gray-900">
-            <div className="flex flex-col w-full h-[calc(100vh-theme(spacing.16))]">
-                <Simplebar className='h-full pt-4 pb-10'>
-                    <Menu setSidebarVisibility={setVisibility} />
-                </Simplebar>
-            </div>
-        </div>
-    </div>
-    <div onClick={(ev) => { ev.preventDefault(); setVisibility(false) }} className="sidebar-toggle fixed inset-0 bg-slate-950 bg-opacity-20 z-[1030] opacity-0 invisible peer-[.sidebar-visible]:opacity-100 peer-[.sidebar-visible]:visible xl:!opacity-0 xl:!invisible"></div>
-    </>
-  )
-}
+                <div
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    className="nk-sidebar-body max-h-full relative overflow-hidden w-full bg-senato text-white"
+                >
+                    <div className="flex flex-col w-full h-[calc(100vh-theme(spacing.16))]">
 
-export default Sidebar
+                        <Simplebar className="h-full pt-4 pb-10">
+                            <Menu setSidebarVisibility={setVisibility} />
+                            {/* Sidebar Links */}
+                            <Link
+                                to="/dashboard"
+                                className="block px-4 py-2 text-gray-400 hover:text-white transition-colors duration-200"
+                            >
+                                Dashboard
+                            </Link>
+                            <Link
+                                to="/settings"
+                                className="block px-4 py-2 text-gray-400 hover:text-white transition-colors duration-200"
+                            >
+                                Settings
+                            </Link>
+                            <Link
+                                to="/profile"
+                                className="block px-4 py-2 text-gray-400 hover:text-white transition-colors duration-200"
+                            >
+                                Profile
+                            </Link>
+                        </Simplebar>
+
+                    </div>
+                </div>
+            </div>
+            <div
+                onClick={(ev) => {
+                    ev.preventDefault();
+                    setVisibility(false);
+                }}
+                className="sidebar-toggle fixed inset-0 bg-slate-950 bg-opacity-20 z-[1030] opacity-0 invisible peer-[.sidebar-visible]:opacity-100 peer-[.sidebar-visible]:visible xl:!opacity-0 xl:!invisible"
+            ></div>
+        </>
+    );
+};
+
+export default Sidebar;

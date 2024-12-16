@@ -47,6 +47,12 @@ export default {
           900: '#2c3782',
           950: '#29347a',
         },
+        
+        senato: {
+          DEFAULT: '#97002D',  // Main Sangria color
+          light: '#B83F54',    // Lighter shade (optional)
+          dark: '#6A001F',     // Darker shade (optional)
+        },
         green:{
           50: '#e9fcf7',
           100: '#e6fcf6',
@@ -153,4 +159,3 @@ export default {
     require('@headlessui/tailwindcss'),
   ],
 }
-

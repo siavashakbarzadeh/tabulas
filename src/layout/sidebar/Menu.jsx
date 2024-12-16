@@ -8,12 +8,12 @@ import { NavLink, useLocation } from "react-router-dom";
 
 const menuData = [
     { heading: "Dashboards" },
-    { icon: "cart", text: "Ecommerce", link: "/home" },
-    { icon: "edit-alt", text: "AI Copywriter", link: "/copywriter" },
-    { icon: "cc-alt2", text: "Sales", link: "/sales" },
-    { icon: "bitcoin-cash", text: "Crypto", link: "/crypto" },
-    { icon: "growth", text: "Analytics", link: "/analytics" },
-    { icon: "coins", text: "Invest", link: "/invest" },    
+    { icon: "file-docs", text: "ASSEMBLEA", link: "/home" },
+    { icon: "users", text: "Commissioni permanenti", link: "/copywriter" },
+    { icon: "chat", text: "Giunte e altre comissioni", link: "/sales" },
+    { icon: "user-list", text: "Bicamerali e delegazioni", link: "/crypto" },
+    { icon: "growth", text: "Diretta", link: "/analytics" },
+    { icon: "signin", text: "INFORMAZIONE", link: "/invest" },
     { heading: "Pre-Built Pages" },
     { 
         icon: "tile-thumb", text: "Projects", link: "#",
@@ -274,10 +274,26 @@ const Menu = ({setSidebarVisibility}) => {
                     (
                         !item.sub ? 
                         <li className={`nk-menu-item py-0.5 group/item ${item.sub ? 'has-sub' : ''}`} >
-                            <NavLink onClick={()=> setSidebarVisibility(false)} target={item.blank && "_blank"} className="nk-menu-link nk-route-toggle flex relative items-center align-middle py-2.5 ps-6 pe-10 font-heading font-bold tracking-snug group" to={item.link} end>
-                                {item.icon && <span className="font-normal tracking-normal w-9 inline-flex flex-grow-0 flex-shrink-0 text-slate-400 group-[.active]/item:text-primary-500 group-hover:text-primary-500"><em className={`text-2xl leading-none text-current transition-all duration-300 icon ni ni-${item.icon}`}></em></span>}
-                                {item.text && <span className="group-[&.is-compact:not(.has-hover)]/sidebar:opacity-0 flex-grow-1 inline-block whitespace-nowrap transition-all duration-300 text-slate-600 dark:text-slate-500 group-[.active]/item:text-primary-500 group-hover:text-primary-500">{item.text}</span>}
+                            <NavLink
+                                onClick={() => setSidebarVisibility(false)}
+                                target={item.blank && "_blank"}
+                                className="nk-menu-link nk-route-toggle flex relative items-center align-middle py-2.5 ps-6 pe-10 font-heading font-bold tracking-snug group hover:text-white"
+                                to={item.link}
+                                end
+                            >
+                                {item.icon && (
+                                    <span className="font-normal tracking-normal w-9 inline-flex flex-grow-0 flex-shrink-0 text-slate-400 group-[.active]/item:text-white hover:text-white">
+            <em className={`text-2xl leading-none text-current transition-all duration-300 icon ni ni-${item.icon}`}></em>
+        </span>
+                                )}
+                                {item.text && (
+                                    <span className="group-[&.is-compact:not(.has-hover)]/sidebar:opacity-0 flex-grow-1 inline-block whitespace-nowrap transition-all duration-300 text-slate-600 dark:text-slate-500 group-[.active]/item:text-white hover:text-white">
+            {item.text}
+        </span>
+                                )}
                             </NavLink>
+
+
                         </li>
                         : 
                         <li className={`nk-menu-item py-0.5 group/item ${item.sub ? 'has-sub' : ''}`} >
@@ -291,9 +307,26 @@ const Menu = ({setSidebarVisibility}) => {
                                     <Fragment key={index1}>
                                         {!itemsub1.sub ? 
                                             <li className={`nk-menu-item py-px group/sub1`} >
-                                                <NavLink  onClick={()=> setSidebarVisibility(false)} target={itemsub1.blank && "_blank"} to={itemsub1.link} className="nk-menu-link nk-route-toggle flex relative items-center align-middle py-1.5 pe-10 ps-[calc(theme(spacing.6)+theme(spacing.9))] font-normal leading-5 text-sm tracking-normal normal-case" end>
-                                                    <span className="text-slate-600 dark:text-slate-500 group-[.active]/sub1:text-primary-500 hover:text-primary-500 whitespace-nowrap flex-grow inline-block">{itemsub1.text}</span>
+                                                <NavLink
+                                                    onClick={() => setSidebarVisibility(false)}
+                                                    target={item.blank && "_blank"}
+                                                    className="nk-menu-link nk-route-toggle flex relative items-center align-middle py-2.5 ps-6 pe-10 font-heading font-bold tracking-snug group hover:text-white"
+                                                    to={item.link}
+                                                    end
+                                                >
+                                                    {item.icon && (
+                                                        <span className="font-normal tracking-normal w-9 inline-flex flex-grow-0 flex-shrink-0 text-slate-400 group-[.active]/item:text-white hover:text-white">
+            <em className={`text-2xl leading-none text-current transition-all duration-300 icon ni ni-${item.icon}`}></em>
+        </span>
+                                                    )}
+                                                    {item.text && (
+                                                        <span className="group-[&.is-compact:not(.has-hover)]/sidebar:opacity-0 flex-grow-1 inline-block whitespace-nowrap transition-all duration-300 text-slate-600 dark:text-slate-500 group-[.active]/item:text-white hover:text-white">
+            {item.text}
+        </span>
+                                                    )}
                                                 </NavLink>
+
+
                                             </li>
                                             :
                                             <li className={`nk-menu-item py-px group/sub1 ${itemsub1.sub ? 'has-sub' : ''}`}>
@@ -305,9 +338,26 @@ const Menu = ({setSidebarVisibility}) => {
                                                     {itemsub1.sub.map((itemsub2,index2) => 
                                                         <Fragment key={index2}>
                                                             <li className={`nk-menu-item py-px group/sub2`}>
-                                                                <NavLink onClick={()=> setSidebarVisibility(false)} target={itemsub2.blank && "_blank"} to={itemsub2.link} className="nk-menu-link nk-route-toggle flex relative items-center align-middle py-1.5 pe-10 ps-4 font-normal leading-5 text-sm tracking-normal normal-case" end>
-                                                                    <span className="text-slate-600 dark:text-slate-500 group-[.active]/sub2:text-primary-500 hover:text-primary-500 whitespace-nowrap flex-grow inline-block">{itemsub2.text}</span>
+                                                                <NavLink
+                                                                    onClick={() => setSidebarVisibility(false)}
+                                                                    target={item.blank && "_blank"}
+                                                                    className="nk-menu-link nk-route-toggle flex relative items-center align-middle py-2.5 ps-6 pe-10 font-heading font-bold tracking-snug group hover:text-white"
+                                                                    to={item.link}
+                                                                    end
+                                                                >
+                                                                    {item.icon && (
+                                                                        <span className="font-normal tracking-normal w-9 inline-flex flex-grow-0 flex-shrink-0 text-slate-400 group-[.active]/item:text-white hover:text-white">
+            <em className={`text-2xl leading-none text-current transition-all duration-300 icon ni ni-${item.icon}`}></em>
+        </span>
+                                                                    )}
+                                                                    {item.text && (
+                                                                        <span className="group-[&.is-compact:not(.has-hover)]/sidebar:opacity-0 flex-grow-1 inline-block whitespace-nowrap transition-all duration-300 text-slate-600 dark:text-slate-500 group-[.active]/item:text-white hover:text-white">
+            {item.text}
+        </span>
+                                                                    )}
                                                                 </NavLink>
+
+
                                                             </li>
                                                         </Fragment>
                                                     )}
