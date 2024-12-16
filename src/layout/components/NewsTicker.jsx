@@ -1,17 +1,22 @@
-import React from 'react'
+import React from 'react';
 
 const NewsTicker = () => {
-  return (
-    <a className="flex items-center transition-all duration-300" href="#link" onClick={(e)=> e.preventDefault()}>
-        <div className="w-8 inline-flex flex-shrink-0">
-            <em className="text-2xl leading-none text-primary-600 ni ni-card-view"></em>
+    return (
+        <div className="flex flex-col gap-4">
+            {/* Longer Search Box with Icon and Cerca Text */}
+            <div className="relative w-full md:w-96"> {/* Full width on mobile, fixed on medium+ screens */}
+                <div className="absolute inset-y-0 left-3 flex items-center gap-2 text-gray-400 text-sm">
+                    <em className="ni ni-search"></em> {/* Search Icon */}
+                    <div className="h-6 w-px bg-gray-300"></div> {/* Vertical Bar */}
+                    <span className="text-gray-400">Cerca</span> {/* Cerca Text */}
+                </div>
+                <input
+                    type="text"
+                    className="w-full h-10 pl-28 pr-3 py-2 text-sm bg-gray-100 border rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-600"
+                />
+            </div>
         </div>
-        <div className="flex items-center max-w-[calc(100%-theme(spacing.8))]">
-            <p className="text-sm text-slate-600 dark:text-slate-300 font-medium text-ellipsis overflow-hidden whitespace-nowrap w-[calc(100%-theme(spacing.8))]">Do you know the latest update of 2022? <span className="text-slate-400 dark:text-slate-500 font-normal"> A overview of our is now available on YouTube</span></p>
-            <em className="text-slate-400 ms-1 ni ni-external"></em>
-        </div>
-    </a>
-  )
-}
+    );
+};
 
-export default NewsTicker
+export default NewsTicker;

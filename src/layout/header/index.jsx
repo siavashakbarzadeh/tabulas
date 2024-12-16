@@ -28,26 +28,19 @@ const Header = ({className, sidebarVisibility, setSidebarVisibility}) => {
                         <div className="px-1 me-4 -ms-1.5 xl:hidden">
                             <SidebarToggle icon="menu" onClick={()=> setSidebarVisibility(!sidebarVisibility)} />
                         </div>
-                        <div className="px-1 py-3.5 flex xl:hidden">
-                            <Link to="/" className="relative inline-block transition-opacity duration-300 h-9">
-                                <img className="h-full opacity-0 dark:opacity-100" src="/logo.png" srcSet="/logo2x.png 2x" alt="logo" />
-                                <img className="h-full opacity-100 dark:opacity-0 absolute start-0 top-0" src="/logo-dark.png" srcSet="/logo-dark2x.png 2x" alt="logo" />
-                            </Link>
-                        </div>
+
                         <div className="px-1 py-2 hidden xl:block">
                             <NewsTicker />
                         </div>
                         <div className="px-1 py-3.5 ms-auto">
                             <ul className="flex item-center -mx-1.5 sm:-mx-2.5">
-                                <li className="px-1.5 sm:px-2.5 hidden sm:inline-flex">
-                                    <LanguageDropdown />
+                                <li className="px-1.5 sm:px-2.5 inline-flex">
+                                    <NotificationDropdown />
                                 </li>
                                 <li className="px-1.5 sm:px-2.5 inline-flex">
                                     <UserDropdown />
                                 </li>
-                                <li className="px-1.5 sm:px-2.5 inline-flex">
-                                    <NotificationDropdown />
-                                </li>
+
                             </ul>
                         </div>
                     </div>

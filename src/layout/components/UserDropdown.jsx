@@ -13,12 +13,18 @@ const UserDropdown = () => {
             <>
             <Menu.Button className={`dropdown-toggle [&>*]:pointer-events-none peer inline-flex items-center group`}>
                 <div className="flex items-center">
-                    <Avatar rounded icon="user-alt" size="sm" variant="primary"/>
+                    <div className="h-9 w-9 flex items-center justify-center rounded-full bg-[#97002D] text-white">
+                        <Icon name="user-alt" className="text-lg" />
+                    </div>
                     <div className="hidden md:block ms-4 text-start">
-                        <div className="text-xs font-medium leading-none pt-0.5 pb-1.5 text-primary-500 group-hover:text-primary-600">Administrator</div>
-                        <div className="text-slate-600 dark:text-white text-xs font-bold flex items-center">Abu Bin Ishityak <em className="text-sm leading-none ms-1 ni ni-chevron-down"></em></div>
+                        <div className="text-slate-600 dark:text-white text-xs font-extrabold flex items-center">
+                            Abu Bin Ishityak
+                            <em className="text-sm leading-none ms-1 ni ni-chevron-down"></em>
+                        </div>
+
                     </div>
                 </div>
+
             </Menu.Button>
             <Menu.Items modal={false} className="dropdown-menu absolute end-0 top-full mt-2.5 max-xs:min-w-[240px] max-xs:max-w-[240px] min-w-[280px] max-w-[280px] border border-t-3 border-gray-200 dark:border-gray-800 border-t-primary-600 dark:border-t-primary-600 bg-white dark:bg-gray-950 rounded shadow z-[1000]">
                 <div className="hidden sm:block px-7 py-5 bg-slate-50 dark:bg-slate-900 border-b border-gray-200 dark:border-gray-800">
