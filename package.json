@@ -1,79 +1,59 @@
 {
-  "name": "@themesberg/volt-react-dashboard",
-  "description": "Volt React Dashboard is a free and open source admin dashboard template powered by React.js and Bootstrap 5",
-  "author": "Themesberg",
-  "keywords": [
-    "bootstrap 5",
-    "react",
-    "react dashboard",
-    "react admin template",
-    "free react",
-    "react ui library",
-    "react bootstrap 5",
-    "bootstrap 5 dashboard",
-    "themesberg"
-  ],
-  "license": "MIT",
-  "homepage": "https://demo.themesberg.com/volt-react-dashboard",
-  "bugs": {
-    "url": "https://github.com/themesberg/volt-react-dashboard/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/themesberg/volt-react-dashboard"
-  },
+  "name": "DashWindReact",
+  "private": true,
   "version": "1.0.0",
-  "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.1",
-    "@fortawesome/fontawesome-svg-core": "^1.2.30",
-    "@fortawesome/free-brands-svg-icons": "^5.14.0",
-    "@fortawesome/free-regular-svg-icons": "^5.14.0",
-    "@fortawesome/free-solid-svg-icons": "^5.14.0",
-    "@fortawesome/react-fontawesome": "^0.1.11",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@themesberg/react-bootstrap": "^1.4.1",
-    "bootstrap": "5.0.0-beta1",
-    "chartist": "^0.11.4",
-    "chartist-plugin-tooltips-updated": "^0.1.4",
-    "moment-timezone": "^0.5.31",
-    "node-sass": "^4.14.1",
-    "react": "^16.13.1",
-    "react-chartist": "^0.14.3",
-    "react-copy-to-clipboard": "^5.0.3",
-    "react-datetime": "^3.0.4",
-    "react-dom": "^16.13.1",
-    "react-github-btn": "^1.2.0",
-    "react-live": "^2.2.3",
-    "react-router-dom": "^5.2.0",
-    "react-router-hash-link": "^2.3.1",
-    "react-scripts": "3.4.3",
-    "react-transition-group": "^4.4.1",
-    "simplebar-react": "^2.3.0"
-  },
+  "type": "module",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "build-local": "PUBLIC_URL=./ react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "dependencies": {
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/list": "^6.1.15",
+    "@fullcalendar/react": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
+    "@headlessui/react": "^2.2.0",
+    "@headlessui/tailwindcss": "^0.2.1",
+    "@popperjs/core": "^2.11.8",
+    "@szhsin/react-accordion": "^1.2.6",
+    "@tanstack/react-table": "^8.20.5",
+    "@tippyjs/react": "^4.2.6",
+    "@yaireo/tagify": "4.31.3",
+    "chart.js": "^4.4.6",
+    "choices.js": "^11.0.2",
+    "classnames": "^2.5.1",
+    "fslightbox-react": "^1.7.6",
+    "jsvectormap": "^1.6.0",
+    "moment": "^2.30.1",
+    "nouislider": "^15.8.1",
+    "react": "^18.3.1",
+    "react-chartjs-2": "^5.2.0",
+    "react-copy-to-clipboard": "^5.1.0",
+    "react-datepicker": "^7.5.0",
+    "react-dom": "^18.3.1",
+    "react-dropzone": "^14.2.10",
+    "react-helmet": "^6.1.0",
+    "react-hook-form": "^7.53.1",
+    "react-popper": "^2.3.0",
+    "react-router-dom": "^6.27.0",
+    "simplebar-react": "^3.2.6",
+    "swiper": "^11.1.14"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.9",
+    "@tailwindcss/typography": "^0.5.15",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.13.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14",
+    "vite": "^5.4.10"
   }
 }
