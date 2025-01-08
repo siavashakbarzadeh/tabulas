@@ -18,19 +18,89 @@
 @import "./custom/keyframes.css";
 @import "./custom/font-faces.css";
 
-.stripe{
-    background-image: linear-gradient(
-        45deg, 
-        rgba(255, 255, 255, 0.15) 25%, 
-        transparent 25%, 
-        transparent 50%, 
-        rgba(255, 255, 255, 0.15) 50%, 
-        rgba(255, 255, 255, 0.15) 75%, 
-        transparent 75%, 
-        transparent
-    );
+.stripe {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
 }
 
-.entry{
-    @apply last:[&>*]:mb-0 prose-p:mb-4 prose-h3:text-2xl lg:prose-h3:text-3xl prose-h4:text-xl lg:prose-h4:text-2xl prose-h5:text-lg lg:prose-h5:text-xl  prose-h6:text-base prose-headings:mb-2 prose-headings:font-heading prose-headings:font-bold prose-headings:leading-tighter prose-headings:text-slate-700 prose-headings:dark:text-white prose-headings:tracking-tight prose-h1:-tracking-snug prose-h2:-tracking-snug prose-ul:mb-4 prose-a:text-primary-500 prose-a:hover:text-primary-600 prose-img:rounded prose-img:my-8;
+.entry {
+  @apply last:[&>*]:mb-0 prose-p:mb-4 prose-h3:text-2xl lg:prose-h3:text-3xl prose-h4:text-xl lg:prose-h4:text-2xl prose-h5:text-lg lg:prose-h5:text-xl  prose-h6:text-base prose-headings:mb-2 prose-headings:font-heading prose-headings:font-bold prose-headings:leading-tighter prose-headings:text-slate-700 prose-headings:dark:text-white prose-headings:tracking-tight prose-h1:-tracking-snug prose-h2:-tracking-snug prose-ul:mb-4 prose-a:text-primary-500 prose-a:hover:text-primary-600 prose-img:rounded prose-img:my-8;
+}
+
+@font-face {
+  font-family: Outfit;
+  font-style: normal;
+  font-weight: 100;
+  src: url("../fonts/outfit/Outfit-Thin.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Outfit;
+  font-style: normal;
+  font-weight: 200;
+  src: url("../fonts/outfit/Outfit-ExtraLight.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Outfit;
+  font-style: normal;
+  font-weight: 300;
+  src: url("../fonts/outfit/Outfit-Light.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Outfit;
+  font-style: normal;
+  font-weight: 500;
+  src: url("../fonts/outfit/Outfit-Medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Outfit;
+  font-style: normal;
+  font-weight: 600;
+  src: url("../fonts/outfit/Outfit-SemiBold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Outfit;
+  font-style: normal;
+  font-weight: 800;
+  src: url("../fonts/outfit/Outfit-ExtraBold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Outfit;
+  font-style: normal;
+  font-weight: 900;
+  src: url("../fonts/outfit/Outfit-Black.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Outfit;
+  font-style: normal;
+  font-weight: 950;
+  src: url("../fonts/outfit/Outfit-ExtraBold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Outfit;
+  font-style: normal;
+  font-weight: bold;
+  src: url("../fonts/outfit/Outfit-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Outfit;
+  font-style: normal;
+  font-weight: normal;
+  src: url("../fonts/outfit/Outfit-Regular.woff2") format("woff2");
 }
