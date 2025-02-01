@@ -106,6 +106,7 @@ import ThemeProvider from "../layout/context";
 
 import { useLocation } from "react-router";
 import TestPage from "../pages/test";
+import TestLoginPage from "../pages/test/login";
 import ThemeProvider2 from "../layout/context2";
 import DashboardLayout from "../layout/dashboard";
 
@@ -127,6 +128,7 @@ function Router() {
             <Route element={<DashboardLayout />}>
               <Route path="test" element={<TestPage />} />
             </Route>
+            <Route path="test/login" element={<TestLoginPage />} />
           </Route>
           <Route element={<ThemeProvider />}>
             <Route element={<FullScreenLayout />}>
