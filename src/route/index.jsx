@@ -107,6 +107,9 @@ import ThemeProvider from "../layout/context";
 import { useLocation } from "react-router";
 import TestPage from "../pages/test";
 import TestLoginPage from "../pages/test/login";
+import TestConfirmPage from "../pages/test/confirm";
+import TestEmailPage from "../pages/test/email";
+import TestFormPage from "../pages/test/form";
 import ThemeProvider2 from "../layout/context2";
 import DashboardLayout from "../layout/dashboard";
 
@@ -127,6 +130,9 @@ function Router() {
           <Route element={<ThemeProvider2 />}>
             <Route element={<DashboardLayout />}>
               <Route path="test" element={<TestPage />} />
+              <Route path="test/confirm" element={<TestConfirmPage />} />
+              <Route path="test/email" element={<TestEmailPage />} />
+              <Route path="test/form" element={<TestFormPage />} />
             </Route>
             <Route path="test/login" element={<TestLoginPage />} />
           </Route>
