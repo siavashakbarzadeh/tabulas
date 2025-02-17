@@ -21,7 +21,7 @@ function LoginTestPage() {
               </button>
             </div>
             <div className="w-full relative h-6 before:content-[''] before:h-px before:absolute before:left-0 before:right-0 before:top-1/2 before:-translate-y-1/2 before:bg-gray-100">
-              <span className="px-3 bg-white text-sm font-semibold leading-6 text-zinc-900 absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">Or</span>
+              <span className="px-3 bg-white text-sm font-semibold leading-6 text-zinc-900 absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"></span>
             </div>
           <div className="mt-5">
             <div className="text-xl font-medium leading-6">ACCEDI</div>
