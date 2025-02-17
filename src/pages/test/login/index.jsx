@@ -80,7 +80,7 @@ function LoginTestPage() {
             <div className="w-full">
               <button className="w-full flex justify-center items-center h-11 relative border border-zinc-900 rounded-md">
                 <MicrosoftIcom className="size-5 absolute left-4 top-1/2 -translate-y-1/2" />
-                <span className="font-medium text-sm">Login with Microsoft</span>
+                <span className="font-medium text-sm">Accedi con Microsoft</span>
               </button>
             </div>
           </div>
