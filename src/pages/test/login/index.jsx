@@ -11,9 +11,18 @@ function LoginTestPage() {
         <div className="w-full md:w-10/12 flex flex-col mx-auto py-4 md:py-2 px-2 md:px-0">
           <div className="w-full flex justify-center">
             <Link className="flex">
-              <img src={Logo2Image} alt="Logo" className="h-15" />
+              {/* <img src={Logo2Image} alt="Logo" className="h-15" /> */}
             </Link>
           </div>
+          <div className="w-full">
+              <button className="w-full flex justify-center items-center h-11 relative border border-zinc-900 rounded-md">
+                <MicrosoftIcom className="size-5 absolute left-4 top-1/2 -translate-y-1/2" />
+                <span className="font-medium text-sm">Accedi con Microsoft</span>
+              </button>
+            </div>
+            <div className="w-full relative h-6 before:content-[''] before:h-px before:absolute before:left-0 before:right-0 before:top-1/2 before:-translate-y-1/2 before:bg-gray-100">
+              <span className="px-3 bg-white text-sm font-semibold leading-6 text-zinc-900 absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">Or</span>
+            </div>
           <div className="mt-5">
             <div className="text-xl font-medium leading-6">ACCEDI</div>
             <p className="leading-7 text-zinc-700 font-light mt-2">
@@ -74,15 +83,8 @@ function LoginTestPage() {
                 ACCEDI
               </button>
             </div>
-            <div className="w-full relative h-6 before:content-[''] before:h-px before:absolute before:left-0 before:right-0 before:top-1/2 before:-translate-y-1/2 before:bg-gray-100">
-              <span className="px-3 bg-white text-sm font-semibold leading-6 text-zinc-900 absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">Or</span>
-            </div>
-            <div className="w-full">
-              <button className="w-full flex justify-center items-center h-11 relative border border-zinc-900 rounded-md">
-                <MicrosoftIcom className="size-5 absolute left-4 top-1/2 -translate-y-1/2" />
-                <span className="font-medium text-sm">Accedi con Microsoft</span>
-              </button>
-            </div>
+            
+         
           </div>
         </div>
       </div>
