@@ -17,7 +17,7 @@ function LoginTestPage() {
           <div className="w-full">
               <button className="w-full flex justify-center items-center h-11 relative border border-zinc-900 rounded-md">
                 <MicrosoftIcom className="size-5 absolute left-4 top-1/2 -translate-y-1/2" />
-                <span className="font-medium text-sm">Accedi con Microsoft</span>
+                <span className="font-medium text-sm">Accedi con Microsoft Azure</span>
               </button>
             </div>
             <div className="w-full relative h-6 before:content-[''] before:h-px before:absolute before:left-0 before:right-0 before:top-1/2 before:-translate-y-1/2 before:bg-gray-100">
