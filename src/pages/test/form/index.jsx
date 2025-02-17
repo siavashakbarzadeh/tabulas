@@ -53,23 +53,31 @@ function TestFormPage() {
                   Firmatario
                 </label>
                 <div className="w-full flex bg-white p-4 rounded-md flex-wrap gap-2">
-                    <div className="h-8 flex bg-gray-100">
-                        <span className="text-sm leading-8 px-2">Roberto Battistoni</span>
-                        <button className="px-2 border-l border-l-gray-300">
-                            <CloseIcon className="size-4.5 text-zinc-500"/>
-                        </button>
-                    </div>
-                    <div className="h-8 flex bg-gray-100">
-                        <span className="text-sm leading-8 px-2">Amirreza Allahverdi</span>
-                        <button className="px-2 border-l border-l-gray-300">
-                            <CloseIcon className="size-4.5 text-zinc-500"/>
-                        </button>
-                    </div>
-                    <div className="h-8 flex">
-                        <label className="flex">
-                            <input type="text" placeholder="Robert ..." className="font-light ring-0 outline-none border-none focus:ring-0 focus:outline-none focus:border-none" />
-                        </label>
-                    </div>
+                  <div className="h-8 flex bg-gray-100">
+                    <span className="text-sm leading-8 px-2">
+                      Roberto Battistoni
+                    </span>
+                    <button className="px-2 border-l border-l-gray-300">
+                      <CloseIcon className="size-4.5 text-zinc-500" />
+                    </button>
+                  </div>
+                  <div className="h-8 flex bg-gray-100">
+                    <span className="text-sm leading-8 px-2">
+                      Amirreza Allahverdi
+                    </span>
+                    <button className="px-2 border-l border-l-gray-300">
+                      <CloseIcon className="size-4.5 text-zinc-500" />
+                    </button>
+                  </div>
+                  <div className="h-8 flex">
+                    <label className="flex">
+                      <input
+                        type="text"
+                        placeholder="Robert ..."
+                        className="font-light ring-0 outline-none border-none focus:ring-0 focus:outline-none focus:border-none"
+                      />
+                    </label>
+                  </div>
                 </div>
               </div>
               <div className="w-full flex flex-col md:flex-row space-x-0 md:space-x-4 space-y-4 md:space-y-4 mt-4">

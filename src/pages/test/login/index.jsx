@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import LogoImage from "../../../assets/svg/logo.svg";
 import Logo2Image from "../../../assets/svg/logo2.svg";
 import CheckIcon from "../../../icons/Check";
+import MicrosoftIcom from "../../../icons/Microsoft";
 
 function LoginTestPage() {
   return (
@@ -71,6 +72,15 @@ function LoginTestPage() {
             <div className="w-full">
               <button className="w-full h-12 bg-primary-900 text-white flex justify-center items-center rounded-lg transition-colors hover:bg-primary-950">
                 ACCEDI
+              </button>
+            </div>
+            <div className="w-full relative h-6 before:content-[''] before:h-px before:absolute before:left-0 before:right-0 before:top-1/2 before:-translate-y-1/2 before:bg-gray-100">
+              <span className="px-3 bg-white text-sm font-semibold leading-6 text-zinc-900 absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">Or</span>
+            </div>
+            <div className="w-full">
+              <button className="w-full flex justify-center items-center h-11 relative border border-zinc-900 rounded-md">
+                <MicrosoftIcom className="size-5 absolute left-4 top-1/2 -translate-y-1/2" />
+                <span className="font-medium text-sm">Login with Microsoft</span>
               </button>
             </div>
           </div>
