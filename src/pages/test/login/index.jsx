@@ -10,10 +10,6 @@ import { useAuth } from "../../../contexts/AuthContext.jsx";
 import { toast } from "react-toastify";
 
 function LoginTestPage() {
-  const [formData, setFormData] = useState({
-    email: null,
-    password: null,
-  });
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const { instance, accounts } = useMsal();
