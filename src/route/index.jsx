@@ -112,6 +112,8 @@ import TestEmailPage from "../pages/test/email";
 import TestFormPage from "../pages/test/form";
 import ThemeProvider2 from "../layout/context2";
 import DashboardLayout from "../layout/dashboard";
+import { ToastContainer } from "react-toastify";
+import PrivateRoute from "./privateRoute";
 
 const ScrollToTop = (props) => {
   const location = useLocation();
@@ -125,14 +127,17 @@ const ScrollToTop = (props) => {
 function Router() {
   return (
     <BrowserRouter>
+      <ToastContainer />
       <ScrollToTop>
         <Routes>
           <Route element={<ThemeProvider2 />}>
-            <Route element={<DashboardLayout />}>
-              <Route path="test" element={<TestPage />} />
-              <Route path="test/confirm" element={<TestConfirmPage />} />
-              <Route path="test/email" element={<TestEmailPage />} />
-              <Route path="test/form" element={<TestFormPage />} />
+            <Route element={<PrivateRoute />}>
+              <Route element={<DashboardLayout />}>
+                <Route path="test" element={<TestPage />} />
+                <Route path="test/confirm" element={<TestConfirmPage />} />
+                <Route path="test/email" element={<TestEmailPage />} />
+                <Route path="test/form" element={<TestFormPage />} />
+              </Route>
             </Route>
             <Route path="test/login" element={<TestLoginPage />} />
           </Route>

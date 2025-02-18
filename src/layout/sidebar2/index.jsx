@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import Menu2 from "./Menu";
+import { useAuth } from "../../contexts/AuthContext";
 
 function Sidebar2({ isSidebarActive = false }) {
-  console.log(isSidebarActive);
+  const { user } = useAuth();
 
   return (
     /* bottom-12 active */
@@ -13,13 +14,15 @@ function Sidebar2({ isSidebarActive = false }) {
     >
       <Link className="flex gap-2 select-none">
         <div className="w-11 h-11 flex justify-center items-center flex-shrink-0 rounded-xl bg-white">
-          <span className="text-2xl text-zinc-900">R</span>
+          {(user && user.email) && (
+            <span className="text-2xl text-zinc-900">
+              {user.email.substring(0, 1).toUpperCase()}
+            </span>
+          )}
         </div>
         <div className="w-full flex flex-col justify-center">
           <div className="leading-6 text-white">Roberto Battistoni</div>
-          <span className="text-xs leading-5 text-white/50">
-            roberto.battistoni@senato.it
-          </span>
+          <span className="text-xs leading-5 text-white/50">{user?.email}</span>
         </div>
       </Link>
       <Menu2 />
