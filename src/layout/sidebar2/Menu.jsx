@@ -3,52 +3,91 @@ import User from "../../icons/User";
 import ChatIcon from "../../icons/Chat";
 import PaperIcon from "../../icons/Paper";
 import ArraowDownIcon from "../../icons/ArraowDown";
+import { useState } from "react";
+
+const Menu = [
+  {
+    id: 1,
+    title: "Assemblea",
+    icon: <PaperIcon className="w-6 h-6" />,
+    subMenu: [
+      {
+        id: 1,
+        title: "Confirm",
+        link: "/test/confirm",
+      },
+      {
+        id: 2,
+        title: "Email",
+        link: "/test/email",
+      },
+      {
+        id: 3,
+        title: "Form",
+        link: "/test/form",
+      },
+    ],
+  },
+  {
+    id: 2,
+    title: "Commissioni permanenti",
+    icon: <User className="w-6 h-6" />,
+    link: "/commissioni-permanenti",
+  },
+  {
+    id: 3,
+    title: "Giunte e altre comissioni",
+    icon: <ChatIcon className="w-6 h-6" />,
+    link: "/giunte-e-altre-comissioni",
+  },
+];
 
 function Menu2() {
+  const [active, setActive] = useState(null);
+
+  const toggleMenuHandler = (id) => () => {
+    setActive((prev) => (prev === id ? null : id));
+  };
+
   return (
     /*  opacity-70 inactive class */
     <ul className="w-full mt-4">
-      <li className="w-full">
-        <div className="w-full h-10 flex items-center space-x-2 px-2 text-sm text-white cursor-pointer">
-          <PaperIcon className="w-6 h-6" />
-          <span>Assemblea</span>
-          <ArraowDownIcon className="w-2.5" />
-        </div>
-        <ul className="w-full space-y-1 rounded-xl overflow-hidden">
-          <li className="w-full">
-            <Link className="w-full h-10 flex items-center px-2 text-white bg-white/5">
-              Assemblea - 1
+      {Menu.map((item) => (
+        <li key={item.id} className="w-full">
+          {item.subMenu ? (
+            <div
+              onClick={toggleMenuHandler(item.id)}
+              className="w-full h-10 flex items-center space-x-2 px-2 text-sm text-white cursor-pointer"
+            >
+              {item.icon}
+              <span>{item.title}</span>
+              <ArraowDownIcon className={`w-2.5 transition-transform duration-150 ${active === item.id ? "" : "-rotate-90"}`} />
+            </div>
+          ) : (
+            <Link
+              to={item.link}
+              className="w-full h-10 flex items-center space-x-2 px-2 text-sm text-white cursor-pointer"
+            >
+              {item.icon}
+              <span>{item.title}</span>
             </Link>
-          </li>
-          <li className="w-full">
-            <Link className="w-full h-10 flex items-center px-2 text-white bg-white/5">
-              Assemblea - 2
-            </Link>
-          </li>
-          <li className="w-full">
-            <Link className="w-full h-10 flex items-center px-2 text-white bg-white/5">
-              Assemblea - 3
-            </Link>
-          </li>
-          <li className="w-full">
-            <Link className="w-full h-10 flex items-center px-2 text-white bg-white/5">
-              Assemblea - 4
-            </Link>
-          </li>
-        </ul>
-      </li>
-      <li className="w-full">
-        <Link className="w-full h-10 flex items-center space-x-2 px-2 text-sm text-white cursor-pointer">
-          <User className="w-6 h-6" />
-          <span>Commissioni permanenti</span>
-        </Link>
-      </li>
-      <li className="w-full">
-        <Link className="w-full h-10 flex items-center space-x-2 px-2 text-sm text-white cursor-pointer">
-          <ChatIcon className="w-6 h-6" />
-          <span>Giunte e altre comissioni</span>
-        </Link>
-      </li>
+          )}
+          {item.subMenu && (
+            <ul className={`w-full ${active === item.id ? "" : "hidden"} space-y-1 rounded-xl overflow-hidden`}>
+              {item.subMenu.map((subItem) => (
+                <li key={subItem.id} className="w-full">
+                  <Link
+                    to={subItem.link}
+                    className="w-full h-10 flex items-center px-2 text-white bg-white/5"
+                  >
+                    {subItem.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+      ))}
     </ul>
   );
 }
