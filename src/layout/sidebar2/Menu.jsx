@@ -26,6 +26,36 @@ const Menu = [
         title: "Form",
         link: "/test/form",
       },
+      {
+        id: 4,
+        title: "Services",
+        link: "/test/services",
+      },
+      {
+        id: 5,
+        title: "Guidemanuali",
+        link: "/test/guidemanuali",
+      },
+      {
+        id: 6,
+        title: "Ebook",
+        link: "/test/ebook",
+      },
+      {
+        id: 7,
+        title: "Commissioni",
+        link: "/test/commissioni",
+      },
+      {
+        id: 8,
+        title: "Ultimiatti",
+        link: "/test/ultimiatti",
+      },
+      {
+        id: 8,
+        title: "Ultimdossier",
+        link: "/test/ultimdossier",
+      },
     ],
   },
   {
