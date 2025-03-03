@@ -2,9 +2,9 @@ import { PublicClientApplication } from "@azure/msal-browser";
 
 const msalConfig = {
   auth: {
-    clientId: "8023f59d-baeb-4507-9a07-e3efc4a54a1a",
+    clientId: "2fa579a2-b924-4da7-b20e-98c74751c617",
     authority: "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
-    redirectUri: "http://localhost:5173/",
+    redirectUri: "https://tabulas.vercel.app/",
   },
   cache: {
     cacheLocation: "sessionStorage",
