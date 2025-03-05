@@ -24,7 +24,7 @@ function LoginPage() {
       })
       .then((response) => {
         login(response.data.data.token);
-        navigate("/test");
+        navigate("/");
       })
       .catch((error) => {
         if (error.response.status === 422) {
@@ -60,7 +60,7 @@ function LoginPage() {
           })
           .then((response) => {
             login(response.data.data.token);
-            navigate("/test");
+            navigate("/");
           });
       })
       .catch((error) => console.error(error));

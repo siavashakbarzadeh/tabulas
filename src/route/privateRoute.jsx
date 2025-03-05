@@ -4,7 +4,7 @@ function PrivateRoute() {
   return localStorage.getItem("auth-token") ? (
     <Outlet />
   ) : (
-    <Navigate to="/test/login" />
+    <Navigate to="/login" />
   );
 }
 
