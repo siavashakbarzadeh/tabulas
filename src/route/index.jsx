@@ -151,7 +151,7 @@ function Router() {
                 <Route path="test/ultimdossier" element={<TestUltimdossierPage />} />
               </Route>
             </Route>
-            <Route path="test/login" element={<TestLoginPage />} />
+            <Route path="login" element={<TestLoginPage />} />
           </Route>
           <Route element={<ThemeProvider />}>
             <Route element={<FullScreenLayout />}>
