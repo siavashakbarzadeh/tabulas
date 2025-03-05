@@ -1,4 +1,5 @@
 import SearchIcon from "../../assets/svg/search.svg";
+import CloseIcon from "../../icons/Close";
 
 function FormPage() {
   return (
