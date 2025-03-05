@@ -1,12 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
-import LogoImage from "../../../assets/svg/logo.svg";
-import Logo2Image from "../../../assets/svg/logo2.svg";
-import CheckIcon from "../../../icons/Check";
-import MicrosoftIcom from "../../../icons/Microsoft";
+import LogoImage from "../../assets/svg/logo.svg";
+import Logo2Image from "../../assets/svg/logo2.svg";
+import CheckIcon from "../../icons/Check.jsx";
+import MicrosoftIcom from "../../icons/Microsoft.jsx";
 import { useMsal } from "@azure/msal-react";
 import { useEffect, useState } from "react";
-import axios from "../../../configs/axiosConfig.js";
-import { useAuth } from "../../../contexts/AuthContext.jsx";
+import axios from "../../configs/axiosConfig.js";
+import { useAuth } from "../../contexts/AuthContext.jsx";
 import { toast } from "react-toastify";
 
 function LoginTestPage() {

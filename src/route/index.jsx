@@ -106,7 +106,7 @@ import ThemeProvider from "../layout/context";
 
 import { useLocation } from "react-router";
 import TestPage from "../pages/test";
-import TestLoginPage from "../pages/test/login";
+import TestLoginPage from "../pages/login";
 import TestConfirmPage from "../pages/test/confirm";
 import TestEmailPage from "../pages/test/email";
 import TestFormPage from "../pages/test/form";
