@@ -105,21 +105,21 @@ import DataTablesPage from "../pages/components/tables/DataTables";
 import ThemeProvider from "../layout/context";
 
 import { useLocation } from "react-router";
-import TestPage from "../pages/test";
-import TestLoginPage from "../pages/login";
-import TestConfirmPage from "../pages/test/confirm";
-import TestEmailPage from "../pages/test/email";
-import TestFormPage from "../pages/test/form";
+import MainPage from "../pages/main";
+import LoginPage from "../pages/login";
+import ConfirmPage from "../pages/confirm";
+import EmailPage from "../pages/email";
+import FormPage from "../pages/form";
 import ThemeProvider2 from "../layout/context2";
 import DashboardLayout from "../layout/dashboard";
 import { ToastContainer } from "react-toastify";
 import PrivateRoute from "./privateRoute";
-import TestServicePage from "../pages/test/services";
-import TestGuidemanualiPage from "../pages/test/guidemanuali";
-import TestEbookPage from "../pages/test/ebook";
-import TestCommissioniPage from "../pages/test/commissioni";
-import TestUltimiattiPage from "../pages/test/ultimiatti";
-import TestUltimdossierPage from "../pages/test/ultimdossier";
+import ServicePage from "../pages/services";
+import GuidemanualiPage from "../pages/guidemanuali";
+import EbookPage from "../pages/ebook";
+import CommissioniPage from "../pages/commissioni";
+import UltimiattiPage from "../pages/ultimiatti";
+import UltimdossierPage from "../pages/ultimdossier";
 
 const ScrollToTop = (props) => {
   const location = useLocation();
@@ -139,19 +139,19 @@ function Router() {
           <Route element={<ThemeProvider2 />}>
             <Route element={<PrivateRoute />}>
               <Route element={<DashboardLayout />}>
-                <Route path="test" element={<TestPage />} />
-                <Route path="test/confirm" element={<TestConfirmPage />} />
-                <Route path="test/email" element={<TestEmailPage />} />
-                <Route path="test/form" element={<TestFormPage />} />
-                <Route path="test/services" element={<TestServicePage />} />
-                <Route path="test/guidemanuali" element={<TestGuidemanualiPage />} />
-                <Route path="test/ebook" element={<TestEbookPage />} />
-                <Route path="test/commissioni" element={<TestCommissioniPage />} />
-                <Route path="test/ultimiatti" element={<TestUltimiattiPage />} />
-                <Route path="test/ultimdossier" element={<TestUltimdossierPage />} />
+                <Route index element={<MainPage />} />
+                <Route path="confirm" element={<ConfirmPage />} />
+                <Route path="email" element={<EmailPage />} />
+                <Route path="form" element={<FormPage />} />
+                <Route path="services" element={<ServicePage />} />
+                <Route path="guidemanuali" element={<GuidemanualiPage />} />
+                <Route path="ebook" element={<EbookPage />} />
+                <Route path="commissioni" element={<CommissioniPage />} />
+                <Route path="ultimiatti" element={<UltimiattiPage />} />
+                <Route path="ultimdossier" element={<UltimdossierPage />} />
               </Route>
             </Route>
-            <Route path="login" element={<TestLoginPage />} />
+            <Route path="login" element={<LoginPage />} />
           </Route>
           <Route element={<ThemeProvider />}>
             <Route element={<FullScreenLayout />}>
@@ -204,7 +204,7 @@ function Router() {
               />
             </Route>
             <Route element={<Layout />}>
-              <Route index element={<EcommerceHomepage />} />
+              <Route path="index2" element={<EcommerceHomepage />} />
               <Route path="home" element={<EcommerceHomepage />} />
               <Route path="copywriter" element={<CopywriterHomepage />} />
               <Route path="sales" element={<SalesHomepage />} />

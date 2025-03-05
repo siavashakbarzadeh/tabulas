@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import SearchIcon from "../../../assets/svg/search.svg";
-import axios from "../../../configs/axiosConfig.js";
-import Loading from "../../../layout/components/Loading.jsx";
+import SearchIcon from "../../assets/svg/search.svg";
+import axios from "../../configs/axiosConfig.js";
+import Loading from "../../layout/components/Loading.jsx";
 
-function TestUltimiattiPage() {
+function UltimiattiPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
@@ -90,4 +90,4 @@ function TestUltimiattiPage() {
   );
 }
 
-export default TestUltimiattiPage;
+export default UltimiattiPage;

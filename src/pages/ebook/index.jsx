@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import SearchIcon from "../../../assets/svg/search.svg";
-import axios from "../../../configs/axiosConfig.js";
-import Loading from "../../../layout/components/Loading.jsx";
+import SearchIcon from "../../assets/svg/search.svg";
+import axios from "../../configs/axiosConfig.js";
+import Loading from "../../layout/components/Loading.jsx";
 
-function TestUltimdossierPage() {
+function EbookPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
@@ -18,7 +18,7 @@ function TestUltimdossierPage() {
   const fetchData = () => {
     setLoading(true);
     axios
-      .get("tabulas/mobile/ultimdossier")
+      .get("tabulas/mobile/ebook")
       .then((res) => {
         setData(res.data);
       })
@@ -50,24 +50,10 @@ function TestUltimdossierPage() {
               <Loading />
             </div>
           ) : (
-            <div className="w-full">
-              <div className="w-full font-medium">{data.name}</div>
-              <div className="w-full space-y-3 mt-2">
-                {data.docNodes.map((item, key) => (
-                  <div className="w-full" key={key}>
-                    <div className="w-full text-sm text-white bg-primary-950 leading-7 px-2">
-                      {item.name}
-                    </div>
-                    <div
-                      className="w-full"
-                      dangerouslySetInnerHTML={{
-                        __html: item.docContentStreamContent,
-                      }}
-                    ></div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <div
+              className="w-full"
+              dangerouslySetInnerHTML={{ __html: data.docContentStreamContent }}
+            ></div>
           )}
         </div>
         <div className="absolute inset-x-0 bottom-0 text-white bg-zinc-800 px-2 line-clamp-1 leading-9 h-9 overflow-hidden rounded-bl-2xl rounded-br-2xl">
@@ -90,4 +76,4 @@ function TestUltimdossierPage() {
   );
 }
 
-export default TestUltimdossierPage;
+export default EbookPage;

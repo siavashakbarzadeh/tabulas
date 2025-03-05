@@ -1,10 +1,6 @@
-import SearchIcon from "../../../assets/svg/search.svg";
-import PlayIcon from "../../../icons/Play";
-import NotificationIcon from "../../../icons/Notification";
-import { Link } from "react-router-dom";
-import CheckIcon from "../../../icons/Check";
+import SearchIcon from "../../assets/svg/search.svg";
 
-function TestEmailPage() {
+function EmailPage() {
   return (
     <>
       <div className="fixed inset-0 bg-white/10 backdrop-blur-[1px] z-40 pl-0 lg:pl-68 flex">
@@ -83,4 +79,4 @@ function TestEmailPage() {
   );
 }
 
-export default TestEmailPage;
+export default EmailPage;

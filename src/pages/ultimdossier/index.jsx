@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import SearchIcon from "../../../assets/svg/search.svg";
-import axios from "../../../configs/axiosConfig.js";
-import Loading from "../../../layout/components/Loading.jsx";
+import SearchIcon from "../../assets/svg/search.svg";
+import axios from "../../configs/axiosConfig.js";
+import Loading from "../../layout/components/Loading.jsx";
 
-function TestCommissioniPage() {
+function UltimdossierPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
@@ -18,7 +18,7 @@ function TestCommissioniPage() {
   const fetchData = () => {
     setLoading(true);
     axios
-      .get("tabulas/mobile/commissioni")
+      .get("tabulas/mobile/ultimdossier")
       .then((res) => {
         setData(res.data);
       })
@@ -53,41 +53,19 @@ function TestCommissioniPage() {
             <div className="w-full">
               <div className="w-full font-medium">{data.name}</div>
               <div className="w-full space-y-3 mt-2">
-                {data.docNodes
-                  .filter((i) => i.docNodes && i.docNodes.length)
-                  .map((item, key) => (
-                    <div key={key} className="w-full">
-                      <div className="w-full">{item.name}</div>
-                      {item.docNodes
-                        .filter((i) => i.docNodes && i.docNodes.length)
-                        .map((subItem, subKey) => (
-                          <div key={subKey} className="w-full p-2">
-                            <div className="text-sm text-white bg-primary-950 leading-7 px-2">
-                              {subItem.name}
-                            </div>
-                            {subItem.docNodes
-                              .filter((i) => i.docContentStreamContent)
-                              .map((subSubItem, subSubKey) => (
-                                <div
-                                  key={subSubKey}
-                                  className="w-full space-y-2 mt-2"
-                                >
-                                  <div className="text-sm text-zinc-900 bg-gray-200 inline-block leading-6 px-3 rounded-full">
-                                    {subSubItem.name}
-                                  </div>
-                                  <div
-                                    className="w-full px-2"
-                                    dangerouslySetInnerHTML={{
-                                      __html:
-                                        subSubItem.docContentStreamContent,
-                                    }}
-                                  ></div>
-                                </div>
-                              ))}
-                          </div>
-                        ))}
+                {data.docNodes.map((item, key) => (
+                  <div className="w-full" key={key}>
+                    <div className="w-full text-sm text-white bg-primary-950 leading-7 px-2">
+                      {item.name}
                     </div>
-                  ))}
+                    <div
+                      className="w-full"
+                      dangerouslySetInnerHTML={{
+                        __html: item.docContentStreamContent,
+                      }}
+                    ></div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -112,4 +90,4 @@ function TestCommissioniPage() {
   );
 }
 
-export default TestCommissioniPage;
+export default UltimdossierPage;

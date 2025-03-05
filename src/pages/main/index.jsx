@@ -3,7 +3,7 @@ import PlayIcon from "../../icons/Play";
 import NotificationIcon from "../../icons/Notification";
 import { Link } from "react-router-dom";
 
-function TestPage() {
+function MainPage() {
   
   return (
     <>
@@ -184,4 +184,4 @@ function TestPage() {
   );
 }
 
-export default TestPage;
+export default MainPage;

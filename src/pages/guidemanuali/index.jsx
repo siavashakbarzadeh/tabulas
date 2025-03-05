@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import SearchIcon from "../../../assets/svg/search.svg";
-import axios from "../../../configs/axiosConfig.js";
-import Loading from "../../../layout/components/Loading.jsx";
+import SearchIcon from "../../assets/svg/search.svg";
+import axios from "../../configs/axiosConfig.js";
+import Loading from "../../layout/components/Loading.jsx";
 
-function TestEbookPage() {
+function GuidemanualiPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
@@ -18,7 +18,7 @@ function TestEbookPage() {
   const fetchData = () => {
     setLoading(true);
     axios
-      .get("tabulas/mobile/ebook")
+      .get("tabulas/mobile/guidemanuali")
       .then((res) => {
         setData(res.data);
       })
@@ -50,10 +50,26 @@ function TestEbookPage() {
               <Loading />
             </div>
           ) : (
-            <div
-              className="w-full"
-              dangerouslySetInnerHTML={{ __html: data.docContentStreamContent }}
-            ></div>
+            <div className="w-full">
+              <div className="w-full font-medium">{data.name}</div>
+              <div className="w-full space-y-3 mt-2">
+                {data.docNodes.map((item, key) => (
+                  <div
+                    key={key}
+                    className="w-full border border-gray-200 rounded-xl p-4"
+                  >
+                    <div className="text-sm">{item.name}</div>
+                    <a
+                      href={item.docContentUrl}
+                      download
+                      className="inline-block px-4 rounded-md mt-4 text-white bg-primary-950 leading-8"
+                    >
+                      Downlaod pdf
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
         <div className="absolute inset-x-0 bottom-0 text-white bg-zinc-800 px-2 line-clamp-1 leading-9 h-9 overflow-hidden rounded-bl-2xl rounded-br-2xl">
@@ -76,4 +92,4 @@ function TestEbookPage() {
   );
 }
 
-export default TestEbookPage;
+export default GuidemanualiPage;

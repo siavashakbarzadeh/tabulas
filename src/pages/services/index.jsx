@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import SearchIcon from "../../../assets/svg/search.svg";
-import axios from "../../../configs/axiosConfig.js";
-import Loading from "../../../layout/components/Loading.jsx";
+import SearchIcon from "../../assets/svg/search.svg";
+import axios from "../../configs/axiosConfig.js";
+import Loading from "../../layout/components/Loading.jsx";
 
-function TestServicePage() {
+function ServicePage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
@@ -76,4 +76,4 @@ function TestServicePage() {
   );
 }
 
-export default TestServicePage;
+export default ServicePage;
