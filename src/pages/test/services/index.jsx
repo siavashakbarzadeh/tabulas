@@ -18,7 +18,7 @@ function TestServicePage() {
   const fetchData = () => {
     setLoading(true);
     axios
-      .get("https://svil-tabulas4.intra.senato.it/v2/tabulas/mobile/servizi")
+      .get("tabulas/mobile/servizi")
       .then((res) => {
         setData(res.data);
       })

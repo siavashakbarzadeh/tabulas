@@ -18,9 +18,7 @@ function TestCommissioniPage() {
   const fetchData = () => {
     setLoading(true);
     axios
-      .get(
-        "https://svil-tabulas4.intra.senato.it/v2/tabulas/mobile/commissioni"
-      )
+      .get("tabulas/mobile/commissioni")
       .then((res) => {
         setData(res.data);
       })
@@ -64,21 +62,28 @@ function TestCommissioniPage() {
                         .filter((i) => i.docNodes && i.docNodes.length)
                         .map((subItem, subKey) => (
                           <div key={subKey} className="w-full p-2">
-                            <div className="text-sm text-white bg-primary-950 leading-7 px-2">{subItem.name}</div>
-                            {subItem.docNodes.filter((i) => i.docContentStreamContent).map((subSubItem, subSubKey) => (
-                              <div
-                                key={subSubKey}
-                                className="w-full space-y-2 mt-2"
-                              >
-                                <div className="text-sm text-zinc-900 bg-gray-200 inline-block leading-6 px-3 rounded-full">{subSubItem.name}</div>
+                            <div className="text-sm text-white bg-primary-950 leading-7 px-2">
+                              {subItem.name}
+                            </div>
+                            {subItem.docNodes
+                              .filter((i) => i.docContentStreamContent)
+                              .map((subSubItem, subSubKey) => (
                                 <div
-                                  className="w-full px-2"
-                                  dangerouslySetInnerHTML={{
-                                    __html: subSubItem.docContentStreamContent,
-                                  }}
-                                ></div>
-                              </div>
-                            ))}
+                                  key={subSubKey}
+                                  className="w-full space-y-2 mt-2"
+                                >
+                                  <div className="text-sm text-zinc-900 bg-gray-200 inline-block leading-6 px-3 rounded-full">
+                                    {subSubItem.name}
+                                  </div>
+                                  <div
+                                    className="w-full px-2"
+                                    dangerouslySetInnerHTML={{
+                                      __html:
+                                        subSubItem.docContentStreamContent,
+                                    }}
+                                  ></div>
+                                </div>
+                              ))}
                           </div>
                         ))}
                     </div>

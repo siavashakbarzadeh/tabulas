@@ -18,9 +18,7 @@ function TestGuidemanualiPage() {
   const fetchData = () => {
     setLoading(true);
     axios
-      .get(
-        "https://svil-tabulas4.intra.senato.it/v2/tabulas/mobile/guidemanuali"
-      )
+      .get("tabulas/mobile/guidemanuali")
       .then((res) => {
         setData(res.data);
       })
@@ -61,7 +59,13 @@ function TestGuidemanualiPage() {
                     className="w-full border border-gray-200 rounded-xl p-4"
                   >
                     <div className="text-sm">{item.name}</div>
-                    <a href={item.docContentUrl} download className="inline-block px-4 rounded-md mt-4 text-white bg-primary-950 leading-8">Downlaod pdf</a>
+                    <a
+                      href={item.docContentUrl}
+                      download
+                      className="inline-block px-4 rounded-md mt-4 text-white bg-primary-950 leading-8"
+                    >
+                      Downlaod pdf
+                    </a>
                   </div>
                 ))}
               </div>

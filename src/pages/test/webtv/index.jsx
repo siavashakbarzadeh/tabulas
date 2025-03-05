@@ -18,9 +18,7 @@ function TestWebTvPage() {
   const fetchData = () => {
     setLoading(true);
     axios
-      .get(
-        "https://svil-tabulas4.intra.senato.it/v2/tabulas/mobile/webtv"
-      )
+      .get("tabulas/mobile/webtv")
       .then((res) => {
         setData(res.data);
       })

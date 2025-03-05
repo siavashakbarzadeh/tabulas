@@ -18,7 +18,7 @@ function TestUltimiattiPage() {
   const fetchData = () => {
     setLoading(true);
     axios
-      .get("https://svil-tabulas4.intra.senato.it/v2/tabulas/mobile/ultimiatti")
+      .get("tabulas/mobile/ultimiatti")
       .then((res) => {
         setData(res.data);
       })
@@ -55,8 +55,15 @@ function TestUltimiattiPage() {
               <div className="w-full space-y-3 mt-2">
                 {data.docNodes.map((item, key) => (
                   <div className="w-full" key={key}>
-                    <div className="w-full text-sm text-white bg-primary-950 leading-7 px-2">{item.name}</div>
-                    <div className="w-full" dangerouslySetInnerHTML={{ __html:item.docContentStreamContent }}></div>
+                    <div className="w-full text-sm text-white bg-primary-950 leading-7 px-2">
+                      {item.name}
+                    </div>
+                    <div
+                      className="w-full"
+                      dangerouslySetInnerHTML={{
+                        __html: item.docContentStreamContent,
+                      }}
+                    ></div>
                   </div>
                 ))}
               </div>

@@ -18,9 +18,7 @@ function TestUltimdossierPage() {
   const fetchData = () => {
     setLoading(true);
     axios
-      .get(
-        "https://svil-tabulas4.intra.senato.it/v2/tabulas/mobile/ultimdossier"
-      )
+      .get("tabulas/mobile/ultimdossier")
       .then((res) => {
         setData(res.data);
       })

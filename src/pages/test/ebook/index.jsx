@@ -18,7 +18,7 @@ function TestEbookPage() {
   const fetchData = () => {
     setLoading(true);
     axios
-      .get("https://svil-tabulas4.intra.senato.it/v2/tabulas/mobile/ebook")
+      .get("tabulas/mobile/ebook")
       .then((res) => {
         setData(res.data);
       })
