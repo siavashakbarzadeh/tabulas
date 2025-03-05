@@ -9,7 +9,7 @@ import axios from "../../configs/axiosConfig.js";
 import { useAuth } from "../../contexts/AuthContext.jsx";
 import { toast } from "react-toastify";
 
-function LoginPage() {
+function NewLoginPage() {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const { instance, accounts } = useMsal();
@@ -208,4 +208,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default NewLoginPage;

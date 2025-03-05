@@ -106,10 +106,9 @@ import ThemeProvider from "../layout/context";
 
 import { useLocation } from "react-router";
 import MainPage from "../pages/main";
-import LoginPage from "../pages/login";
+import NewLoginPage from "../pages/login";
 import ConfirmPage from "../pages/confirm";
 import EmailPage from "../pages/email";
-import FormPage from "../pages/form";
 import ThemeProvider2 from "../layout/context2";
 import DashboardLayout from "../layout/dashboard";
 import { ToastContainer } from "react-toastify";
@@ -142,7 +141,6 @@ function Router() {
                 <Route index element={<MainPage />} />
                 <Route path="confirm" element={<ConfirmPage />} />
                 <Route path="email" element={<EmailPage />} />
-                <Route path="form" element={<FormPage />} />
                 <Route path="services" element={<ServicePage />} />
                 <Route path="guidemanuali" element={<GuidemanualiPage />} />
                 <Route path="ebook" element={<EbookPage />} />
@@ -151,7 +149,7 @@ function Router() {
                 <Route path="ultimdossier" element={<UltimdossierPage />} />
               </Route>
             </Route>
-            <Route path="login" element={<LoginPage />} />
+            <Route path="login" element={<NewLoginPage />} />
           </Route>
           <Route element={<ThemeProvider />}>
             <Route element={<FullScreenLayout />}>
