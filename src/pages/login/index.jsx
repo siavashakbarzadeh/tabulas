@@ -80,16 +80,14 @@ function NewLoginPage() {
         <div className="w-full lg:w-1/2 bg-white flex items-center">
           <div className="w-full md:w-10/12 flex flex-col mx-auto py-4 md:py-2 px-2 md:px-0">
             <div className="w-full flex justify-center">
-              <Link className="flex">
-                <img src={Logo2Image} alt="Logo" className="h-15" />
-              </Link>
+
             </div>
             <div className="mt-5">
               <div className="text-xl font-medium leading-6">ACCEDI</div>
               <p className="leading-7 text-zinc-700 font-light mt-2">
                 Puoi effettuare l'accesso qui con il tuo nome utente e password
                 o utilizzando il pulsante sopra utilizzando l'applicazione
-                fortinet
+
               </p>
             </div>
             <div className="w-full space-y-5 mt-8">
