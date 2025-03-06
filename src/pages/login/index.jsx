@@ -82,6 +82,21 @@ function NewLoginPage() {
             <div className="w-full flex justify-center">
 
             </div>
+            <div className="w-full">
+                {accounts.length ? (
+                  <button onClick={handleLogout}>logout</button>
+                ) : (
+                  <button
+                    onClick={handleMicrosoftLogin}
+                    className="w-full flex justify-center items-center h-11 relative border border-zinc-900 rounded-md"
+                  >
+                    <MicrosoftIcom className="size-5 absolute left-4 top-1/2 -translate-y-1/2" />
+                    <span className="font-medium text-sm">
+                      Login with Microsoft
+                    </span>
+                  </button>
+                )}
+              </div>
             <div className="mt-5">
               <div className="text-xl font-medium leading-6">ACCEDI</div>
               <p className="leading-7 text-zinc-700 font-light mt-2">
@@ -155,21 +170,7 @@ function NewLoginPage() {
                   Or
                 </span>
               </div>
-              <div className="w-full">
-                {accounts.length ? (
-                  <button onClick={handleLogout}>logout</button>
-                ) : (
-                  <button
-                    onClick={handleMicrosoftLogin}
-                    className="w-full flex justify-center items-center h-11 relative border border-zinc-900 rounded-md"
-                  >
-                    <MicrosoftIcom className="size-5 absolute left-4 top-1/2 -translate-y-1/2" />
-                    <span className="font-medium text-sm">
-                      Login with Microsoft
-                    </span>
-                  </button>
-                )}
-              </div>
+             
             </div>
           </div>
         </div>
