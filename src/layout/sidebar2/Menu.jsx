@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import User from "../../icons/User";
+import UsersIcon from "../../icons/Users";
 import ChatIcon from "../../icons/Chat";
+import Play2Icon from "../../icons/Play2";
+import NoticeIcon from "../../icons/Notice";
 import PaperIcon from "../../icons/Paper";
 import ArraowDownIcon from "../../icons/ArraowDown";
 import { useState } from "react";
@@ -69,6 +72,24 @@ const Menu = [
     title: "Giunte e altre comissioni",
     icon: <ChatIcon className="w-6 h-6" />,
     link: "/giunte-e-altre-comissioni",
+  },
+  {
+    id: 4,
+    title: "Bicamerali e delegazioni",
+    icon: <UsersIcon className="w-6 h-6" />,
+    link: "/giunte-e-altre-comissioni",
+  },
+  {
+    id: 5,
+    title: "Diretta Senato",
+    icon: <Play2Icon className="w-6 h-6" />,
+    link: "/",
+  },
+  {
+    id: 6,
+    title: "INFORMAZIONE",
+    icon: <NoticeIcon className="w-6 h-6" />,
+    link: "/",
   },
 ];
 
