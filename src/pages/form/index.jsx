@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import SearchIcon from "../../assets/svg/search.svg";
 import CloseIcon from "../../icons/Close";
 import FileImportIcon from "../../icons/FileImport";
+import FileCheckIcon from "../../icons/FileCheck";
 
 function FormPage() {
   const [file, setFile] = useState(null);
@@ -65,8 +66,10 @@ function FormPage() {
                       className="w-0 h-0 opacity-0 absolute left-0 top-0"
                     />
                     <div className="w-full flex items-center gap-3 p-3 border border-dashed border-zinc-300 rounded-lg text-zinc-500">
-                      <FileImportIcon className="size-6" />
-                      <span className="text-sm">No choosen file</span>
+                      <FileCheckIcon className="size-6 text-green-500" />
+                      <span className="text-sm">
+                        {file ? file.name : "No choosen file"}
+                      </span>
                     </div>
                   </label>
                 </div>
