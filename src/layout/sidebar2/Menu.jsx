@@ -47,6 +47,7 @@ const Menu = [
       {
         id: 7,
         title: "Commissioni",
+        icon: <User className="w-6 h-6" />,
         link: "/commissioni",
       },
       {
