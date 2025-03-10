@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import User from "../../icons/User";
 import EbookIcon from "../../icons/Ebook";
 import LatestDossiersIcon from "../../icons/LatestDossiers";
+import ServicesIcon from "../../icons/ServicesIcon";
 import FormIcon from "../../icons/FormIcon";
 import LatestActsIcon from "../../icons/LatestActs";
 import GuideManualsIcon from "../../icons/GuideManuals";
@@ -23,7 +24,7 @@ const Menu = [
       { id: 1, title: "Confirm", link: "/confirm" },
       { id: 2, title: "Email", link: "/email" },
       { id: 3, title: "Form",icon: <FormIcon className="w-6 h-6" />, link: "/form" },
-      { id: 4, title: "Services", link: "/services" },
+      { id: 4, title: "Services",icon: <ServicesIcon className="w-6 h-6" />, link: "/services" },
       { id: 5, title: "Guidemanuali",icon: <GuideManualsIcon className="w-6 h-6" />, link: "/guidemanuali" },
       { id: 6, title: "Ebook", icon: <EbookIcon className="w-6 h-6" />, link: "/ebook" },
       {
