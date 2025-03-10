@@ -12,7 +12,10 @@ function UltimiattiPage() {
   }, []);
 
   useEffect(() => {
-    setLoading(false);
+    if (data) {
+      setLoading(false);
+      modifyPdfLinks();
+    }
   }, [data]);
 
   const fetchData = () => {
@@ -25,6 +28,20 @@ function UltimiattiPage() {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const modifyPdfLinks = () => {
+    document.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
+      const img = link.querySelector('img[title*=".pdf"]');
+      if (img) {
+        img.style.display = "none"; // Hide the small PDF icon
+      }
+
+      // Add Font Awesome PDF icon before the link
+      const icon = document.createElement("i");
+      icon.className = "fas fa-file-pdf text-red-600 mr-2"; // Font Awesome class
+      link.prepend(icon);
+    });
   };
 
   return (
