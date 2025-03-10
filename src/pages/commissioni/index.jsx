@@ -83,8 +83,9 @@ function CommissioniPage() {
                                     {subSubItem.name}
                                   </div>
 
+                                  {/* Wrap dynamic HTML inside a div with a custom class */}
                                   <div
-                                    className="w-full px-2"
+                                    className="w-full px-2 rich-text-content"
                                     dangerouslySetInnerHTML={{
                                       __html:
                                         subSubItem.docContentStreamContent,
@@ -123,6 +124,17 @@ function CommissioniPage() {
           (z ANSA Polit
         </div>
       </div>
+
+      {/* Style the links inside dynamically inserted content */}
+      <style>
+        {`
+          .rich-text-content a {
+            color: red !important;
+            font-weight: bold;
+            text-decoration: underline;
+          }
+        `}
+      </style>
     </>
   );
 }
