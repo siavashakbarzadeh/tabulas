@@ -37,16 +37,18 @@ function UltimiattiPage() {
         if (img) {
           img.style.display = "none"; // Hide small PDF icon
         }
-
+  
         // Check if the icon is already added to prevent duplication
         if (!link.querySelector(".custom-pdf-icon")) {
           const icon = document.createElement("i");
-          icon.className = "fas fa-file-pdf text-red-600 mr-2 custom-pdf-icon"; // Font Awesome icon
+          icon.className = "fas fa-file-pdf mr-2 custom-pdf-icon"; // Font Awesome icon
+          icon.style.color = "rgb(151, 0, 45)"; // Apply custom color
           link.prepend(icon);
         }
       });
-    }, 100); // Slight delay ensures it runs after React updates the DOM
+    }, 100);
   };
+  
 
   return (
     <>
