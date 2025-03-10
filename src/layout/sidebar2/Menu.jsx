@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import User from "../../icons/User";
+import User from "../../icons/Ebook";
 import UsersIcon from "../../icons/Users";
 import ChatIcon from "../../icons/Chat";
 import Play2Icon from "../../icons/Play2";
@@ -7,6 +8,7 @@ import NoticeIcon from "../../icons/Notice";
 import PaperIcon from "../../icons/Paper";
 import ArraowDownIcon from "../../icons/ArraowDown";
 import { useState } from "react";
+import Ebook from "../../icons/Ebook";
 
 const Menu = [
   {
@@ -19,7 +21,7 @@ const Menu = [
       { id: 3, title: "Form", link: "/form" },
       { id: 4, title: "Services", link: "/services" },
       { id: 5, title: "Guidemanuali", link: "/guidemanuali" },
-      { id: 6, title: "Ebook", link: "/ebook" },
+      { id: 6, title: "Ebook", icon: <Ebook className="w-6 h-6" />, link: "/ebook" },
       {
         id: 7,
         title: "Commissioni",
