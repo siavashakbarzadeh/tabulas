@@ -62,7 +62,11 @@ function CommissioniPage() {
                         .filter((i) => i.docNodes && i.docNodes.length)
                         .map((subItem, subKey) => (
                           <div key={subKey} className="w-full p-2">
-                            <div className="text-sm text-white bg-primary-950 leading-7 px-2">
+                            {/* Change bg-primary-950 to rgb(151, 0, 45) */}
+                            <div
+                              className="text-sm text-white leading-7 px-2"
+                              style={{ backgroundColor: "rgb(151, 0, 45)" }}
+                            >
                               {subItem.name}
                             </div>
                             {subItem.docNodes
@@ -74,7 +78,14 @@ function CommissioniPage() {
                                 >
                                   {/* Display Tag in Custom Color if it Exists */}
                                   {subSubItem.tag && (
-                                    <div className="text-sm text-white" style={{ backgroundColor: "rgb(151, 0, 45)", padding: "5px", borderRadius: "5px", display: "inline-block" }}>
+                                    <div
+                                      className="text-sm text-white px-3 rounded-full inline-block"
+                                      style={{
+                                        backgroundColor: "rgb(151, 0, 45)",
+                                        padding: "5px",
+                                        borderRadius: "5px",
+                                      }}
+                                    >
                                       {subSubItem.tag}
                                     </div>
                                   )}
@@ -94,7 +105,10 @@ function CommissioniPage() {
 
                                   {/* Display Button in Custom Color if it Exists */}
                                   {subSubItem.button && (
-                                    <button className="w-full mt-2 p-2 text-white rounded-md" style={{ backgroundColor: "rgb(151, 0, 45)" }}>
+                                    <button
+                                      className="w-full mt-2 p-2 text-white rounded-md"
+                                      style={{ backgroundColor: "rgb(151, 0, 45)" }}
+                                    >
                                       {subSubItem.button.text || "Click Me"}
                                     </button>
                                   )}
@@ -109,19 +123,7 @@ function CommissioniPage() {
           )}
         </div>
         <div className="absolute inset-x-0 bottom-0 text-white bg-zinc-800 px-2 line-clamp-1 leading-9 h-9 overflow-hidden rounded-bl-2xl rounded-br-2xl">
-          16.25 Scuola: Gilda, ministeri trovino soluzione per stipendi precari
-          (z ANSA Politica) ~ 16.25 Confartigianato, 'no alla patente a crediti
-          nell'edilizia' (z ANSA Economia e Finanza) ~ 16.25 Agricoltori:
-          Fidanza (Fdi), richieste in linea nostre battaglie = (AGI) ~ 16.25 ++
-          'Biden al confine col Messico lo stesso giorno di Trump' ++ (z ANSA
-          Politica) ~ 16.26 Scontri Pisa: Conti, 'è pagina buia, polizia si può
-          criticare' (z ANSA Cronaca) ~ 16.26 Giustizia: sabato riunione Anm su
-          reclutamento straordinario = (AGI) ~ 16.28 Schlein, vita di Don
-          Nicolini dedicata agli ultimi, mancherà (z ANSA Politica) ~ 16.28
-          Hezbollah, 60 razzi contro base militare israeliana (2) (z ANSA
-          Politica) ~ 16.30 Legale due poliziotti uccisi, 'dissento da
-          Mattarella' (z ANSA Cronaca) ~ 16.30 Al via il Consiglio dei ministri
-          (z ANSA Polit
+          News Section Here...
         </div>
       </div>
 
