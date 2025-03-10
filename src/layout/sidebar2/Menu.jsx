@@ -65,7 +65,7 @@ const Menu = [
   {
     id: 2,
     title: "Commissioni permanenti",
-    icon: <User className="w-6 h-6" />,
+    icon: <UsersIcon className="w-6 h-6" />,
     link: "/commissioni-permanenti",
   },
   {
