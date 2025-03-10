@@ -66,7 +66,7 @@ function FormPage() {
                       className="w-0 h-0 opacity-0 absolute left-0 top-0"
                     />
                     <div className="w-full flex items-center gap-3 p-3 border border-dashed border-zinc-300 rounded-lg text-zinc-500">
-                      <FileCheckIcon className="size-6 text-green-500" />
+                      <FileCheckIcon className="size-6 text-green-700" />
                       <span className="text-sm">
                         {file ? file.name : "No choosen file"}
                       </span>
