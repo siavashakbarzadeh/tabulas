@@ -50,13 +50,13 @@ function FormPage() {
                   >
                     Documenti
                   </label>
-                  <label className="w-full relative block p-4 rounded-md text-sm bg-white">
+                  <label className="w-full relative block p-4 rounded-md text-sm bg-white cursor-pointer">
                     <input
                       type="file"
                       id="document"
                       className="w-0 h-0 opacity-0 absolute left-0 top-0"
                     />
-                    <div className="w-full flex items-center gap-2 text-zinc-500">
+                    <div className="w-full flex items-center gap-2 p-2 border border-zinc-500 rounded-lg text-zinc-500">
                       <FileImportIcon className="size-6" />
                       <span className="text-sm">
                         No choosen file
