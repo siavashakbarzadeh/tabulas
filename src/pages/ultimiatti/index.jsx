@@ -31,17 +31,21 @@ function UltimiattiPage() {
   };
 
   const modifyPdfLinks = () => {
-    document.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
-      const img = link.querySelector('img[title*=".pdf"]');
-      if (img) {
-        img.style.display = "none"; // Hide the small PDF icon
-      }
+    setTimeout(() => {
+      document.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
+        const img = link.querySelector('img[title*=".pdf"]');
+        if (img) {
+          img.style.display = "none"; // Hide small PDF icon
+        }
 
-      // Add Font Awesome PDF icon before the link
-      const icon = document.createElement("i");
-      icon.className = "fas fa-file-pdf text-red-600 mr-2"; // Font Awesome class
-      link.prepend(icon);
-    });
+        // Check if the icon is already added to prevent duplication
+        if (!link.querySelector(".custom-pdf-icon")) {
+          const icon = document.createElement("i");
+          icon.className = "fas fa-file-pdf text-red-600 mr-2 custom-pdf-icon"; // Font Awesome icon
+          link.prepend(icon);
+        }
+      });
+    }, 100); // Slight delay ensures it runs after React updates the DOM
   };
 
   return (
