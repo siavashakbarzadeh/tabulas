@@ -92,7 +92,7 @@ function NewLoginPage() {
                   >
                     <MicrosoftIcom className="size-5 absolute left-4 top-1/2 -translate-y-1/2" />
                     <span className="font-medium text-sm">
-                      Login with Microsoft
+                    Accedi con Microsoft
                     </span>
                   </button>
                 )}
