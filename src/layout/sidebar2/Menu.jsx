@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import User from "../../icons/User";
-import User from "../../icons/Ebook";
+import Ebook from "../../icons/Ebook";
 import UsersIcon from "../../icons/Users";
 import ChatIcon from "../../icons/Chat";
 import Play2Icon from "../../icons/Play2";
