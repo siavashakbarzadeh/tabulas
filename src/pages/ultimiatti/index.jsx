@@ -79,7 +79,7 @@ function UltimiattiPage() {
                 {data.docNodes.map((item, key) => (
                   <div className="w-full" key={key}>
                     <div
-                      className="w-full text-sm text-white leading-7 px-2 rounded-t-lg"
+                      className="w-full text-sm text-white leading-7 px-2 rounded-md"
                       style={{ backgroundColor: "rgb(151, 0, 45)" }}
                     >
                       {item.name}
