@@ -50,7 +50,7 @@ function FormPage() {
                   >
                     Documenti
                   </label>
-                  <label className="w-full relative block p-2 rounded-md text-sm bg-white">
+                  <label className="w-full relative block p-4 rounded-md text-sm bg-white">
                     <input
                       type="file"
                       id="document"
