@@ -82,6 +82,11 @@ function CommissioniPage() {
                                         subSubItem.docContentStreamContent,
                                     }}
                                   ></div>
+                                  {subSubItem.button && (
+                                    <button className="w-full mt-2 p-2 bg-red-600 text-white rounded-md">
+                                      {subSubItem.button.text || "Click Me"}
+                                    </button>
+                                  )}
                                 </div>
                               ))}
                           </div>
