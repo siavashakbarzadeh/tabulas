@@ -49,12 +49,15 @@ function FormPage() {
                   >
                     Documenti
                   </label>
-                  <label className="w-full relative flex rounded-md text-sm bg-white">
+                  <label className="w-full relative block p-2 rounded-md text-sm bg-white">
                     <input
                       type="file"
                       id="document"
                       className="w-0 h-0 opacity-0 absolute left-0 top-0"
                     />
+                    <div className="w-full">
+                      <span>No choosen file</span>
+                    </div>
                   </label>
                 </div>
               </div>
