@@ -1,5 +1,6 @@
 import SearchIcon from "../../assets/svg/search.svg";
 import CloseIcon from "../../icons/Close";
+import FileImportIcon from "../../icons/FileImport";
 
 function FormPage() {
   return (
@@ -56,6 +57,7 @@ function FormPage() {
                       className="w-0 h-0 opacity-0 absolute left-0 top-0"
                     />
                     <div className="w-full">
+                      <FileImportIcon className="size-4.5 text-zinc-500" />
                       <span>No choosen file</span>
                     </div>
                   </label>
