@@ -72,9 +72,17 @@ function CommissioniPage() {
                                   key={subSubKey}
                                   className="w-full space-y-2 mt-2"
                                 >
+                                  {/* Display Tag in Red if it Exists */}
+                                  {subSubItem.tag && (
+                                    <div className="text-sm text-white bg-red-600 inline-block leading-6 px-3 rounded-full">
+                                      {subSubItem.tag}
+                                    </div>
+                                  )}
+
                                   <div className="text-sm text-zinc-900 bg-gray-200 inline-block leading-6 px-3 rounded-full">
                                     {subSubItem.name}
                                   </div>
+
                                   <div
                                     className="w-full px-2"
                                     dangerouslySetInnerHTML={{
@@ -82,6 +90,8 @@ function CommissioniPage() {
                                         subSubItem.docContentStreamContent,
                                     }}
                                   ></div>
+
+                                  {/* Display Button in Red if it Exists */}
                                   {subSubItem.button && (
                                     <button className="w-full mt-2 p-2 bg-red-600 text-white rounded-md">
                                       {subSubItem.button.text || "Click Me"}
