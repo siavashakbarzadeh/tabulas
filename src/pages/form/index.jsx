@@ -1,8 +1,15 @@
+import { useEffect, useState } from "react";
 import SearchIcon from "../../assets/svg/search.svg";
 import CloseIcon from "../../icons/Close";
 import FileImportIcon from "../../icons/FileImport";
 
 function FormPage() {
+  const [file, setFile] = useState(null);
+
+  useEffect(() => {
+    console.log(file);
+  }, [file]);
+
   return (
     <>
       <div className="fixed inset-0 bg-white/10 backdrop-blur-[1px] z-40 pl-0 lg:pl-68 flex">
@@ -54,13 +61,12 @@ function FormPage() {
                     <input
                       type="file"
                       id="document"
+                      onChange={(e) => setFile(e.target.files[0])}
                       className="w-0 h-0 opacity-0 absolute left-0 top-0"
                     />
-                    <div className="w-full flex items-center gap-2 p-4 border border-dashed border-zinc-300 rounded-lg text-zinc-500">
+                    <div className="w-full flex items-center gap-3 p-3 border border-dashed border-zinc-300 rounded-lg text-zinc-500">
                       <FileImportIcon className="size-6" />
-                      <span className="text-sm">
-                        No choosen file
-                      </span>
+                      <span className="text-sm">No choosen file</span>
                     </div>
                   </label>
                 </div>
