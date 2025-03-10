@@ -29,17 +29,6 @@ function UltimiattiPage() {
 
   return (
     <>
-      <style>
-        {`
-          a {
-            color: rgb(151, 0, 45) !important;
-            text-decoration: none;
-          }
-          a:hover {
-            text-decoration: underline;
-          }
-        `}
-      </style>
       <div className="w-full bg-white rounded-tl-none lg:rounded-tl-2xl rounded-tr-none lg:rounded-tr-2xl rounded-bl-2xl rounded-br-2xl relative px-4 pt-4 pb-13">
         <form className="w-full">
           <label className="w-full block relative before:w-px before:h-2/3 before:bg-neutral-300 before:absolute before:left-14 before:top-1/2 before:-translate-y-1/2">
@@ -66,10 +55,7 @@ function UltimiattiPage() {
               <div className="w-full space-y-3 mt-2">
                 {data.docNodes.map((item, key) => (
                   <div className="w-full" key={key}>
-                    <div
-                      className="w-full text-sm text-white leading-7 px-2"
-                      style={{ backgroundColor: "rgb(151, 0, 45)" }}
-                    >
+                    <div className="w-full text-sm text-white bg-primary-950 leading-7 px-2">
                       {item.name}
                     </div>
                     <div
