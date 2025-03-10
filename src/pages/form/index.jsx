@@ -56,9 +56,11 @@ function FormPage() {
                       id="document"
                       className="w-0 h-0 opacity-0 absolute left-0 top-0"
                     />
-                    <div className="w-full">
+                    <div className="w-full flex items-center gap-2">
                       <FileImportIcon className="size-6 text-zinc-500" />
-                      <span>No choosen file</span>
+                      <span className="text-zinc-500 text-sm">
+                        No choosen file
+                      </span>
                     </div>
                   </label>
                 </div>
