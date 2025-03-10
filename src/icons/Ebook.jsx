@@ -6,18 +6,29 @@ function Ebook({ className = "" }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
+      {/* Book cover */}
       <path
-        d="M5 2C3.89 2 3 2.89 3 4V20C3 21.11 3.89 22 5 22H19C20.11 22 21 21.11 21 20V4C21 2.89 20.11 2 19 2H5Z"
+        d="M4 3C3.45 3 3 3.45 3 4V20C3 20.55 3.45 21 4 21H16C16.55 21 17 20.55 17 20V4C17 3.45 16.55 3 16 3H4Z"
         fill="white"
       />
+      
+      {/* Book spine */}
       <path
-        d="M7 6H17V8H7V6ZM7 10H14V12H7V10ZM7 14H17V16H7V14Z"
+        d="M18 3H19C19.55 3 20 3.45 20 4V20C20 20.55 19.55 21 19 21H18V3Z"
         opacity="0.6"
         fill="white"
       />
+      
+      {/* Text lines on the book */}
       <path
-        d="M19 2H5C3.89 2 3 2.89 3 4V20C3 21.11 3.89 22 5 22H19C20.11 22 21 21.11 21 20V4C21 2.89 20.11 2 19 2ZM19 20H5V4H19V20Z"
+        d="M6 6H14V7.5H6V6ZM6 9H14V10.5H6V9ZM6 12H14V13.5H6V12ZM6 15H14V16.5H6V15Z"
         opacity="0.4"
+        fill="white"
+      />
+
+      {/* Bookmark */}
+      <path
+        d="M17 3V20H20V3H17Z"
         fill="white"
       />
     </svg>
