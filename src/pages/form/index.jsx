@@ -41,6 +41,23 @@ function FormPage() {
                   </select>
                 </div>
               </div>
+              <div className="w-full flex flex-col md:flex-row space-x-0 md:space-x-4 space-y-4 md:space-y-0">
+                <div className="w-full md:w-1/2">
+                  <label
+                    htmlFor="document"
+                    className="text-sm text-zinc-900 mb-1 font-medium"
+                  >
+                    Documenti
+                  </label>
+                  <label>
+                    <input
+                      type="file"
+                      id="document"
+                      className="w-full h-10 rounded-md text-sm bg-white border-none outline-none ring-0 focus:border-none focus:outline-none focus:ring-0"
+                    />
+                  </label>
+                </div>
+              </div>
               <div className="w-full flex flex-col mt-4">
                 <label
                   htmlFor="signatory"
