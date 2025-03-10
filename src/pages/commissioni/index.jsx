@@ -29,18 +29,18 @@ function CommissioniPage() {
 
   return (
     <>
-      <div className="w-full bg-white rounded-tl-none lg:rounded-tl-2xl rounded-tr-none lg:rounded-tr-2xl rounded-bl-2xl rounded-br-2xl relative px-4 pt-4 pb-13">
+      <div className="w-full bg-white rounded-lg relative px-4 pt-4 pb-10">
         <form className="w-full">
-          <label className="w-full block relative before:w-px before:h-2/3 before:bg-neutral-300 before:absolute before:left-14 before:top-1/2 before:-translate-y-1/2">
+          <label className="w-full block relative">
             <input
               type="text"
               placeholder="Cerca..."
-              className="w-full h-11 bg-neutral-200 text-sm rounded-xl border-none pl-18 ring-0 focus:ring-0 focus:border-none"
+              className="w-full h-10 bg-neutral-200 text-sm rounded-md border border-neutral-300 px-4 focus:outline-none"
             />
             <img
               src={SearchIcon}
               alt="Search"
-              className="w-6 h-6 select-none absolute left-4 top-1/2 -translate-y-1/2"
+              className="w-5 h-5 absolute right-4 top-1/2 transform -translate-y-1/2"
             />
           </label>
         </form>
@@ -52,7 +52,7 @@ function CommissioniPage() {
           ) : (
             <div className="w-full">
               <div className="w-full font-medium">{data.name}</div>
-              <div className="w-full space-y-3 mt-2">
+              <div className="w-full space-y-2 mt-2">
                 {data.docNodes
                   .filter((i) => i.docNodes && i.docNodes.length)
                   .map((item, key) => (
@@ -64,33 +64,29 @@ function CommissioniPage() {
                           <div key={subKey} className="w-full p-2">
                             {/* Change bg-primary-950 to rgb(151, 0, 45) */}
                             <div
-                              className="text-sm text-white leading-7 px-2"
-                              style={{ backgroundColor: "rgb(151, 0, 45)" }}
+                              className="text-sm text-white px-2 rounded-md"
+                              style={{ backgroundColor: "rgb(151, 0, 45)", padding: "6px" }}
                             >
                               {subItem.name}
                             </div>
                             {subItem.docNodes
                               .filter((i) => i.docContentStreamContent)
                               .map((subSubItem, subSubKey) => (
-                                <div
-                                  key={subSubKey}
-                                  className="w-full space-y-2 mt-2"
-                                >
+                                <div key={subSubKey} className="w-full mt-2">
                                   {/* Display Tag in Custom Color if it Exists */}
                                   {subSubItem.tag && (
                                     <div
-                                      className="text-sm text-white px-3 rounded-full inline-block"
+                                      className="text-sm text-white px-3 rounded-md inline-block"
                                       style={{
                                         backgroundColor: "rgb(151, 0, 45)",
-                                        padding: "5px",
-                                        borderRadius: "5px",
+                                        padding: "4px",
                                       }}
                                     >
                                       {subSubItem.tag}
                                     </div>
                                   )}
 
-                                  <div className="text-sm text-zinc-900 bg-gray-200 inline-block leading-6 px-3 rounded-full">
+                                  <div className="text-sm text-zinc-900 bg-gray-200 inline-block leading-6 px-3 rounded-md">
                                     {subSubItem.name}
                                   </div>
 
@@ -122,7 +118,7 @@ function CommissioniPage() {
             </div>
           )}
         </div>
-        <div className="absolute inset-x-0 bottom-0 text-white bg-zinc-800 px-2 line-clamp-1 leading-9 h-9 overflow-hidden rounded-bl-2xl rounded-br-2xl">
+        <div className="absolute inset-x-0 bottom-0 text-white bg-zinc-800 px-2 text-sm leading-8 h-8 overflow-hidden rounded-b-md">
           News Section Here...
         </div>
       </div>
