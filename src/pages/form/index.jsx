@@ -49,11 +49,11 @@ function FormPage() {
                   >
                     Documenti
                   </label>
-                  <label>
+                  <label className="w-full flex rounded-md text-sm bg-white">
                     <input
                       type="file"
                       id="document"
-                      className="w-full h-10 rounded-md text-sm bg-white border-none outline-none ring-0 focus:border-none focus:outline-none focus:ring-0"
+                      className=""
                     />
                   </label>
                 </div>
