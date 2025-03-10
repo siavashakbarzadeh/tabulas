@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import User from "../../icons/User";
 import EbookIcon from "../../icons/Ebook";
+import LatestDossiersIcon from "../../icons/LatestDossiers";
 import UsersIcon from "../../icons/Users";
 import ChatIcon from "../../icons/Chat";
 import Play2Icon from "../../icons/Play2";
@@ -29,7 +30,7 @@ const Menu = [
         link: "/commissioni",
       },
       { id: 8, title: "Ultimiatti", link: "/ultimiatti" },
-      { id: 9, title: "Ultimdossier", link: "/ultimdossier" },
+      { id: 9, title: "Ultimdossier", icon: <LatestDossiersIcon className="w-6 h-6" />,link: "/ultimdossier" },
     ],
   },
   { id: 2, title: "Commissioni permanenti", icon: <User className="w-6 h-6" />, link: "/commissioni-permanenti" },
