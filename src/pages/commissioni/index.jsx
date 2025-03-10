@@ -72,9 +72,9 @@ function CommissioniPage() {
                                   key={subSubKey}
                                   className="w-full space-y-2 mt-2"
                                 >
-                                  {/* Display Tag in Red if it Exists */}
+                                  {/* Display Tag in Custom Color if it Exists */}
                                   {subSubItem.tag && (
-                                    <div className="text-sm text-white bg-red-600 inline-block leading-6 px-3 rounded-full">
+                                    <div className="text-sm text-white" style={{ backgroundColor: "rgb(151, 0, 45)", padding: "5px", borderRadius: "5px", display: "inline-block" }}>
                                       {subSubItem.tag}
                                     </div>
                                   )}
@@ -92,9 +92,9 @@ function CommissioniPage() {
                                     }}
                                   ></div>
 
-                                  {/* Display Button in Red if it Exists */}
+                                  {/* Display Button in Custom Color if it Exists */}
                                   {subSubItem.button && (
-                                    <button className="w-full mt-2 p-2 bg-red-600 text-white rounded-md">
+                                    <button className="w-full mt-2 p-2 text-white rounded-md" style={{ backgroundColor: "rgb(151, 0, 45)" }}>
                                       {subSubItem.button.text || "Click Me"}
                                     </button>
                                   )}
@@ -129,7 +129,7 @@ function CommissioniPage() {
       <style>
         {`
           .rich-text-content a {
-            color: red !important;
+            color: rgb(151, 0, 45) !important;
             font-weight: bold;
             text-decoration: underline;
           }
