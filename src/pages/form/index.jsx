@@ -9,7 +9,7 @@ import FileInput from "../../componenets/forms/FileInput";
 
 function FormPage() {
   const [formData, setFormData] = useState({
-    name: null,
+    name: "ali",
   });
   const [file, setFile] = useState(null);
   const [actType, setActType] = useState(null);
