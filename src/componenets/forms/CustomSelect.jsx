@@ -5,6 +5,7 @@ function CustomSelect({
   options = [],
   onChange,
   label = null,
+  value = null,
   placeholder = "",
 }) {
   return (
@@ -18,6 +19,7 @@ function CustomSelect({
         id={id}
         placeholder={placeholder}
         onChange={onChange}
+        value={value}
         className="w-full h-10 rounded-md text-sm bg-white border-none outline-none ring-0 focus:border-none focus:outline-none focus:ring-0"
       >
         {options.map((option) => (
