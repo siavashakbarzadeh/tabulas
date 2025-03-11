@@ -9,7 +9,8 @@ import FileInput from "../../componenets/forms/FileInput";
 
 function FormPage() {
   const [formData, setFormData] = useState({
-    name: "ali",
+    name: "",
+    act_type: "",
   });
   const [file, setFile] = useState(null);
   const [actType, setActType] = useState(null);
@@ -52,7 +53,12 @@ function FormPage() {
                 <CustomSelect
                   id="act_type"
                   label="Tipo atto"
-                  onChange={(e) => setActType(e.target.value)}
+                  onChange={(e) =>
+                    setFormData((prevState) => ({
+                      ...prevState,
+                      act_type: e.target.value,
+                    }))
+                  }
                   options={act_types}
                 />
               </div>
@@ -80,10 +86,7 @@ function FormPage() {
                 />
               </div>
               <div className="col-span-1 flex items-end">
-                <CustomButton
-                  label="Submit"
-                  onClick={handleSubmit}
-                />
+                <CustomButton label="Submit" onClick={handleSubmit} />
               </div>
             </div>
           </div>
