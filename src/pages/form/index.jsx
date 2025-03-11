@@ -3,9 +3,11 @@ import SearchIcon from "../../assets/svg/search.svg";
 import CloseIcon from "../../icons/Close";
 import FileImportIcon from "../../icons/FileImport";
 import FileCheckIcon from "../../icons/FileCheck";
+import TextInput from "../../componenets/forms/TextInput";
 
 function FormPage() {
   const [file, setFile] = useState(null);
+  const [name, setName] = useState(null);
 
   useEffect(() => {
     console.log(file);
@@ -17,7 +19,14 @@ function FormPage() {
         <div className="w-full flex p-2 md:p-4">
           <div className="w-full flex relative overflow-auto">
             <div className="grid grid-cols-2 gap-4 w-11/12 lg:w-10/12 p-4 bg-gray-100 rounded-xl drop-shadow-lg absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
-              <div className="col-span-1">salam</div>
+              <div className="col-span-1">
+                <TextInput
+                  id="name"
+                  label="Nome atto"
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Nome atto"
+                />
+              </div>
               <div className="col-span-1">salam2</div>
               <div className="col-span-1">salam3</div>
             </div>
