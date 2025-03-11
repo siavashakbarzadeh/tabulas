@@ -10,7 +10,7 @@ import FileInput from "../../componenets/forms/FileInput";
 function FormPage() {
   const [formData, setFormData] = useState({
     name: "",
-    act_type: "",
+    act_type: "DDL 2",
   });
   const [file, setFile] = useState(null);
   const [actType, setActType] = useState(null);
@@ -53,6 +53,7 @@ function FormPage() {
                 <CustomSelect
                   id="act_type"
                   label="Tipo atto"
+                  value={formData.act_type}
                   onChange={(e) =>
                     setFormData((prevState) => ({
                       ...prevState,
