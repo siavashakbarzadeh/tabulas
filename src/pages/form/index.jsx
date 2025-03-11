@@ -5,6 +5,7 @@ import FileImportIcon from "../../icons/FileImport";
 import FileCheckIcon from "../../icons/FileCheck";
 import TextInput from "../../componenets/forms/TextInput";
 import CustomSelect from "../../componenets/forms/CustomSelect";
+import DateInput from "../../componenets/forms/DateInput";
 
 function FormPage() {
   const [file, setFile] = useState(null);
@@ -54,6 +55,9 @@ function FormPage() {
                   onChange={(e) => setActType(e.target.value)}
                   options={recipient_offices}
                 />
+              </div>
+              <div className="col-span-1">
+                <DateInput id="submission_date" placeholder="Data Invio" onChange={(e) => setActType(e.target.value)}/>
               </div>
             </div>
           </div>
