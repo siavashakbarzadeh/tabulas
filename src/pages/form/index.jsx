@@ -8,8 +8,10 @@ import CustomButton from "../../componenets/forms/CustomButton";
 import FileInput from "../../componenets/forms/FileInput";
 
 function FormPage() {
+  const [formData, setFormData] = useState({
+    name: null,
+  });
   const [file, setFile] = useState(null);
-  const [name, setName] = useState(null);
   const [actType, setActType] = useState(null);
 
   const act_types = ["DDL 1", "DDL 2", "DDL 3", "DDL 4", "DDL 5"];
@@ -22,9 +24,9 @@ function FormPage() {
     "Ufficio 5",
   ];
 
-  useEffect(() => {
-    console.log(file);
-  }, [file]);
+  const handleSubmit = () => {
+    console.log(formData);
+  };
 
   return (
     <>
@@ -36,7 +38,13 @@ function FormPage() {
                 <TextInput
                   id="name"
                   label="Nome atto"
-                  onChange={(e) => setName(e.target.value)}
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData((prevState) => ({
+                      ...prevState,
+                      name: e.target.value,
+                    }))
+                  }
                   placeholder="Nome atto"
                 />
               </div>
@@ -65,14 +73,16 @@ function FormPage() {
                 />
               </div>
               <div className="col-span-1">
-                <FileInput id="document" label="Documenti" onChange={(e) => setActType(e)} />
+                <FileInput
+                  id="document"
+                  label="Documenti"
+                  onChange={(e) => setActType(e)}
+                />
               </div>
               <div className="col-span-1 flex items-end">
                 <CustomButton
                   label="Submit"
-                  disabled={true}
-                  isLoading={true}
-                  onClick={() => console.log("Submit")}
+                  onClick={handleSubmit}
                 />
               </div>
             </div>
