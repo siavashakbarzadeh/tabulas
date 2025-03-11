@@ -6,7 +6,7 @@ function CustomButton({ label, onClick, isLoading = false, disabled = false }) {
     <>
       {isLoading ? (
         <div className="w-full h-10 flex justify-center items-center rounded-md bg-primary-900/20">
-          <Loading className="size-6"/>
+          <Loading className="size-4"/>
         </div>
       ) : (
         <button
