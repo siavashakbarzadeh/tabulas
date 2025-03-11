@@ -95,6 +95,7 @@ function FormPage() {
                 <FileInput
                   id="document"
                   label="Documenti"
+                  file={formData.document}
                   onChange={(e) =>
                     handleUpdateFormData("document", e.target.files[0])
                   }
