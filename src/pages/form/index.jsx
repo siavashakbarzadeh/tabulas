@@ -14,6 +14,7 @@ const formInitialState = {
   recipient_office: "",
   submission_date: "",
   document: null,
+  sign: null,
 };
 
 function FormPage() {
@@ -108,6 +109,16 @@ function FormPage() {
                   file={formData.document}
                   onChange={(e) =>
                     handleUpdateFormData("document", e.target.files[0])
+                  }
+                />
+              </div>
+              <div className="col-span-1">
+                <FileInput
+                  id="sign"
+                  label="Sign"
+                  file={formData.sign}
+                  onChange={(e) =>
+                    handleUpdateFormData("sign", e.target.files[0])
                   }
                 />
               </div>
