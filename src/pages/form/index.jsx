@@ -13,6 +13,14 @@ function FormPage() {
 
   const act_types = ["DDL 1", "DDL 2", "DDL 3", "DDL 4", "DDL 5"];
 
+  const recipient_offices = [
+    "Ufficio 1",
+    "Ufficio 2",
+    "Ufficio 3",
+    "Ufficio 4",
+    "Ufficio 5",
+  ];
+
   useEffect(() => {
     console.log(file);
   }, [file]);
@@ -39,7 +47,14 @@ function FormPage() {
                   options={act_types}
                 />
               </div>
-              <div className="col-span-1">salam3</div>
+              <div className="col-span-1">
+                <CustomSelect
+                  id="recipient_office"
+                  label="Ufficio destinatario"
+                  onChange={(e) => setActType(e.target.value)}
+                  options={recipient_offices}
+                />
+              </div>
             </div>
           </div>
         </div>
