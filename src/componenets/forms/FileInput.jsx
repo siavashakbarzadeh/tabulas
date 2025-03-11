@@ -16,7 +16,7 @@ function FileInput({
           {label}
         </label>
       )}
-      <div className="w-full relative block p-4 rounded-md text-sm bg-white cursor-pointer">
+      <label className="w-full relative block p-4 rounded-md text-sm bg-white cursor-pointer">
         <input
           type="file"
           id={id}
@@ -33,7 +33,7 @@ function FileInput({
             {file ? file.name : input_label ? input_label : "Choose a file"}
           </span>
         </div>
-      </div>
+      </label>
     </>
   );
 }
