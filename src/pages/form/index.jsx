@@ -57,7 +57,7 @@ function FormPage() {
                 />
               </div>
               <div className="col-span-1">
-                <DateInput id="submission_date" placeholder="Data Invio" onChange={(e) => setActType(e.target.value)}/>
+                <DateInput id="submission_date" label="Data Invio" placeholder="Data Invio" onChange={(e) => setActType(e.target.value)}/>
               </div>
             </div>
           </div>
