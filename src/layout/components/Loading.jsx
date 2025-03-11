@@ -7,7 +7,7 @@ function Loading({ className = "w-full" }) {
       <svg
         aria-hidden="true"
         className={classNames(
-          "w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-primary-900",
+          "size-8 text-gray-200 animate-spin dark:text-gray-600 fill-primary-900",
           className
         )}
         viewBox="0 0 100 101"
