@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import SearchIcon from "../../assets/svg/search.svg";
 import CloseIcon from "../../icons/Close";
-import FileImportIcon from "../../icons/FileImport";
-import FileCheckIcon from "../../icons/FileCheck";
 import TextInput from "../../componenets/forms/TextInput";
 import CustomSelect from "../../componenets/forms/CustomSelect";
 import DateInput from "../../componenets/forms/DateInput";
 import CustomButton from "../../componenets/forms/CustomButton";
+import FileInput from "../../componenets/forms/FileInput";
 
 function FormPage() {
   const [file, setFile] = useState(null);
@@ -58,10 +57,23 @@ function FormPage() {
                 />
               </div>
               <div className="col-span-1">
-                <DateInput id="submission_date" label="Data Invio" placeholder="Data Invio" onChange={(e) => setActType(e.target.value)}/>
+                <DateInput
+                  id="submission_date"
+                  label="Data Invio"
+                  placeholder="Data Invio"
+                  onChange={(e) => setActType(e.target.value)}
+                />
               </div>
               <div className="col-span-1">
-                <CustomButton label="Submit" disabled={true} isLoading={true} onClick={() => console.log("Submit")}/>
+                <FileInput id="document" label="Documenti" onChange={(e) => setActType(e)} />
+              </div>
+              <div className="col-span-1">
+                <CustomButton
+                  label="Submit"
+                  disabled={true}
+                  isLoading={true}
+                  onClick={() => console.log("Submit")}
+                />
               </div>
             </div>
           </div>
