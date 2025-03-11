@@ -67,7 +67,7 @@ function FormPage() {
               <div className="col-span-1">
                 <FileInput id="document" label="Documenti" onChange={(e) => setActType(e)} />
               </div>
-              <div className="col-span-1">
+              <div className="col-span-1 flex items-end">
                 <CustomButton
                   label="Submit"
                   disabled={true}
