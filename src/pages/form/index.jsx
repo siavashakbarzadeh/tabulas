@@ -9,6 +9,7 @@ import CustomSelect from "../../componenets/forms/CustomSelect";
 function FormPage() {
   const [file, setFile] = useState(null);
   const [name, setName] = useState(null);
+  const [actType, setActType] = useState(null);
 
   const act_types = ["DDL 1", "DDL 2", "DDL 3", "DDL 4", "DDL 5"];
 
@@ -34,6 +35,7 @@ function FormPage() {
                 <CustomSelect
                   id="act_type"
                   label="Tipo atto"
+                  onChange={(e) => setActType(e.target.value)}
                   options={act_types}
                 />
               </div>
