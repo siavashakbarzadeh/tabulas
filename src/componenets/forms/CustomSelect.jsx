@@ -20,11 +20,9 @@ function CustomSelect({
         onChange={onChange}
         className="w-full h-10 rounded-md text-sm bg-white border-none outline-none ring-0 focus:border-none focus:outline-none focus:ring-0"
       >
-        {options.map((option, key) => (
-          <option key={key} value={option}>
-            {option}
-          </option>
-        ))}
+        <option value="DDL 1">DDL 1</option>
+        <option value="DDL 2">DDL 2</option>
+        <option value="DDL 3">DDL 3</option>
       </select>
     </>
   );

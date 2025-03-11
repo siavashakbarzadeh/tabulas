@@ -32,15 +32,12 @@ function FormPage() {
                 />
               </div>
               <div className="col-span-1">
-                <select
+                <CustomSelect
                   id="act_type"
-                  placeholder="Tipo atto"
-                  className="w-full h-10 rounded-md text-sm bg-white border-none outline-none ring-0 focus:border-none focus:outline-none focus:ring-0"
-                >
-                  <option value="DDL 1">DDL 1</option>
-                  <option value="DDL 2">DDL 2</option>
-                  <option value="DDL 3">DDL 3</option>
-                </select>
+                  label="Tipo atto"
+                  onChange={(e) => setActType(e.target.value)}
+                  options={act_types}
+                />
               </div>
               <div className="col-span-1">salam3</div>
             </div>
