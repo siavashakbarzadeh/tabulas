@@ -61,7 +61,7 @@ function FormPage() {
                 <DateInput id="submission_date" label="Data Invio" placeholder="Data Invio" onChange={(e) => setActType(e.target.value)}/>
               </div>
               <div className="col-span-1">
-                <CustomButton label="Submit" onClick={() => console.log("Submit")}/>;
+                <CustomButton label="Submit" disabled={true} onClick={() => console.log("Submit")}/>
               </div>
             </div>
           </div>
