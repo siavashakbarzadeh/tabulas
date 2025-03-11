@@ -30,6 +30,7 @@ function FormPage() {
 
   const handleSubmit = () => {
     setIsLoading(true);
+    console.log(formData);
     setTimeout(() => {
       setIsLoading(false);
     }, 2000);
