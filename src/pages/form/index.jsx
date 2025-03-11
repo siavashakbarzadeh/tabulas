@@ -6,7 +6,7 @@ import CustomSelect from "../../componenets/forms/CustomSelect";
 import DateInput from "../../componenets/forms/DateInput";
 import CustomButton from "../../componenets/forms/CustomButton";
 import FileInput from "../../componenets/forms/FileInput";
-import { set } from "react-hook-form";
+import axios from "../../configs/axiosConfig.js";
 
 function FormPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,10 +30,17 @@ function FormPage() {
 
   const handleSubmit = () => {
     setIsLoading(true);
-    console.log(formData);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+    axios
+      .post("/applications", formData)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const handleUpdateFormData = (name, value) => {
