@@ -6,6 +6,7 @@ import FileCheckIcon from "../../icons/FileCheck";
 import TextInput from "../../componenets/forms/TextInput";
 import CustomSelect from "../../componenets/forms/CustomSelect";
 import DateInput from "../../componenets/forms/DateInput";
+import CustomButton from "../../componenets/forms/CustomButton";
 
 function FormPage() {
   const [file, setFile] = useState(null);
@@ -58,6 +59,9 @@ function FormPage() {
               </div>
               <div className="col-span-1">
                 <DateInput id="submission_date" label="Data Invio" placeholder="Data Invio" onChange={(e) => setActType(e.target.value)}/>
+              </div>
+              <div className="col-span-1">
+                <CustomButton label="Submit" onClick={() => console.log("Submit")}/>;
               </div>
             </div>
           </div>
