@@ -4,10 +4,13 @@ import CloseIcon from "../../icons/Close";
 import FileImportIcon from "../../icons/FileImport";
 import FileCheckIcon from "../../icons/FileCheck";
 import TextInput from "../../componenets/forms/TextInput";
+import CustomSelect from "../../componenets/forms/CustomSelect";
 
 function FormPage() {
   const [file, setFile] = useState(null);
   const [name, setName] = useState(null);
+
+  const act_types = ["DDL 1", "DDL 2", "DDL 3", "DDL 4", "DDL 5"];
 
   useEffect(() => {
     console.log(file);
@@ -27,7 +30,13 @@ function FormPage() {
                   placeholder="Nome atto"
                 />
               </div>
-              <div className="col-span-1">salam2</div>
+              <div className="col-span-1">
+                <CustomSelect
+                  id="act_type"
+                  label="Tipo atto"
+                  options={act_types}
+                />
+              </div>
               <div className="col-span-1">salam3</div>
             </div>
           </div>
