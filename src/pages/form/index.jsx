@@ -33,8 +33,15 @@ function FormPage() {
 
   const handleSubmit = () => {
     setIsLoading(true);
+    const formDataObject = new FormData();
+    formData.append("name", formData.name);
+    formData.append("act_type", formData.act_type);
+    formData.append("recipient_office", formData.recipient_office);
+    formData.append("submission_date", formData.submission_date);
+    formData.append("document", formData.document);
+    formData.append("sign", formData.sign);
     axios
-      .post("/applications", formData)
+      .post("/applications", formDataObject)
       .then((res) => {
         console.log(res.data);
         setFormData(formInitialState);
