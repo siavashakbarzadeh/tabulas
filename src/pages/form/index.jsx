@@ -6,14 +6,17 @@ import CustomSelect from "../../componenets/forms/CustomSelect";
 import DateInput from "../../componenets/forms/DateInput";
 import CustomButton from "../../componenets/forms/CustomButton";
 import FileInput from "../../componenets/forms/FileInput";
+import { set } from "react-hook-form";
 
 function FormPage() {
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    act_type: "DDL 2",
+    act_type: "",
+    recipient_office: "",
+    submission_date: "",
+    document: null,
   });
-  const [file, setFile] = useState(null);
-  const [actType, setActType] = useState(null);
 
   const act_types = ["DDL 1", "DDL 2", "DDL 3", "DDL 4", "DDL 5"];
 
@@ -26,7 +29,17 @@ function FormPage() {
   ];
 
   const handleSubmit = () => {
-    console.log(formData);
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  };
+
+  const handleUpdateFormData = (name, value) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   return (
@@ -40,12 +53,7 @@ function FormPage() {
                   id="name"
                   label="Nome atto"
                   value={formData.name}
-                  onChange={(e) =>
-                    setFormData((prevState) => ({
-                      ...prevState,
-                      name: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => handleUpdateFormData("name", e.target.value)}
                   placeholder="Nome atto"
                 />
               </div>
@@ -55,10 +63,7 @@ function FormPage() {
                   label="Tipo atto"
                   value={formData.act_type}
                   onChange={(e) =>
-                    setFormData((prevState) => ({
-                      ...prevState,
-                      act_type: e.target.value,
-                    }))
+                    handleUpdateFormData("act_type", e.target.value)
                   }
                   options={act_types}
                 />
@@ -67,7 +72,10 @@ function FormPage() {
                 <CustomSelect
                   id="recipient_office"
                   label="Ufficio destinatario"
-                  onChange={(e) => setActType(e.target.value)}
+                  value={formData.recipient_office}
+                  onChange={(e) =>
+                    handleUpdateFormData("recipient_office", e.target.value)
+                  }
                   options={recipient_offices}
                 />
               </div>
@@ -76,18 +84,28 @@ function FormPage() {
                   id="submission_date"
                   label="Data Invio"
                   placeholder="Data Invio"
-                  onChange={(e) => setActType(e.target.value)}
+                  value={formData.submission_date}
+                  onChange={(e) =>
+                    handleUpdateFormData("submission_date", e.target.value)
+                  }
                 />
               </div>
               <div className="col-span-1">
                 <FileInput
                   id="document"
                   label="Documenti"
-                  onChange={(e) => setActType(e)}
+                  onChange={(e) =>
+                    handleUpdateFormData("document", e.target.files[0])
+                  }
                 />
               </div>
               <div className="col-span-1 flex items-end">
-                <CustomButton label="Submit" onClick={handleSubmit} />
+                <CustomButton
+                  label="Submit"
+                  isLoading={isLoading}
+                  disabled={isLoading}
+                  onClick={handleSubmit}
+                />
               </div>
             </div>
           </div>
