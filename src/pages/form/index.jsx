@@ -8,15 +8,17 @@ import CustomButton from "../../componenets/forms/CustomButton";
 import FileInput from "../../componenets/forms/FileInput";
 import axios from "../../configs/axiosConfig.js";
 
+const formInitialState = {
+  name: "",
+  act_type: "",
+  recipient_office: "",
+  submission_date: "",
+  document: null,
+};
+
 function FormPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    act_type: "",
-    recipient_office: "",
-    submission_date: "",
-    document: null,
-  });
+  const [formData, setFormData] = useState(formInitialState);
 
   const act_types = ["DDL 1", "DDL 2", "DDL 3", "DDL 4", "DDL 5"];
 
@@ -34,6 +36,7 @@ function FormPage() {
       .post("/applications", formData)
       .then((res) => {
         console.log(res.data);
+        setFormData(formInitialState);
       })
       .catch((err) => {
         console.log(err);
