@@ -33,16 +33,19 @@ function FormPage() {
 
   const handleSubmit = () => {
     setIsLoading(true);
-    console.log(formData);
-    const formDataObject = new FormData();
-    formDataObject.append("name", formData.name);
-    formDataObject.append("act_type", formData.act_type);
-    formDataObject.append("recipient_office", formData.recipient_office);
-    formDataObject.append("submission_date", formData.submission_date);
-    formDataObject.append("document", formData.document);
-    formDataObject.append("sign", formData.sign);
+    const formDataObj = new FormData();
+    formDataObj.append("name", formData.name);
+    formDataObj.append("act_type", formData.act_type);
+    formDataObj.append("recipient_office", formData.recipient_office);
+    formDataObj.append("submission_date", formData.submission_date);
+    formDataObj.append("document", formData.document);
+    formDataObj.append("sign", formData.sign);
     axios
-      .post("/applications", formDataObject)
+      .post("/applications", formDataObj, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((res) => {
         console.log(res.data);
         setFormData(formInitialState);
