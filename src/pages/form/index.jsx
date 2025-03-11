@@ -7,6 +7,8 @@ import DateInput from "../../componenets/forms/DateInput";
 import CustomButton from "../../componenets/forms/CustomButton";
 import FileInput from "../../componenets/forms/FileInput";
 import axios from "../../configs/axiosConfig.js";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const formInitialState = {
   name: "",
@@ -20,6 +22,7 @@ const formInitialState = {
 function FormPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState(formInitialState);
+  const navigate = useNavigate();
 
   const act_types = ["DDL 1", "DDL 2", "DDL 3", "DDL 4", "DDL 5"];
 
@@ -47,11 +50,29 @@ function FormPage() {
         },
       })
       .then((res) => {
-        console.log(res.data);
-        setFormData(formInitialState);
+        navigate("/confirm");
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        if (error.response.status === 422) {
+          const responseErrors = error.response.data.errors;
+          const errors = [];
+          Object.keys(responseErrors).forEach((key) => {
+            const item = responseErrors[key];
+            if (item && item.length) {
+              errors.push(item[0]);
+            }
+          });
+
+          toast.error(errors.join(" "), {
+            position: "bottom-right",
+            hideProgressBar: true,
+          });
+        } else {
+          toast.error(error.response.data.data.message, {
+            position: "bottom-right",
+            hideProgressBar: true,
+          });
+        }
       })
       .finally(() => {
         setIsLoading(false);
