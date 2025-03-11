@@ -33,6 +33,7 @@ function FormPage() {
 
   const handleSubmit = () => {
     setIsLoading(true);
+    console.log(formData);
     const formDataObject = new FormData();
     formDataObject.append("name", formData.name);
     formDataObject.append("act_type", formData.act_type);
