@@ -137,6 +137,7 @@ function UltimiattiPage() {
               <th className="py-2 px-4 text-left">Data</th>
               <th className="py-2 px-4 text-left">Seduta</th>
               <th className="py-2 px-4 text-left">Documento</th>
+              <th className="py-2 px-4 text-left">piu detagli</th>
             </tr>
           </thead>
           <tbody>{paginatedContent}</tbody>
