@@ -111,8 +111,21 @@ function UltimiattiPage() {
       </form>
 
       {/* Navbar for Doc Nodes */}
-      <div className="w-1/4 bg-gray-900 text-white p-4">
-        <Menu2 activeNode={activeNode} setActiveNode={setActiveNode} />
+      <div className="flex overflow-x-auto mt-4 space-x-3 border-b pb-2">
+        {data.docNodes.map((node, key) => (
+          <button
+            key={key}
+            onClick={() => {
+              setActiveNode(node.name);
+              setCurrentPage(1);
+            }}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold ${
+              activeNode === node.name ? "bg-red-600 text-white" : "bg-gray-200"
+            }`}
+          >
+            {node.name}
+          </button>
+        ))}
       </div>
 
       {/* Content Table */}
