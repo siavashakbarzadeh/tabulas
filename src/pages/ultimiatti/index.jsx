@@ -8,8 +8,8 @@ const ITEMS_PER_PAGE = 20;
 function UltimiattiPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
-  const [activeNode, setActiveNode] = useState(null); // Selected category
-  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const [activeNode, setActiveNode] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     fetchData();
@@ -19,7 +19,7 @@ function UltimiattiPage() {
     if (data) {
       setLoading(false);
       modifyPdfLinks();
-      setActiveNode(data.docNodes[0]?.name || null); // Set default active node
+      setActiveNode(data.docNodes[0]?.name || null);
     }
   }, [data]);
 
@@ -44,7 +44,7 @@ function UltimiattiPage() {
         }
         if (!link.querySelector(".custom-pdf-icon")) {
           const icon = document.createElement("i");
-          icon.className = "fas fa-file-pdf mr-2 custom-pdf-icon"; // Font Awesome icon
+          icon.className = "fas fa-file-pdf mr-2 custom-pdf-icon";
           icon.style.color = "rgb(151, 0, 45)";
           link.prepend(icon);
         }
@@ -62,7 +62,6 @@ function UltimiattiPage() {
 
   const activeDocNode = data.docNodes.find((node) => node.name === activeNode);
 
-  // Pagination logic
   const totalItems = activeDocNode?.docContentStreamContent
     ? activeDocNode.docContentStreamContent.split("<HR class=\"defrss\">").length
     : 0;
@@ -71,7 +70,11 @@ function UltimiattiPage() {
   const paginatedContent = activeDocNode?.docContentStreamContent
     ?.split("<HR class=\"defrss\">")
     .slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
-    .join("<HR class=\"defrss\">");
+    .map((item, index) => (
+      <tr key={index} className="border-b">
+        <td className="py-3 px-4 text-left" dangerouslySetInnerHTML={{ __html: item }}></td>
+      </tr>
+    ));
 
   return (
     <div className="w-full bg-white rounded-2xl relative px-4 pt-4 pb-13">
@@ -98,7 +101,7 @@ function UltimiattiPage() {
             key={key}
             onClick={() => {
               setActiveNode(node.name);
-              setCurrentPage(1); // Reset pagination
+              setCurrentPage(1);
             }}
             className={`px-4 py-2 rounded-lg text-sm font-semibold ${
               activeNode === node.name ? "bg-red-600 text-white" : "bg-gray-200"
@@ -109,16 +112,16 @@ function UltimiattiPage() {
         ))}
       </div>
 
-      {/* Content */}
-      <div className="mt-4">
-        {activeDocNode && (
-          <div
-            className="w-full"
-            dangerouslySetInnerHTML={{
-              __html: paginatedContent,
-            }}
-          ></div>
-        )}
+      {/* Content Table */}
+      <div className="overflow-x-auto mt-4">
+        <table className="w-full border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="py-2 px-4 text-left">Document Details</th>
+            </tr>
+          </thead>
+          <tbody>{paginatedContent}</tbody>
+        </table>
       </div>
 
       {/* Pagination Controls */}
@@ -150,5 +153,3 @@ function UltimiattiPage() {
 }
 
 export default UltimiattiPage;
-
-
