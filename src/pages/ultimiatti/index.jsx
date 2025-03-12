@@ -70,11 +70,27 @@ function UltimiattiPage() {
   const paginatedContent = activeDocNode?.docContentStreamContent
     ?.split("<HR class=\"defrss\">")
     .slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
-    .map((item, index) => (
-      <tr key={index} className="border-b">
-        <td className="py-3 px-4 text-left" dangerouslySetInnerHTML={{ __html: item }}></td>
-      </tr>
-    ));
+    .map((item, index) => {
+      // Convert item string into a DOM element
+      const tempElement = document.createElement("div");
+      tempElement.innerHTML = item;
+
+      // Extract <p> and <a> elements into separate table cells
+      const rows = Array.from(tempElement.children).map((child, idx) => (
+        <td key={idx} className="py-3 px-4 text-left">
+          {child.tagName === "A" ? (
+            <a href={child.href} target="_blank" rel="noopener noreferrer">
+              <i className="fas fa-file-pdf mr-2 custom-pdf-icon" style={{ color: "rgb(151, 0, 45)" }}></i>
+              {child.textContent}
+            </a>
+          ) : (
+            <span dangerouslySetInnerHTML={{ __html: child.innerHTML }}></span>
+          )}
+        </td>
+      ));
+
+      return <tr key={index} className="border-b">{rows}</tr>;
+    });
 
   return (
     <div className="w-full bg-white rounded-2xl relative px-4 pt-4 pb-13">
@@ -117,7 +133,10 @@ function UltimiattiPage() {
         <table className="w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-200">
-              <th className="py-2 px-4 text-left">Document Details</th>
+              <th className="py-2 px-4 text-left">Titolo</th>
+              <th className="py-2 px-4 text-left">Data</th>
+              <th className="py-2 px-4 text-left">Seduta</th>
+              <th className="py-2 px-4 text-left">Documento</th>
             </tr>
           </thead>
           <tbody>{paginatedContent}</tbody>
