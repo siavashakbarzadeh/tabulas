@@ -31,7 +31,7 @@ function Ultimidossierage() {
   const fetchData = () => {
     setLoading(true);
     axios
-      .get("tabulas/mobile/ultimidossier")
+      .get("tabulas/mobile/ultimdossier")
       .then((res) => {
         setData(res.data);
       })
