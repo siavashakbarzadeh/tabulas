@@ -1,11 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import PaperIcon from "../../icons/PaperIcon";
+import PaperIcon from "../../icons/Paper";
 import EmailIcon from "../../icons/EmailIcon";
 import FormIcon from "../../icons/FormIcon";
 import ServicesIcon from "../../icons/ServicesIcon";
-import GuideManualsIcon from "../../icons/GuideManualsIcon";
+import GuideManualsIcon from "../../icons/GuideManuals";
 import EbookIcon from "../../icons/Ebook";
 import UsersIcon from "../../icons/Users";
 import ChatIcon from "../../icons/Chat";
