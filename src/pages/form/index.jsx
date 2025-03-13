@@ -22,7 +22,9 @@ const formInitialState = {
 function FormPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState(formInitialState);
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  
 
   const act_types = ["DDL 1", "DDL 2", "DDL 3", "DDL 4", "DDL 5"];
 
@@ -55,20 +57,16 @@ function FormPage() {
       .catch((error) => {
         if (error.response.status === 422) {
           console.log(error.response.data.errors);
-          
+
           const responseErrors = error.response.data.errors;
-          const errors = [];
+          const result = {};
           Object.keys(responseErrors).forEach((key) => {
             const item = responseErrors[key];
             if (item && item.length) {
-              errors.push(item[0]);
+              result[key] = item[0];
             }
           });
-
-          toast.error(errors.join(" "), {
-            position: "bottom-right",
-            hideProgressBar: true,
-          });
+          setErrors(result);
         } else {
           toast.error(error.response.data.data.message, {
             position: "bottom-right",
@@ -99,6 +97,7 @@ function FormPage() {
                   id="name"
                   label="Nome atto"
                   value={formData.name}
+                  error_message={errors.name}
                   onChange={(e) => handleUpdateFormData("name", e.target.value)}
                   placeholder="Nome atto"
                 />
