@@ -6,6 +6,7 @@ function CustomSelect({
   onChange,
   label = null,
   value = null,
+  error_message = "",
   placeholder = "",
 }) {
   return (
@@ -28,6 +29,9 @@ function CustomSelect({
           </option>
         ))}
       </select>
+      {error_message && (
+        <span className="text-red-700 text-sm mt-1">{error_message}</span>
+      )}
     </>
   );
 }

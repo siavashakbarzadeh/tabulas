@@ -5,6 +5,7 @@ function DateInput({
   onChange,
   label = null,
   value = "",
+  error_message = "",
   placeholder = "",
 }) {
   return (
@@ -22,6 +23,9 @@ function DateInput({
         placeholder={placeholder}
         className="w-full h-10 rounded-md text-sm bg-white border-none outline-none ring-0 focus:border-none focus:outline-none focus:ring-0"
       />
+      {error_message && (
+        <span className="text-red-700 text-sm mt-1">{error_message}</span>
+      )}
     </>
   );
 }

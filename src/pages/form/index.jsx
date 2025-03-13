@@ -106,6 +106,7 @@ function FormPage() {
                   id="act_type"
                   label="Tipo atto"
                   value={formData.act_type}
+                  error_message={errors.act_type}
                   onChange={(e) =>
                     handleUpdateFormData("act_type", e.target.value)
                   }
@@ -117,6 +118,7 @@ function FormPage() {
                   id="recipient_office"
                   label="Ufficio destinatario"
                   value={formData.recipient_office}
+                  error_message={errors.recipient_office}
                   onChange={(e) =>
                     handleUpdateFormData("recipient_office", e.target.value)
                   }
@@ -129,6 +131,7 @@ function FormPage() {
                   label="Data Invio"
                   placeholder="Data Invio"
                   value={formData.submission_date}
+                  error_message={errors.submission_date}
                   onChange={(e) =>
                     handleUpdateFormData("submission_date", e.target.value)
                   }
@@ -139,6 +142,7 @@ function FormPage() {
                   id="document"
                   label="Documenti"
                   file={formData.document}
+                  error_message={errors.document}
                   onChange={(e) =>
                     handleUpdateFormData("document", e.target.files[0])
                   }
@@ -149,6 +153,7 @@ function FormPage() {
                   id="sign"
                   label="Sign"
                   file={formData.sign}
+                  error_message={errors.sign}
                   onChange={(e) =>
                     handleUpdateFormData("sign", e.target.files[0])
                   }

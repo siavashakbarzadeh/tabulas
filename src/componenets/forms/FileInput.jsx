@@ -7,6 +7,7 @@ function FileInput({
   onChange,
   file = null,
   label = null,
+  error_message = "",
   input_label = null,
 }) {
   return (
@@ -34,6 +35,9 @@ function FileInput({
           </span>
         </div>
       </label>
+      {error_message && (
+        <span className="text-red-700 text-sm mt-1">{error_message}</span>
+      )}
     </>
   );
 }
