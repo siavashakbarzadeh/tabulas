@@ -4,7 +4,7 @@ import SearchIcon from "../../assets/svg/search.svg";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
 import Sidebar from "../../layout/sidebar2/Menu.jsx"; // Global sidebar (if needed)
-import InnerSidebar from "../../layout/sidebar2/InnerSidebar.jsx"; // Inner sidebar
+import InnerSidebar from "../../layout/sidebar2/InnerSidebar.jsx"; // Inner sidebar with pagination
 
 const ITEMS_PER_PAGE = 20;
 
@@ -96,9 +96,9 @@ function UltimiattiPage() {
     });
 
   return (
-    // Outer container centers the content and keeps a fixed width for the main area.
-    <div className="flex min-h-screen justify-center">
-      <div className="w-[1200px] bg-white rounded-2xl relative p-4">
+    <div className="flex flex-col min-h-screen w-full">
+      {/* Main Content Area */}
+      <div className="flex-1 bg-white rounded-2xl relative p-4">
         {/* Search Bar */}
         <form className="w-full mb-4">
           <label className="w-full block relative">
@@ -115,8 +115,8 @@ function UltimiattiPage() {
           </label>
         </form>
         {/* Inner Content Layout */}
-        <div className="flex">
-          {/* Inner Sidebar with fixed width from its own styling (e.g., w-64) */}
+        <div className="flex w-full">
+          {/* Inner Sidebar */}
           <InnerSidebar
             docNodes={data.docNodes}
             activeNode={activeNode}
@@ -126,11 +126,15 @@ function UltimiattiPage() {
             }}
           />
           {/* Main Table Content */}
-          <div className="flex-1 ml-4">
+          <div className="flex-1 ml-4 overflow-x-auto">
             <table className="w-full border-collapse border border-gray-300">
               <thead>
                 <tr className="bg-gray-200">
-                  <th className="py-2 px-4 text-left"></th>
+                  <th className="py-2 px-4 text-left">Titolo</th>
+                  <th className="py-2 px-4 text-left">Data</th>
+                  <th className="py-2 px-4 text-left">Seduta</th>
+                  <th className="py-2 px-4 text-left">Documento</th>
+                  <th className="py-2 px-4 text-left">piu detagli</th>
                 </tr>
               </thead>
               <tbody>{paginatedContent}</tbody>
