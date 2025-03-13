@@ -5,7 +5,7 @@ function CustomSelect({
   options = [],
   onChange,
   label = null,
-  value = null,
+  value = "",
   error_message = "",
   placeholder = "",
 }) {
@@ -20,9 +20,10 @@ function CustomSelect({
         id={id}
         placeholder={placeholder}
         onChange={onChange}
-        value={value}
+        defaultValue={value}
         className="w-full h-10 rounded-md text-sm bg-white border-none outline-none ring-0 focus:border-none focus:outline-none focus:ring-0"
       >
+        <option hidden value="">placeholder</option>
         {options.map((option) => (
           <option key={option} value={option}>
             {option}
