@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import SearchIcon from "../../assets/svg/search.svg";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
-import Menu from "../../components/Menu"; // Adjust the path as needed
+import Menu from "../../layout/sidebar2/Menu.jsx"; // Adjust the path as needed
 
 const ITEMS_PER_PAGE = 20;
 
