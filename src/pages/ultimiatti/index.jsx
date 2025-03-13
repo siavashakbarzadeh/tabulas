@@ -128,11 +128,6 @@ function UltimiattiPage() {
           {/* Main Table Content */}
           <div className="flex-1 ml-4 overflow-x-auto">
             <table className="w-full border-collapse border border-gray-300">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="py-2 px-4 text-left"></th>
-                </tr>
-              </thead>
               <tbody>{paginatedContent}</tbody>
             </table>
             {totalPages > 1 && (
