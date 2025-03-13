@@ -24,7 +24,6 @@ function FormPage() {
   const [formData, setFormData] = useState(formInitialState);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  
 
   const act_types = ["DDL 1", "DDL 2", "DDL 3", "DDL 4", "DDL 5"];
 
@@ -56,16 +55,16 @@ function FormPage() {
       })
       .catch((error) => {
         if (error.response.status === 422) {
-          console.log(error.response.data.errors);
-
           const responseErrors = error.response.data.errors;
-          const result = {};
-          Object.keys(responseErrors).forEach((key) => {
+
+          const result = Object.keys(responseErrors).reduce((acc, key) => {
             const item = responseErrors[key];
             if (item && item.length) {
-              result[key] = item[0];
+              acc[key] = item[0];
             }
-          });
+            return acc;
+          }, {});
+
           setErrors(result);
         } else {
           toast.error(error.response.data.data.message, {
