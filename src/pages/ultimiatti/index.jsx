@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import SearchIcon from "../../assets/svg/search.svg";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
-import Sidebar from "../../layout/sidebar2/Sidebar.jsx"; // Global sidebar
+import Sidebar from "../../layout/sidebar2/Menu.jsx"; // Global sidebar
 import InnerSidebar from "../../layout/sidebar2/InnerSidebar.jsx"; // Inner sidebar
 
 const ITEMS_PER_PAGE = 20;
