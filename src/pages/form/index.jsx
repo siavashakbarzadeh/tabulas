@@ -91,7 +91,7 @@ function FormPage() {
       <div className="fixed inset-0 bg-white/10 backdrop-blur-[1px] z-40 pl-0 lg:pl-68 flex">
         <div className="w-full flex p-2 md:p-4">
           <div className="w-full flex relative overflow-auto">
-            <div className="grid grid-cols-2 gap-4 w-11/12 lg:w-10/12 p-4 bg-gray-100 rounded-xl drop-shadow-lg absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-11/12 lg:w-10/12 p-4 bg-gray-100 rounded-xl drop-shadow-lg absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
               <div className="col-span-1">
                 <TextInput
                   id="name"
