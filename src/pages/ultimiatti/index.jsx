@@ -97,8 +97,6 @@ function UltimiattiPage() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Global Sidebar */}
-      <Sidebar />
       {/* Main Content Area */}
       <div className="flex-1 bg-white rounded-2xl relative p-4">
         {/* Search Bar */}
