@@ -54,6 +54,8 @@ function FormPage() {
       })
       .catch((error) => {
         if (error.response.status === 422) {
+          console.log(error.response.data.errors);
+          
           const responseErrors = error.response.data.errors;
           const errors = [];
           Object.keys(responseErrors).forEach((key) => {
