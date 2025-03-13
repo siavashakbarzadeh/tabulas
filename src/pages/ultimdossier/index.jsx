@@ -1,37 +1,107 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import SearchIcon from "../../assets/svg/search.svg";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
+import Sidebar from "../../layout/sidebar2/Menu.jsx"; // Global sidebar (if needed)
+import InnerSidebar from "../../layout/sidebar2/InnerSidebar.jsx"; // Inner sidebar with pagination
 
-function UltimdossierPage() {
+const ITEMS_PER_PAGE = 20;
+
+function Ultimidossierage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
+  const [activeNode, setActiveNode] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   useEffect(() => {
-    setLoading(false);
-  }, [data]);
+    if (data) {
+      setLoading(false);
+      modifyPdfLinks();
+      if (data.docNodes && data.docNodes.length > 0 && !activeNode) {
+        setActiveNode(data.docNodes[0].name);
+      }
+    }
+  }, [data, activeNode]);
 
   const fetchData = () => {
     setLoading(true);
     axios
-      .get("tabulas/mobile/ultimdossier")
+      .get("tabulas/mobile/ultimiatti")
       .then((res) => {
         setData(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 
+  const modifyPdfLinks = () => {
+    setTimeout(() => {
+      document.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
+        const img = link.querySelector('img[title*=".pdf"]');
+        if (img) {
+          img.style.display = "none";
+        }
+        if (!link.querySelector(".custom-pdf-icon")) {
+          const icon = document.createElement("i");
+          icon.className = "fas fa-file-pdf mr-2 custom-pdf-icon";
+          icon.style.color = "rgb(151, 0, 45)";
+          link.prepend(icon);
+        }
+      });
+    }, 100);
+  };
+
+  if (loading || data === null) {
+    return (
+      <div className="w-full flex justify-center">
+        <Loading />
+      </div>
+    );
+  }
+
+  // Find the active document node from the fetched data
+  const activeDocNode = data.docNodes.find((node) => node.name === activeNode);
+  const totalItems = activeDocNode?.docContentStreamContent
+    ? activeDocNode.docContentStreamContent.split('<HR class="defrss">').length
+    : 0;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const paginatedContent = activeDocNode?.docContentStreamContent
+    ?.split('<HR class="defrss">')
+    .slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
+    .map((item, index) => {
+      const tempElement = document.createElement("div");
+      tempElement.innerHTML = item;
+      const rows = Array.from(tempElement.children).map((child, idx) => (
+        <td key={idx} className="py-3 px-4 text-left">
+          {child.tagName === "A" ? (
+            <a href={child.href} target="_blank" rel="noopener noreferrer">
+              <i
+                className="fas fa-file-pdf mr-2 custom-pdf-icon"
+                style={{ color: "rgb(151, 0, 45)" }}
+              ></i>
+              {child.textContent}
+            </a>
+          ) : (
+            <span dangerouslySetInnerHTML={{ __html: child.innerHTML }}></span>
+          )}
+        </td>
+      ));
+      return <tr key={index} className="border-b">{rows}</tr>;
+    });
+
   return (
-    <>
-      <div className="w-full bg-white rounded-tl-none lg:rounded-tl-2xl rounded-tr-none lg:rounded-tr-2xl rounded-bl-2xl rounded-br-2xl relative px-4 pt-4 pb-13">
-        <form className="w-full">
-          <label className="w-full block relative before:w-px before:h-2/3 before:bg-neutral-300 before:absolute before:left-14 before:top-1/2 before:-translate-y-1/2">
+    <div className="flex flex-col min-h-screen w-full">
+      {/* Main Content Area */}
+      <div className="flex-1 bg-white rounded-2xl relative p-4">
+        {/* Search Bar */}
+        <form className="w-full mb-4">
+          <label className="w-full block relative">
             <input
               type="text"
               placeholder="Cerca..."
@@ -40,54 +110,54 @@ function UltimdossierPage() {
             <img
               src={SearchIcon}
               alt="Search"
-              className="w-6 h-6 select-none absolute left-4 top-1/2 -translate-y-1/2"
+              className="w-6 h-6 absolute left-4 top-1/2 transform -translate-y-1/2"
             />
           </label>
         </form>
-        <div className="w-full flex mt-4">
-          {loading || data === null ? (
-            <div className="w-full flex justify-center">
-              <Loading />
-            </div>
-          ) : (
-            <div className="w-full">
-              <div className="w-full font-medium">{data.name}</div>
-              <div className="w-full space-y-3 mt-2">
-                {data.docNodes.map((item, key) => (
-                  <div className="w-full" key={key}>
-                    <div className="w-full text-sm text-white bg-primary-950 leading-7 px-2">
-                      {item.name}
-                    </div>
-                    <div
-                      className="w-full"
-                      dangerouslySetInnerHTML={{
-                        __html: item.docContentStreamContent,
-                      }}
-                    ></div>
-                  </div>
-                ))}
+        {/* Inner Content Layout */}
+        <div className="flex w-full">
+          {/* Inner Sidebar */}
+          <InnerSidebar
+            docNodes={data.docNodes}
+            activeNode={activeNode}
+            onSelect={(name) => {
+              setActiveNode(name);
+              setCurrentPage(1);
+            }}
+          />
+          {/* Main Table Content */}
+          <div className="flex-1 ml-4 overflow-x-auto">
+            <table className="w-full border-collapse border border-gray-300">
+              <tbody>{paginatedContent}</tbody>
+            </table>
+            {totalPages > 1 && (
+              <div className="flex justify-center mt-4 space-x-2">
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className={`px-3 py-1 border rounded ${
+                    currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-200"
+                  }`}
+                >
+                  Prev
+                </button>
+                <span className="text-sm px-3 py-1">{`Page ${currentPage} of ${totalPages}`}</span>
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className={`px-3 py-1 border rounded ${
+                    currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-200"
+                  }`}
+                >
+                  Next
+                </button>
               </div>
-            </div>
-          )}
-        </div>
-        <div className="absolute inset-x-0 bottom-0 text-white bg-zinc-800 px-2 line-clamp-1 leading-9 h-9 overflow-hidden rounded-bl-2xl rounded-br-2xl">
-          16.25 Scuola: Gilda, ministeri trovino soluzione per stipendi precari
-          (z ANSA Politica) ~ 16.25 Confartigianato, 'no alla patente a crediti
-          nell'edilizia' (z ANSA Economia e Finanza) ~ 16.25 Agricoltori:
-          Fidanza (Fdi), richieste in linea nostre battaglie = (AGI) ~ 16.25 ++
-          'Biden al confine col Messico lo stesso giorno di Trump' ++ (z ANSA
-          Politica) ~ 16.26 Scontri Pisa: Conti, 'è pagina buia, polizia si può
-          criticare' (z ANSA Cronaca) ~ 16.26 Giustizia: sabato riunione Anm su
-          reclutamento straordinario = (AGI) ~ 16.28 Schlein, vita di Don
-          Nicolini dedicata agli ultimi, mancherà (z ANSA Politica) ~ 16.28
-          Hezbollah, 60 razzi contro base militare israeliana (2) (z ANSA
-          Politica) ~ 16.30 Legale due poliziotti uccisi, 'dissento da
-          Mattarella' (z ANSA Cronaca) ~ 16.30 Al via il Consiglio dei ministri
-          (z ANSA Polit
+            )}
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
-export default UltimdossierPage;
+export default Ultimidossierage;
