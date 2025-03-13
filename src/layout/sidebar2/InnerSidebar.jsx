@@ -3,7 +3,6 @@ import React from "react";
 function InnerSidebar({ docNodes, activeNode, onSelect }) {
   return (
     <div className="w-64 bg-gray-100 p-4">
-      <h3 className="text-lg font-bold mb-4">Doc Nodes</h3>
       <ul>
         {docNodes.map((node, index) => (
           <li key={index} className="mb-2">

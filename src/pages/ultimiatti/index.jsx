@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import SearchIcon from "../../assets/svg/search.svg";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
-import Sidebar from "../../layout/sidebar2/Menu.jsx"; // Global sidebar
+import Sidebar from "../../layout/sidebar2/Menu.jsx"; // Global sidebar (if needed)
 import InnerSidebar from "../../layout/sidebar2/InnerSidebar.jsx"; // Inner sidebar
 
 const ITEMS_PER_PAGE = 20;
@@ -96,9 +96,9 @@ function UltimiattiPage() {
     });
 
   return (
-    <div className="flex min-h-screen">
-      {/* Main Content Area */}
-      <div className="flex-1 bg-white rounded-2xl relative p-4">
+    // Outer container centers the content and keeps a fixed width for the main area.
+    <div className="flex min-h-screen justify-center">
+      <div className="w-[1200px] bg-white rounded-2xl relative p-4">
         {/* Search Bar */}
         <form className="w-full mb-4">
           <label className="w-full block relative">
@@ -116,7 +116,7 @@ function UltimiattiPage() {
         </form>
         {/* Inner Content Layout */}
         <div className="flex">
-          {/* Inner Sidebar */}
+          {/* Inner Sidebar with fixed width from its own styling (e.g., w-64) */}
           <InnerSidebar
             docNodes={data.docNodes}
             activeNode={activeNode}
@@ -130,11 +130,7 @@ function UltimiattiPage() {
             <table className="w-full border-collapse border border-gray-300">
               <thead>
                 <tr className="bg-gray-200">
-                  <th className="py-2 px-4 text-left">Titolo</th>
-                  <th className="py-2 px-4 text-left">Data</th>
-                  <th className="py-2 px-4 text-left">Seduta</th>
-                  <th className="py-2 px-4 text-left">Documento</th>
-                  <th className="py-2 px-4 text-left">piu detagli</th>
+                  <th className="py-2 px-4 text-left"></th>
                 </tr>
               </thead>
               <tbody>{paginatedContent}</tbody>
