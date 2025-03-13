@@ -23,7 +23,7 @@ function CustomSelect({
         value={value}
         className="w-full h-10 rounded-md text-sm bg-white border-none outline-none ring-0 focus:border-none focus:outline-none focus:ring-0"
       >
-        <option disabled>Choose an option</option>
+        <option disabled selected>Choose an option</option>
         {options.map((option) => (
           <option key={option} value={option}>
             {option}
