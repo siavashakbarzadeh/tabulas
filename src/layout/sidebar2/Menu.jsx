@@ -1,5 +1,5 @@
-import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useState } from "react";
 import User from "../../icons/User";
 import EbookIcon from "../../icons/Ebook";
 import LatestDossiersIcon from "../../icons/LatestDossiers";
@@ -15,7 +15,7 @@ import NoticeIcon from "../../icons/Notice";
 import PaperIcon from "../../icons/Paper";
 import ArraowDownIcon from "../../icons/ArraowDown";
 
-const menuData = [
+const Menu = [
   {
     id: 1,
     title: "Assemblea",
@@ -27,12 +27,7 @@ const menuData = [
       { id: 4, title: "Services", icon: <ServicesIcon className="w-6 h-6" />, link: "/services" },
       { id: 5, title: "Guidemanuali", icon: <GuideManualsIcon className="w-6 h-6" />, link: "/guidemanuali" },
       { id: 6, title: "Ebook", icon: <EbookIcon className="w-6 h-6" />, link: "/ebook" },
-      {
-        id: 7,
-        title: "Commissioni",
-        icon: <UsersIcon className="w-6 h-6" />,
-        link: "/commissioni",
-      },
+      { id: 7, title: "Commissioni", icon: <UsersIcon className="w-6 h-6" />, link: "/commissioni" },
       { id: 8, title: "Ultimiatti", icon: <LatestActsIcon className="w-6 h-6" />, link: "/ultimiatti" },
       { id: 9, title: "Ultimdossier", icon: <LatestDossiersIcon className="w-6 h-6" />, link: "/ultimdossier" },
     ],
@@ -44,78 +39,80 @@ const menuData = [
   { id: 6, title: "INFORMAZIONE", icon: <NoticeIcon className="w-6 h-6" />, link: "/" },
 ];
 
-function Menu() {
-  const location = useLocation();
-  const [openParent, setOpenParent] = useState(null);
+function Menu2() {
+  // activeMain tracks the currently open (or active) main menu item
+  // activeSub tracks the active submenu item's id
+  const [activeMain, setActiveMain] = useState(null);
+  const [activeSub, setActiveSub] = useState(null);
 
-  useEffect(() => {
-    // Check if current route is in any submenu and open that parent if so
-    menuData.forEach((menuItem) => {
-      if (menuItem.subMenu) {
-        menuItem.subMenu.forEach((subItem) => {
-          if (subItem.link === location.pathname) {
-            setOpenParent(menuItem.id);
-          }
-        });
-      }
-    });
-  }, [location.pathname]);
+  const toggleMenuHandler = (id) => () => {
+    // Toggle the main menu item open or closed.
+    setActiveMain((prev) => (prev === id ? null : id));
+    // Reset active submenu when toggling a main menu item.
+    setActiveSub(null);
+  };
 
   return (
-    <div className="sidebar w-64 bg-gray-800 text-white h-full">
-      <ul className="w-full">
-        {menuData.map((item) => (
-          <li key={item.id} className="w-full">
-            {item.subMenu ? (
-              <>
-                <div
-                  onClick={() =>
-                    setOpenParent((prev) => (prev === item.id ? null : item.id))
-                  }
-                  className={`flex items-center p-2 cursor-pointer hover:bg-gray-700 ${
-                    openParent === item.id ? "bg-gray-700" : ""
-                  }`}
-                >
-                  {item.icon}
-                  <span className="ml-2">{item.title}</span>
-                  <ArraowDownIcon
-                    className={`ml-auto w-3 h-3 transition-transform ${
-                      openParent === item.id ? "rotate-0" : "rotate-90"
-                    }`}
-                  />
-                </div>
-                <ul className={`${openParent === item.id ? "block" : "hidden"} pl-4`}>
-                  {item.subMenu.map((subItem) => (
-                    <li key={subItem.id} className="w-full">
-                      <Link
-                        to={subItem.link}
-                        className={`flex items-center p-2 hover:bg-gray-600 ${
-                          subItem.link === location.pathname ? "bg-red-600" : ""
-                        }`}
-                      >
-                        {subItem.icon && <span className="mr-2">{subItem.icon}</span>}
-                        <span>{subItem.title}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            ) : (
-              <Link
-                to={item.link}
-                className={`flex items-center p-2 hover:bg-gray-700 ${
-                  item.link === location.pathname ? "bg-red-600" : ""
+    <ul className="w-full mt-4">
+      {Menu.map((item) => (
+        <li key={item.id} className="w-full">
+          {item.subMenu ? (
+            <div
+              onClick={toggleMenuHandler(item.id)}
+              className={`w-full h-10 flex items-center space-x-2 px-2 text-sm text-white cursor-pointer ${
+                activeMain === item.id ? "bg-gray-700" : ""
+              }`}
+            >
+              {item.icon}
+              <span>{item.title}</span>
+              <ArraowDownIcon
+                className={`w-2.5 transition-transform duration-150 ${
+                  activeMain === item.id ? "" : "-rotate-90"
                 }`}
-              >
-                {item.icon}
-                <span className="ml-2">{item.title}</span>
-              </Link>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
+              />
+            </div>
+          ) : (
+            <Link
+              to={item.link}
+              onClick={() => {
+                setActiveMain(item.id);
+                setActiveSub(null);
+              }}
+              className={`w-full h-10 flex items-center space-x-2 px-2 text-sm text-white cursor-pointer ${
+                activeMain === item.id ? "bg-gray-700" : ""
+              }`}
+            >
+              {item.icon}
+              <span>{item.title}</span>
+            </Link>
+          )}
+          {item.subMenu && (
+            <ul
+              className={`w-full ${activeMain === item.id ? "" : "hidden"} space-y-1 rounded-xl overflow-hidden`}
+            >
+              {item.subMenu.map((subItem) => (
+                <li key={subItem.id} className="w-full">
+                  <Link
+                    to={subItem.link}
+                    onClick={() => {
+                      setActiveMain(item.id);
+                      setActiveSub(subItem.id);
+                    }}
+                    className={`w-full h-10 flex items-center px-2 space-x-2 text-white bg-white/5 cursor-pointer ${
+                      activeSub === subItem.id ? "bg-red-600" : ""
+                    }`}
+                  >
+                    {subItem.icon && <span>{subItem.icon}</span>}
+                    <span>{subItem.title}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+      ))}
+    </ul>
   );
 }
 
-export default Menu;
+export default Menu2;
