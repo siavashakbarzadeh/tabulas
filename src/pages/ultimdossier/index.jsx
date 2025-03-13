@@ -43,16 +43,16 @@ function Ultimidossierage() {
   const modifyPdfLinks = () => {
     setTimeout(() => {
       document.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
-        const img = link.querySelector('img[title*=".pdf"]');
-        if (img) {
-          img.style.display = "none";
-        }
-        if (!link.querySelector(".custom-pdf-icon")) {
-          const icon = document.createElement("i");
-          icon.className = "fas fa-file-pdf mr-2 custom-pdf-icon";
-          icon.style.color = "rgb(151, 0, 45)";
-          link.prepend(icon);
-        }
+        // Remove any existing text or child nodes in the link
+        link.innerHTML = "";
+  
+        // Create the PDF icon element
+        const icon = document.createElement("i");
+        icon.className = "fas fa-file-pdf custom-pdf-icon";
+        icon.style.color = "rgb(151, 0, 45)";
+  
+        // Append only the icon to the link
+        link.appendChild(icon);
       });
     }, 100);
   };
