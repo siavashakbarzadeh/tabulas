@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import SearchIcon from "../../assets/svg/search.svg";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
+import Menu from "../../components/Menu"; // Adjust the path as needed
 
 const ITEMS_PER_PAGE = 20;
 
@@ -19,7 +20,7 @@ function UltimiattiPage() {
     if (data) {
       setLoading(false);
       modifyPdfLinks();
-      setActiveNode(data.docNodes[0]?.name || null);
+      // activeNode is now set via the Menu component callback
     }
   }, [data]);
 
@@ -40,7 +41,7 @@ function UltimiattiPage() {
       document.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
         const img = link.querySelector('img[title*=".pdf"]');
         if (img) {
-          img.style.display = "none"; // Hide small PDF icon
+          img.style.display = "none";
         }
         if (!link.querySelector(".custom-pdf-icon")) {
           const icon = document.createElement("i");
@@ -60,15 +61,16 @@ function UltimiattiPage() {
     );
   }
 
+  // Find the active document node from the fetched data
   const activeDocNode = data.docNodes.find((node) => node.name === activeNode);
 
   const totalItems = activeDocNode?.docContentStreamContent
-    ? activeDocNode.docContentStreamContent.split("<HR class=\"defrss\">").length
+    ? activeDocNode.docContentStreamContent.split('<HR class="defrss">').length
     : 0;
 
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
   const paginatedContent = activeDocNode?.docContentStreamContent
-    ?.split("<HR class=\"defrss\">")
+    ?.split('<HR class="defrss">')
     .slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
     .map((item, index) => {
       // Convert item string into a DOM element
@@ -80,7 +82,10 @@ function UltimiattiPage() {
         <td key={idx} className="py-3 px-4 text-left">
           {child.tagName === "A" ? (
             <a href={child.href} target="_blank" rel="noopener noreferrer">
-              <i className="fas fa-file-pdf mr-2 custom-pdf-icon" style={{ color: "rgb(151, 0, 45)" }}></i>
+              <i
+                className="fas fa-file-pdf mr-2 custom-pdf-icon"
+                style={{ color: "rgb(151, 0, 45)" }}
+              ></i>
               {child.textContent}
             </a>
           ) : (
@@ -110,23 +115,14 @@ function UltimiattiPage() {
         </label>
       </form>
 
-      {/* Navbar for Doc Nodes */}
-      <div className="flex overflow-x-auto mt-4 space-x-3 border-b pb-2">
-        {data.docNodes.map((node, key) => (
-          <button
-            key={key}
-            onClick={() => {
-              setActiveNode(node.name);
-              setCurrentPage(1);
-            }}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold ${
-              activeNode === node.name ? "bg-red-600 text-white" : "bg-gray-200"
-            }`}
-          >
-            {node.name}
-          </button>
-        ))}
-      </div>
+      {/* Dynamic Navbar provided by Menu component */}
+      <Menu
+        activeItem={activeNode}
+        onMenuSelect={(name) => {
+          setActiveNode(name);
+          setCurrentPage(1);
+        }}
+      />
 
       {/* Content Table */}
       <div className="overflow-x-auto mt-4">
