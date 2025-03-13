@@ -130,11 +130,7 @@ function UltimiattiPage() {
             <table className="w-full border-collapse border border-gray-300">
               <thead>
                 <tr className="bg-gray-200">
-                  <th className="py-2 px-4 text-left">Titolo</th>
-                  <th className="py-2 px-4 text-left">Data</th>
-                  <th className="py-2 px-4 text-left">Seduta</th>
-                  <th className="py-2 px-4 text-left">Documento</th>
-                  <th className="py-2 px-4 text-left">piu detagli</th>
+                  <th className="py-2 px-4 text-left"></th>
                 </tr>
               </thead>
               <tbody>{paginatedContent}</tbody>
