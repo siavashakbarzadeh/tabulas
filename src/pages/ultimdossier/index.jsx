@@ -104,7 +104,7 @@ function Ultimidossierage() {
           {/* Wrap the entire content in a span with display: ruby-text */}
 
           {child.tagName === "A" ? (
-            <span style={{ display: "ruby-text" }}>
+            <span style={{ display: "table-caption !important" }}>
               <a
                 href={child.href}
                 target="_blank"
