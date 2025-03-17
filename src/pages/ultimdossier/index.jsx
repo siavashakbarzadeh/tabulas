@@ -45,12 +45,12 @@ function Ultimidossierage() {
       document.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
         // Remove any existing text or child nodes in the link
         link.innerHTML = "";
-  
+
         // Create the PDF icon element
         const icon = document.createElement("i");
         icon.className = "fas fa-file-pdf custom-pdf-icon";
         icon.style.color = "rgb(151, 0, 45)";
-  
+
         // Append only the icon to the link
         link.appendChild(icon);
       });
@@ -77,23 +77,43 @@ function Ultimidossierage() {
     .map((item, index) => {
       const tempElement = document.createElement("div");
       tempElement.innerHTML = item;
+
       const rows = Array.from(tempElement.children).map((child, idx) => (
-        <td key={idx} className="py-3 px-4 text-left">
-          {child.tagName === "A" ? (
-            <a href={child.href} target="_blank" rel="noopener noreferrer">
-              <i
-                className="fas fa-file-pdf mr-2 custom-pdf-icon"
-                style={{ color: "rgb(151, 0, 45)" }}
-              ></i>
-              {child.textContent}
-            </a>
-          ) : (
-            <span dangerouslySetInnerHTML={{ __html: child.innerHTML }}></span>
-          )}
+        <td
+          key={idx}
+          className="py-3 px-4 text-left"
+          style={{ verticalAlign: "middle" }}
+        >
+          {/* Wrap content in a div to apply display: ruby-text */}
+          <div style={{ display: "ruby-text" }}>
+            {child.tagName === "A" ? (
+              <a
+                href={child.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i
+                  className="fas fa-file-pdf mr-2 custom-pdf-icon"
+                  style={{ color: "rgb(151, 0, 45)" }}
+                ></i>
+                {child.textContent}
+              </a>
+            ) : (
+              <span
+                dangerouslySetInnerHTML={{ __html: child.innerHTML }}
+              />
+            )}
+          </div>
         </td>
       ));
-      return <tr key={index} className="border-b">{rows}</tr>;
+
+      return (
+        <tr key={index} className="border-b">
+          {rows}
+        </tr>
+      );
     });
+
 
   return (
     <div className="flex flex-col min-h-screen w-full">
@@ -135,9 +155,8 @@ function Ultimidossierage() {
                 <button
                   onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1}
-                  className={`px-3 py-1 border rounded ${
-                    currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-200"
-                  }`}
+                  className={`px-3 py-1 border rounded ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-200"
+                    }`}
                 >
                   Prev
                 </button>
@@ -145,9 +164,8 @@ function Ultimidossierage() {
                 <button
                   onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                   disabled={currentPage === totalPages}
-                  className={`px-3 py-1 border rounded ${
-                    currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-200"
-                  }`}
+                  className={`px-3 py-1 border rounded ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-200"
+                    }`}
                 >
                   Next
                 </button>
