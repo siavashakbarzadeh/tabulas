@@ -21,7 +21,6 @@ function Ultimidossierage() {
   useEffect(() => {
     if (data) {
       setLoading(false);
-      modifyPdfLinks();
       // If there are docNodes, set the first as active if not already
       if (data.docNodes && data.docNodes.length > 0 && !activeNode) {
         setActiveNode(data.docNodes[0].name);
@@ -55,15 +54,15 @@ function Ultimidossierage() {
 
   // 2) Modify PDF links to show only the PDF icon
   const modifyPdfLinks = () => {
-    setTimeout(() => {
-      document.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
-        link.innerHTML = ""; // Clear existing text
-        const icon = document.createElement("i");
-        icon.className = "fas fa-file-pdf custom-pdf-icon";
-        icon.style.color = "rgb(151, 0, 45)";
-        link.appendChild(icon);
-      });
-    }, 100);
+
+    document.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
+      link.innerHTML = ""; // Clear existing text
+      const icon = document.createElement("i");
+      icon.className = "fas fa-file-pdf custom-pdf-icon";
+      icon.style.color = "rgb(151, 0, 45)";
+      link.appendChild(icon);
+    });
+
   };
 
   // 3) Helper to remove parentheses from a DOM element
@@ -107,6 +106,7 @@ function Ultimidossierage() {
       // Remove parentheses from this chunk
       removeParenthesesFrom(tempElement);
       removePdfIcons();
+      modifyPdfLinks();
       // Now build table cells from the processed DOM
       const rows = Array.from(tempElement.children).map((child, idx) => (
         <td
