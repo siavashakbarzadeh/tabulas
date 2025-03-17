@@ -28,6 +28,9 @@ function Ultimidossierage() {
     }
   }, [data, activeNode]);
 
+  // -----------------------
+  // 1) Fetch Data from API
+  // -----------------------
   const fetchData = () => {
     setLoading(true);
     axios
@@ -40,32 +43,9 @@ function Ultimidossierage() {
       });
   };
 
-  // 1) Remove PDF icons from the DOM
-  const removePdfIcons = () => {
-
-    const pdfImages = document.querySelectorAll(
-      'img[src="https://www.senato.it//img/icona_pdf.gif"]'
-    );
-    pdfImages.forEach((img) => {
-      img.remove();
-    });
-
-  };
-
-  // 2) Modify PDF links to show only the PDF icon
-  const modifyPdfLinks = () => {
-
-    document.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
-      link.innerHTML = ""; // Clear existing text
-      const icon = document.createElement("i");
-      icon.className = "fas fa-file-pdf custom-pdf-icon";
-      icon.style.color = "rgb(151, 0, 45)";
-      link.appendChild(icon);
-    });
-
-  };
-
-  // 3) Helper to remove parentheses from a DOM element
+  // -----------------------------------
+  // 2) Helper to Remove Parentheses
+  // -----------------------------------
   function removeParenthesesFrom(element) {
     element.childNodes.forEach((child) => {
       if (child.nodeType === Node.TEXT_NODE) {
@@ -77,6 +57,36 @@ function Ultimidossierage() {
     });
   }
 
+  // -----------------------------------
+  // 3) Helper to Remove PDF Icon <img>
+  // -----------------------------------
+  function removePdfIconsFrom(element) {
+    element
+      .querySelectorAll('img[src="https://www.senato.it//img/icona_pdf.gif"]')
+      .forEach((img) => {
+        img.remove();
+      });
+  }
+
+  // --------------------------------------------------------
+  // 4) Helper to Transform .pdf Links into PDF Icon Only
+  // --------------------------------------------------------
+  function transformPdfLinks(element) {
+    element.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
+      // Remove any existing text or child nodes in the link
+      link.innerHTML = "";
+      // Create the PDF icon element
+      const icon = document.createElement("i");
+      icon.className = "fas fa-file-pdf custom-pdf-icon";
+      icon.style.color = "rgb(151, 0, 45)";
+      // Append only the icon to the link
+      link.appendChild(icon);
+    });
+  }
+
+  // -----------------------------------
+  // Render Loading State
+  // -----------------------------------
   if (loading || data === null) {
     return (
       <div className="w-full flex justify-center">
@@ -88,13 +98,15 @@ function Ultimidossierage() {
   // Find the active document node
   const activeDocNode = data.docNodes.find((node) => node.name === activeNode);
 
-  // Pagination
+  // Handle pagination
   const totalItems = activeDocNode?.docContentStreamContent
     ? activeDocNode.docContentStreamContent.split('<HR class="defrss">').length
     : 0;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
-  // 4) Split the content, remove parentheses, then build table rows
+  // -----------------------------------
+  // 5) Build Paginated Table Rows
+  // -----------------------------------
   const paginatedContent = activeDocNode?.docContentStreamContent
     ?.split('<HR class="defrss">')
     .slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
@@ -103,11 +115,12 @@ function Ultimidossierage() {
       const tempElement = document.createElement("div");
       tempElement.innerHTML = item;
 
-      // Remove parentheses from this chunk
+      // Apply transformations in memory
       removeParenthesesFrom(tempElement);
-      removePdfIcons();
-      modifyPdfLinks();
-      // Now build table cells from the processed DOM
+      removePdfIconsFrom(tempElement);
+      transformPdfLinks(tempElement);
+
+      // Convert each child element into a table cell
       const rows = Array.from(tempElement.children).map((child, idx) => (
         <td
           key={idx}
@@ -137,9 +150,13 @@ function Ultimidossierage() {
       );
     });
 
+  // -----------------------------------
+  // Final JSX Return
+  // -----------------------------------
   return (
     <div className="flex flex-col min-h-screen w-full">
       <div className="flex-1 bg-white rounded-2xl relative p-4">
+        {/* Search Bar */}
         <form className="w-full mb-4">
           <label className="w-full block relative">
             <input
@@ -156,6 +173,7 @@ function Ultimidossierage() {
         </form>
 
         <div className="flex w-full">
+          {/* Inner Sidebar */}
           <InnerSidebar
             docNodes={data.docNodes}
             activeNode={activeNode}
@@ -164,18 +182,22 @@ function Ultimidossierage() {
               setCurrentPage(1);
             }}
           />
+
+          {/* Main Content Area */}
           <div className="flex-1 ml-4 overflow-x-auto">
             <table className="w-full border-collapse border border-gray-300">
               <tbody>{paginatedContent}</tbody>
             </table>
+
+            {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="flex justify-center mt-4 space-x-2">
                 <button
                   onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1}
                   className={`px-3 py-1 border rounded ${currentPage === 1
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-gray-200"
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:bg-gray-200"
                     }`}
                 >
                   Prev
@@ -187,8 +209,8 @@ function Ultimidossierage() {
                   }
                   disabled={currentPage === totalPages}
                   className={`px-3 py-1 border rounded ${currentPage === totalPages
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-gray-200"
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:bg-gray-200"
                     }`}
                 >
                   Next
