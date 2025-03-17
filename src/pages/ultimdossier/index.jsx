@@ -77,24 +77,37 @@ function Ultimidossierage() {
     .map((item, index) => {
       const tempElement = document.createElement("div");
       tempElement.innerHTML = item;
+
       const rows = Array.from(tempElement.children).map((child, idx) => (
-        <td key={idx} className="py-3 px-4 text-left" style={{ verticalAlign: "middle" }}>
-          {child.tagName === "A" ?
-            <a href={child.href} target="_blank" rel="noopener noreferrer" style={{ display: "ruby-text" }}>
-
-              {child.textContent}
-            </a>
-            : (
-              <span
-
-                dangerouslySetInnerHTML={{ __html: child.innerHTML }}
-              ></span>
-
+        <td
+          key={idx}
+          className="py-3 px-4 text-left"
+          style={{ verticalAlign: "middle" }}
+        >
+          {/* Wrap the entire content in a span with display: ruby-text */}
+          <span style={{ display: "ruby-text" }}>
+            {child.tagName === "A" ? (
+              <a
+                href={child.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {child.textContent}
+              </a>
+            ) : (
+              <span dangerouslySetInnerHTML={{ __html: child.innerHTML }} />
             )}
+          </span>
         </td>
       ));
-      return <tr key={index} className="border-b">{rows}</tr>;
+
+      return (
+        <tr key={index} className="border-b">
+          {rows}
+        </tr>
+      );
     });
+
 
   return (
     <div className="flex flex-col min-h-screen w-full">
