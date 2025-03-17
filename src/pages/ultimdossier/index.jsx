@@ -85,19 +85,20 @@ function Ultimidossierage() {
           style={{ verticalAlign: "middle" }}
         >
           {/* Wrap the entire content in a span with display: ruby-text */}
-          <span style={{ display: "ruby-text" }}>
-            {child.tagName === "A" ? (
+
+          {child.tagName === "A" ? (
+            <span style={{ display: "ruby-text" }}>
               <a
                 href={child.href}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 {child.textContent}
-              </a>
-            ) : (
-              <span dangerouslySetInnerHTML={{ __html: child.innerHTML }} />
-            )}
-          </span>
+              </a></span>
+          ) : (
+            <span dangerouslySetInnerHTML={{ __html: child.innerHTML }} />
+          )}
+
         </td>
       ));
 
