@@ -79,17 +79,14 @@ function Ultimidossierage() {
       tempElement.innerHTML = item;
       const rows = Array.from(tempElement.children).map((child, idx) => (
         <td key={idx} className="py-3 px-4 text-left">
-          {child.tagName === "A" ? (
+          {child.tagName === "A" ?
             <a href={child.href} target="_blank" rel="noopener noreferrer">
-              <i
-                className="fas fa-file-pdf mr-2 custom-pdf-icon"
-                style={{ color: "rgb(151, 0, 45)" }}
-              ></i>
+
               {child.textContent}
             </a>
-          ) : (
-            <span dangerouslySetInnerHTML={{ __html: child.innerHTML }}></span>
-          )}
+            : (
+              <span dangerouslySetInnerHTML={{ __html: child.innerHTML }}></span>
+            )}
         </td>
       ));
       return <tr key={index} className="border-b">{rows}</tr>;
