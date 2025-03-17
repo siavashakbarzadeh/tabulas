@@ -40,22 +40,22 @@ function Ultimidossierage() {
       });
   };
 
-  const modifyPdfLinks = () => {
-    setTimeout(() => {
-      document.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
-        // Remove any existing text or child nodes in the link
-        link.innerHTML = "";
+  // const modifyPdfLinks = () => {
+  //   setTimeout(() => {
+  //     document.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
+  //       // Remove any existing text or child nodes in the link
+  //       link.innerHTML = "";
 
-        // Create the PDF icon element
-        const icon = document.createElement("i");
-        icon.className = "fas fa-file-pdf custom-pdf-icon";
-        icon.style.color = "rgb(151, 0, 45)";
+  //       // Create the PDF icon element
+  //       const icon = document.createElement("i");
+  //       icon.className = "fas fa-file-pdf custom-pdf-icon";
+  //       icon.style.color = "rgb(151, 0, 45)";
 
-        // Append only the icon to the link
-        link.appendChild(icon);
-      });
-    }, 100);
-  };
+  //       // Append only the icon to the link
+  //       link.appendChild(icon);
+  //     });
+  //   }, 100);
+  // };
 
   if (loading || data === null) {
     return (
@@ -85,7 +85,11 @@ function Ultimidossierage() {
               {child.textContent}
             </a>
             : (
-              <span dangerouslySetInnerHTML={{ __html: child.innerHTML }}></span>
+              <span
+                style={{ verticalAlign: "middle", display: "ruby-text" }}
+                dangerouslySetInnerHTML={{ __html: child.innerHTML }}
+              ></span>
+
             )}
         </td>
       ));
