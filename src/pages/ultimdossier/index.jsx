@@ -22,7 +22,6 @@ function Ultimidossierage() {
     if (data) {
       setLoading(false);
       modifyPdfLinks();
-      removePdfIcons();
       // If there are docNodes, set the first as active if not already
       if (data.docNodes && data.docNodes.length > 0 && !activeNode) {
         setActiveNode(data.docNodes[0].name);
@@ -44,14 +43,14 @@ function Ultimidossierage() {
 
   // 1) Remove PDF icons from the DOM
   const removePdfIcons = () => {
-    setTimeout(() => {
-      const pdfImages = document.querySelectorAll(
-        'img[src="https://www.senato.it//img/icona_pdf.gif"]'
-      );
-      pdfImages.forEach((img) => {
-        img.remove();
-      });
-    }, 100);
+
+    const pdfImages = document.querySelectorAll(
+      'img[src="https://www.senato.it//img/icona_pdf.gif"]'
+    );
+    pdfImages.forEach((img) => {
+      img.remove();
+    });
+
   };
 
   // 2) Modify PDF links to show only the PDF icon
@@ -107,7 +106,7 @@ function Ultimidossierage() {
 
       // Remove parentheses from this chunk
       removeParenthesesFrom(tempElement);
-
+      removePdfIcons();
       // Now build table cells from the processed DOM
       const rows = Array.from(tempElement.children).map((child, idx) => (
         <td
@@ -175,8 +174,8 @@ function Ultimidossierage() {
                   onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1}
                   className={`px-3 py-1 border rounded ${currentPage === 1
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:bg-gray-200"
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-gray-200"
                     }`}
                 >
                   Prev
@@ -188,8 +187,8 @@ function Ultimidossierage() {
                   }
                   disabled={currentPage === totalPages}
                   className={`px-3 py-1 border rounded ${currentPage === totalPages
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:bg-gray-200"
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-gray-200"
                     }`}
                 >
                   Next
