@@ -7,21 +7,12 @@ function CommissioniPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
-  // Which "mode" the sidebar is in: "main" or "sub"
-  const [sidebarMode, setSidebarMode] = useState("main");
-  // The top-level item we clicked on (if any) that has sub docNodes
-  const [selectedMainDocNode, setSelectedMainDocNode] = useState(null);
-  // The docNode whose content we are showing in the main area
-  const [selectedContentNode, setSelectedContentNode] = useState(null);
-
   useEffect(() => {
     fetchData();
   }, []);
 
   useEffect(() => {
-    if (data) {
-      setLoading(false);
-    }
+    setLoading(false);
   }, [data]);
 
   const fetchData = () => {
@@ -36,134 +27,9 @@ function CommissioniPage() {
       });
   };
 
-  /**
-   * Handle clicking on a top-level docNode in the sidebar
-   */
-  const handleClickTopLevel = (node) => {
-    // Reset any selected content
-    setSelectedContentNode(null);
-
-    // If this node has child docNodes, switch to "sub" mode
-    if (node.docNodes && node.docNodes.length > 0) {
-      setSelectedMainDocNode(node);
-      setSidebarMode("sub");
-    }
-    // Otherwise, if it has docContent, show it in the main area
-    else if (node.docContentStreamContent) {
-      setSelectedContentNode(node);
-    }
-  };
-
-  /**
-   * Handle clicking on a sub-level docNode
-   */
-  const handleClickSubNode = (node) => {
-    // Show this node's content in the main area
-    setSelectedContentNode(node);
-  };
-
-  /**
-   * Go back from "sub" mode to "main" mode
-   */
-  const handleBack = () => {
-    setSidebarMode("main");
-    setSelectedMainDocNode(null);
-    setSelectedContentNode(null);
-  };
-
-  /**
-   * Render the sidebar according to sidebarMode
-   */
-  const renderSidebar = () => {
-    if (sidebarMode === "main") {
-      // Show the top-level docNodes
-      const topNodes = data?.docNodes || [];
-      return (
-        <ul className="space-y-1">
-          {topNodes.map((node, index) => (
-            <li key={index}>
-              <button
-                onClick={() => handleClickTopLevel(node)}
-                className="w-full text-left px-4 py-2 rounded bg-white text-gray-800 hover:bg-gray-200"
-              >
-                {node.name}
-              </button>
-            </li>
-          ))}
-        </ul>
-      );
-    } else {
-      // "sub" mode: show a Back button + sub docNodes of selectedMainDocNode
-      const subNodes = selectedMainDocNode?.docNodes || [];
-      return (
-        <div>
-          {/* Back button */}
-          <button
-            onClick={handleBack}
-            className="mb-2 px-3 py-2 rounded bg-red-600 text-white"
-          >
-            &larr; Back
-          </button>
-          <ul className="space-y-1">
-            {subNodes.map((node, index) => (
-              <li key={index}>
-                <button
-                  onClick={() => handleClickSubNode(node)}
-                  className="w-full text-left px-4 py-2 rounded bg-white text-gray-800 hover:bg-gray-200"
-                >
-                  {node.name}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      );
-    }
-  };
-
-  /**
-   * Render the main content area for selectedContentNode
-   */
-  const renderContent = () => {
-    if (!selectedContentNode) {
-      return (
-        <div className="p-4 text-gray-500">
-          Seleziona un elemento dal menu per visualizzare i dettagli.
-        </div>
-      );
-    }
-    // If there's HTML content, render it
-    if (selectedContentNode.docContentStreamContent) {
-      return (
-        <div
-          className="rich-text-content p-4 bg-gray-100 rounded"
-          dangerouslySetInnerHTML={{
-            __html: selectedContentNode.docContentStreamContent,
-          }}
-        />
-      );
-    }
-    // Otherwise, just show the name or a fallback
-    return (
-      <div className="p-4 bg-gray-100 rounded">
-        Nessun contenuto HTML per: {selectedContentNode.name}
-      </div>
-    );
-  };
-
-  // Show loading if data not loaded
-  if (loading || data === null) {
-    return (
-      <div className="w-full flex justify-center">
-        <Loading />
-      </div>
-    );
-  }
-
   return (
     <>
       <div className="w-full bg-white rounded-lg relative px-4 pt-4 pb-10">
-        {/* Search Bar */}
         <form className="w-full">
           <label className="w-full block relative">
             <input
@@ -178,25 +44,86 @@ function CommissioniPage() {
             />
           </label>
         </form>
+        <div className="w-full flex mt-4">
+          {loading || data === null ? (
+            <div className="w-full flex justify-center">
+              <Loading />
+            </div>
+          ) : (
+            <div className="w-full">
+              <div className="w-full font-medium">{data.name}</div>
+              <div className="w-full space-y-2 mt-2">
+                {data.docNodes
+                  .filter((i) => i.docNodes && i.docNodes.length)
+                  .map((item, key) => (
+                    <div key={key} className="w-full">
+                      <div className="w-full">{item.name}</div>
+                      {item.docNodes
+                        .filter((i) => i.docNodes && i.docNodes.length)
+                        .map((subItem, subKey) => (
+                          <div key={subKey} className="w-full p-2">
+                            {/* Change bg-primary-950 to rgb(151, 0, 45) */}
+                            <div
+                              className="text-sm text-white px-2 rounded-md"
+                              style={{ backgroundColor: "rgb(151, 0, 45)", padding: "6px" }}
+                            >
+                              {subItem.name}
+                            </div>
+                            {subItem.docNodes
+                              .filter((i) => i.docContentStreamContent)
+                              .map((subSubItem, subSubKey) => (
+                                <div key={subSubKey} className="w-full mt-2">
+                                  {/* Display Tag in Custom Color if it Exists */}
+                                  {subSubItem.tag && (
+                                    <div
+                                      className="text-sm text-white px-3 rounded-md inline-block"
+                                      style={{
+                                        backgroundColor: "rgb(151, 0, 45)",
+                                        padding: "4px",
+                                      }}
+                                    >
+                                      {subSubItem.tag}
+                                    </div>
+                                  )}
 
-        {/* Layout: Sidebar on the left, Content on the right */}
-        <div className="flex mt-4">
-          <div className="w-64 mr-4 bg-gray-100 p-3 rounded-md">
-            {/* Title if you want */}
-            <div className="font-medium text-gray-700 mb-2">{data.name}</div>
-            {renderSidebar()}
-          </div>
+                                  <div className="text-sm text-zinc-900 bg-gray-200 inline-block leading-6 px-3 rounded-md">
+                                    {subSubItem.name}
+                                  </div>
 
-          <div className="flex-1 ml-4">{renderContent()}</div>
+                                  {/* Wrap dynamic HTML inside a div with a custom class */}
+                                  <div
+                                    className="w-full px-2 rich-text-content"
+                                    dangerouslySetInnerHTML={{
+                                      __html:
+                                        subSubItem.docContentStreamContent,
+                                    }}
+                                  ></div>
+
+                                  {/* Display Button in Custom Color if it Exists */}
+                                  {subSubItem.button && (
+                                    <button
+                                      className="w-full mt-2 p-2 text-white rounded-md"
+                                      style={{ backgroundColor: "rgb(151, 0, 45)" }}
+                                    >
+                                      {subSubItem.button.text || "Click Me"}
+                                    </button>
+                                  )}
+                                </div>
+                              ))}
+                          </div>
+                        ))}
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
         </div>
-
-        {/* Footer / News Section */}
         <div className="absolute inset-x-0 bottom-0 text-white bg-zinc-800 px-2 text-sm leading-8 h-8 overflow-hidden rounded-b-md">
           News Section Here...
         </div>
       </div>
 
-      {/* Style links in any dynamically inserted content */}
+      {/* Style the links inside dynamically inserted content */}
       <style>
         {`
           .rich-text-content a {
