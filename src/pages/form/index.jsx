@@ -156,7 +156,7 @@ function FormPage() {
           <div className="flex w-full">
 
             {/* Main content area with centered white card */}
-            <div className="p-4 flex-1 flex justify-center items-start">
+            <div className="gridgrid-cols-1 lg:grid-cols-2 gap-4 w-11/12 lg:w-10/12 p-4 bg-gray-100 rounded-xl drop-shadow-lg absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
               <div className="bg-gray-100 rounded-xl drop-shadow-lg w-full max-w-4xl p-6">
                 {/* Form Title (optional) */}
                 <h2 className="text-xl font-semibold mb-4">Inserisci Nuovo Atto</h2>
