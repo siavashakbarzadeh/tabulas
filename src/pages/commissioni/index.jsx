@@ -137,11 +137,11 @@ function CommissioniPage() {
 
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-red-700 text-white">
+                  <tr className="bg-gray-50 text-dark">
                     {columns.map((col, cIdx) => (
                       <th
                         key={cIdx}
-                        className="py-2 px-3 border border-red-800 text-center"
+                        className="py-2 px-3 border  text-center"
                       >
                         {col.label}
                       </th>
