@@ -120,6 +120,7 @@ import CommissioniPage from "../pages/commissioni";
 import UltimiattiPage from "../pages/ultimiatti";
 import UltimdossierPage from "../pages/ultimdossier";
 import FormPage from "../pages/form";
+import DetailsPage from "../pages/details";
 
 const ScrollToTop = (props) => {
   const location = useLocation();
@@ -144,6 +145,7 @@ function Router() {
                 <Route path="email" element={<EmailPage />} />
                 <Route path="services" element={<ServicePage />} />
                 <Route path="form" element={<FormPage />} />
+                <Route path="details/:id" element={<DetailsPage />} />
                 <Route path="guidemanuali" element={<GuidemanualiPage />} />
                 <Route path="ebook" element={<EbookPage />} />
                 <Route path="commissioni" element={<CommissioniPage />} />
