@@ -1,0 +1,53 @@
+/* Example: custom-rich-text.css */
+.rich-text-content {
+    font-family: sans-serif;
+    line-height: 1.5;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .rich-text-content h1,
+  .rich-text-content h2,
+  .rich-text-content h3,
+  .rich-text-content h4 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .rich-text-content h1 {
+    font-size: 1.25rem;
+  }
+  .rich-text-content h2 {
+    font-size: 1.125rem;
+  }
+    
+  .rich-text-content p,
+  .rich-text-content div,
+  .rich-text-content li {
+    margin-bottom: 0.75rem;
+  }
+  
+  .rich-text-content ul,
+  .rich-text-content ol {
+    padding-left: 1.2em;
+    margin-bottom: 1rem;
+  }
+  
+  .rich-text-content a {
+    color: rgb(151 0 45);
+    text-decoration: underline;
+  }
+  
+  .rich-text-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+  }
+  
+  .rich-text-content th,
+  .rich-text-content td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+  }
+  

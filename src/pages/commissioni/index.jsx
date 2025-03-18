@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
+import "../../assets/css/custom/rich-text-content.css"; 
 
 function CommissioniPage() {
   const [loading, setLoading] = useState(true);
