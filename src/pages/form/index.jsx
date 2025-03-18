@@ -23,31 +23,29 @@ function FormPage() {
   const { user } = useAuth();
 
   const [formData, setFormData] = useState({
-    name: user?.email || "", // or user?.name
+    name: user?.email || "", // prefill with user's email
     act_type: "",
     recipient_office: "",
     submission_date: "",
     document: null,
-    firmatarios: [], // stores the selected user objects
+    firmatarios: [], // stores selected users
   });
 
-  // Text typed in the firmatario textarea
+  // Holds the text typed into the firmatario textarea
   const [firmatarioInput, setFirmatarioInput] = useState("");
 
-  // Search results from the API
+  // Search results from the API (expects response.data.data.users)
   const [searchResults, setSearchResults] = useState([]);
 
-  // UI state
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  // Update any form field except firmatarios
   const handleUpdateFormData = (fieldName, value) => {
     setFormData((prev) => ({ ...prev, [fieldName]: value }));
   };
 
-  // Handle changes to the firmatario textarea
+  // Trigger API search as the user types
   const handleFirmatarioChange = (e) => {
     const value = e.target.value;
     setFirmatarioInput(value);
@@ -59,19 +57,23 @@ function FormPage() {
     }
   };
 
-  // Perform API search
+  // Perform API search and retrieve users from res.data.data.users
   const handleSearch = (query) => {
     axios
       .get(`/users/search?query=${query}`)
       .then((res) => {
-        setSearchResults(res.data.data || []);
+        // Adjusted to access the "users" array inside the data object
+        setSearchResults(res.data.data.users || []);
       })
       .catch(() => setSearchResults([]));
   };
 
-  // Select a user from search results
+  // When a user is selected from the dropdown
   const handleSelectFirmatario = (selectedUser) => {
-    // Avoid duplicates
+    // Use name if available; otherwise, use email
+    const displayValue = selectedUser.name || selectedUser.email;
+
+    // Prevent duplicates
     const alreadySelected = formData.firmatarios.some(
       (f) => f.id === selectedUser.id
     );
@@ -80,15 +82,15 @@ function FormPage() {
         ...prev,
         firmatarios: [...prev.firmatarios, selectedUser],
       }));
-      // Append user’s name to the textarea with a comma
+      // Append the display value (email or name) to the textarea (with a comma)
       setFirmatarioInput((prevText) =>
-        (prevText.trim() ? prevText.trim() + " " : "") + selectedUser.name + ", "
+        (prevText.trim() ? prevText.trim() + " " : "") + displayValue + ", "
       );
     }
     setSearchResults([]);
   };
 
-  // Submit form
+  // Form submission handler
   const handleSubmit = () => {
     setIsLoading(true);
     const formDataObj = new FormData();
@@ -98,7 +100,7 @@ function FormPage() {
     formDataObj.append("submission_date", formData.submission_date);
     formDataObj.append("document", formData.document);
 
-    // Add firmatario IDs
+    // Append each firmatario's ID
     formData.firmatarios.forEach((f) => {
       formDataObj.append("firmatarios[]", f.id);
     });
@@ -154,11 +156,9 @@ function FormPage() {
             </label>
           </form>
           <div className="flex w-full">
-
             {/* Main content area with centered white card */}
             <div className="p-4 flex-1 flex justify-center items-start">
-              <div className="gridgrid-cols-1 lg:grid-cols-2 gap-4 w-11/12 lg:w-10/12 p-4 bg-gray-100 rounded-xl drop-shadow-lg absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-11/12 lg:w-10/12 p-4 bg-gray-100 rounded-xl drop-shadow-lg absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 {/* 2-column grid for fields */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {/* Nome Atto */}
@@ -172,7 +172,6 @@ function FormPage() {
                       placeholder="Nome atto"
                     />
                   </div>
-
                   {/* Tipo atto */}
                   <div>
                     <CustomSelect
@@ -180,11 +179,12 @@ function FormPage() {
                       label="Tipo atto"
                       value={formData.act_type}
                       error_message={errors.act_type}
-                      onChange={(e) => handleUpdateFormData("act_type", e.target.value)}
+                      onChange={(e) =>
+                        handleUpdateFormData("act_type", e.target.value)
+                      }
                       options={act_types}
                     />
                   </div>
-
                   {/* Firmatari */}
                   <div className="col-span-2">
                     <label
@@ -209,16 +209,13 @@ function FormPage() {
                             key={userItem.id}
                             className="cursor-pointer p-2 hover:bg-gray-200 border-b"
                             onClick={() => handleSelectFirmatario(userItem)}
-
-
                           >
-                            {userItem.name}
+                            {userItem.name || userItem.email}
                           </div>
                         ))}
                       </div>
                     )}
                   </div>
-
                   {/* Ufficio destinatario */}
                   <div>
                     <CustomSelect
@@ -232,7 +229,6 @@ function FormPage() {
                       options={recipient_offices}
                     />
                   </div>
-
                   {/* Data Invio */}
                   <div>
                     <DateInput
@@ -246,7 +242,6 @@ function FormPage() {
                       }
                     />
                   </div>
-
                   {/* Document Upload */}
                   <div className="col-span-2">
                     <FileInput
@@ -260,7 +255,6 @@ function FormPage() {
                     />
                   </div>
                 </div>
-
                 {/* Submit Button */}
                 <div className="mt-6">
                   <CustomButton
@@ -275,7 +269,6 @@ function FormPage() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }
