@@ -48,9 +48,13 @@ function DetailsPage() {
                   </div>
                 ) : (
                   <div className="w-full grid grid-cols-1 gap-px bg-gray-300">
-                    <div className="col-span-1 text-sm p-3">
-                      <div className="text-zinc-700 mb-2">Name</div>
+                    <div className="col-span-1 text-sm p-3 bg-white">
+                      <div className="text-zinc-700 mb-2">Nome atto</div>
                       <div className="text-zinc-900">{application.name}</div>
+                    </div>
+                    <div className="col-span-1 text-sm p-3 bg-white">
+                      <div className="text-zinc-700 mb-2">Tipo atto</div>
+                      <div className="text-zinc-900">{application.act_type}</div>
                     </div>
                   </div>
                 )}
