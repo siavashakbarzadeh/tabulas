@@ -75,7 +75,7 @@ function DetailsPage() {
                     <div className="col-span-1 text-sm p-3 border border-gray-100 rounded-lg">
                       <div className="text-zinc-300 mb-1">Documenti</div>
                       <div className="text-zinc-900">
-                        {application.document.type == "image" ? (
+                        {application.document.type != "image" ? (
                           <img
                             src={application.document.files.original}
                             alt={application.name}
