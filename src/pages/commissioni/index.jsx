@@ -6,10 +6,12 @@ function CommissioniPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
-  // For modal state
+  // We still have a modal, but maybe just for day columns. 
+  // If you don’t want *any* modal at all, you can remove all modal code.
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalContent, setModalContent] = useState("");
+  const [isIframe, setIsIframe] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -30,36 +32,59 @@ function CommissioniPage() {
   };
 
   /**
-   * Opens the modal with an iframe whose src is `url`.
+   *  Opens a new tab with docContentUrl.
+   *  If docContentUrl is missing, tries docContentStreamContent (raw HTML).
    */
-  const handleOpenModalWithUrl = (url) => {
-    setModalTitle("Convocazioni");
-    // We put an <iframe> into modalContent via dangerouslySetInnerHTML
-    window.open(url, "_blank", "noopener,noreferrer,width=900,height=600");
+  const handleOpenUltimaSeduta = (node) => {
+    if (!node) return;
 
+    // If there's a URL, open it directly:
+    if (node.docContentUrl) {
+      window.open(node.docContentUrl, "_blank", "noopener,noreferrer");
+    }
+    // Otherwise, if we have raw HTML, open a blank tab and write the HTML there.
+    else if (node.docContentStreamContent) {
+      const newWin = window.open("", "_blank", "noopener,noreferrer");
+      if (newWin) {
+        newWin.document.write(node.docContentStreamContent);
+        newWin.document.close();
+      }
+    } else {
+      alert("Nessun contenuto disponibile per Ultima Seduta.");
+    }
   };
 
   /**
-   * Opens the modal with raw HTML (as in Ultima Seduta).
+   *  Opens a new tab for "Convocazioni" or day columns 
+   *  (since X-Frame-Options may block iframes).
+   */
+  const handleOpenModalWithUrl = (url) => {
+    if (!url) return;
+    window.open(url, "_blank", "noopener,noreferrer,width=900,height=600");
+  };
+
+  /**
+   * For the day columns, if you still prefer an actual modal with an iframe, 
+   * you could do that here. But typically it will be blocked by X-Frame-Options 
+   * if from senato.it. 
    */
   const openModal = (title, node) => {
     if (!node) return;
 
     setModalTitle(title || "");
-    if (node.docContentStreamContent) {
-      // Show raw HTML
-      setIsIframe(false);
-      setModalContent(node.docContentStreamContent);
-    } else if (node.docContentUrl) {
-      // Show iframe
+    if (node.docContentUrl) {
+      // show in an iframe => might be blocked
       setIsIframe(true);
-      // We’ll store an <iframe> in `modalContent`, rendered via dangerouslySetInnerHTML
       const iframeHtml = `<iframe 
           src="${node.docContentUrl}" 
           style="width:100%; height:600px;" 
           frameborder="0">
         </iframe>`;
       setModalContent(iframeHtml);
+    } else if (node.docContentStreamContent) {
+      // raw HTML
+      setIsIframe(false);
+      setModalContent(node.docContentStreamContent);
     } else {
       setModalContent("Nessun contenuto disponibile.");
       setIsIframe(false);
@@ -161,7 +186,7 @@ function CommissioniPage() {
                     {columns.map((col, cIdx) => (
                       <th
                         key={cIdx}
-                        className="py-2 px-3 border  text-center"
+                        className="py-2 px-3 border text-center"
                       >
                         {col.label}
                       </th>
@@ -189,7 +214,7 @@ function CommissioniPage() {
                             rowNode,
                             "Convocazioni"
                           );
-                          // Instead of a link, show an icon that opens a modal with an iframe
+                          // Use a DIFFERENT icon, e.g. fa-calendar-alt
                           return (
                             <td
                               key={colIdx}
@@ -205,7 +230,7 @@ function CommissioniPage() {
                                   }
                                 >
                                   <i
-                                    className="fas fa-file-alt text-xl"
+                                    className="fas fa-calendar-alt text-xl"
                                     title="Apri Convocazioni"
                                   ></i>
                                 </span>
@@ -213,10 +238,12 @@ function CommissioniPage() {
                             </td>
                           );
                         } else if (col.id === "ultimaSeduta") {
+                          //  Child named "Ultima seduta"
                           const ultimaNode = findChildByName(
                             rowNode,
                             "Ultima seduta"
                           );
+                          // Instead of a modal, open a new tab
                           return (
                             <td
                               key={colIdx}
@@ -225,7 +252,7 @@ function CommissioniPage() {
                               {ultimaNode && (
                                 <span
                                   className="inline-block cursor-pointer"
-                                  onClick={() => openModal("Ultima Seduta", ultimaNode)}
+                                  onClick={() => handleOpenUltimaSeduta(ultimaNode)}
                                 >
                                   <i
                                     className="fas fa-file-alt text-xl"
@@ -277,7 +304,8 @@ function CommissioniPage() {
           ))}
       </div>
 
-      {/* Modal */}
+      {/* We still have a modal for day columns if you prefer an iframe, 
+          or you could remove it entirely if you never want a modal. */}
       {showModal && (
         <div
           className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
