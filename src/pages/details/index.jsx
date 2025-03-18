@@ -47,18 +47,18 @@ function DetailsPage() {
                     <Loading />
                   </div>
                 ) : (
-                  <div className="w-full grid grid-cols-2 gap-2">
-                    <div className="col-span-1 text-sm p-2 border border-gray-100 rounded-lg">
+                  <div className="w-full grid grid-cols-2 gap-4">
+                    <div className="col-span-1 text-sm p-3 border border-gray-100 rounded-lg">
                       <div className="text-zinc-300 mb-1">Nome atto</div>
                       <div className="text-zinc-900">{application.name}</div>
                     </div>
-                    <div className="col-span-1 text-sm p-2 border border-gray-100 rounded-lg">
+                    <div className="col-span-1 text-sm p-3 border border-gray-100 rounded-lg">
                       <div className="text-zinc-300 mb-1">Tipo atto</div>
                       <div className="text-zinc-900">
                         {application.act_type}
                       </div>
                     </div>
-                    <div className="col-span-1 text-sm p-2 border border-gray-100 rounded-lg">
+                    <div className="col-span-1 text-sm p-3 border border-gray-100 rounded-lg">
                       <div className="text-zinc-300 mb-1">
                         Ufficio destinatario
                       </div>
@@ -66,10 +66,29 @@ function DetailsPage() {
                         {application.act_type}
                       </div>
                     </div>
-                    <div className="col-span-1 text-sm p-2 border border-gray-100 rounded-lg">
+                    <div className="col-span-1 text-sm p-3 border border-gray-100 rounded-lg">
                       <div className="text-zinc-300 mb-1">Data Invio</div>
                       <div className="text-zinc-900">
                         {application.submission_date}
+                      </div>
+                    </div>
+                    <div className="col-span-1 text-sm p-3 border border-gray-100 rounded-lg">
+                      <div className="text-zinc-300 mb-1">Documenti</div>
+                      <div className="text-zinc-900">
+                        {application.document.type == "image" ? (
+                          <img
+                            src={application.document.files.original}
+                            alt={application.name}
+                            className="w-full max-w-full"
+                          />
+                        ) : (
+                          <a
+                            href={application.document.files.original}
+                            download
+                          >
+                            Download
+                          </a>
+                        )}
                       </div>
                     </div>
                   </div>
