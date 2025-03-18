@@ -1,15 +1,33 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import SearchIcon from "../../assets/svg/search.svg";
 import { useParams } from "react-router-dom";
+import axios from "../../configs/axiosConfig.js";
 
 function DetailsPage() {
-
-  const {id} = useParams();
+  const { id } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [application, setApplication] = useState(null);
 
   useEffect(() => {
-    console.log(id);
-    
+    fetchApplication(id);
   }, []);
+
+  useEffect(() => {
+    console.log(application);
+  }, [application]);
+
+  const fetchApplication = (id) => {
+    setLoading(true);
+    axios
+      .get(`applications/${id}`)
+      .then((res) => {
+        setLoading(false);
+        setApplication(res.data.application);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <>
