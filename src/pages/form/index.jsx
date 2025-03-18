@@ -51,7 +51,7 @@ function FormPage() {
         },
       })
       .then((res) => {
-        navigate(`details/${res.data.data.application.id}`);
+        navigate(`/details/${res.data.data.application.id}`);
       })
       .catch((error) => {
         if (error.response.status === 422) {
