@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import SearchIcon from "../../assets/svg/search.svg";
 import { useParams } from "react-router-dom";
 import axios from "../../configs/axiosConfig.js";
+import Loading from "../../layout/components/Loading.jsx";
 
 function DetailsPage() {
   const { id } = useParams();
@@ -41,27 +42,18 @@ function DetailsPage() {
                 </span>
               </div>
               <div className="w-full max-h-52 overflow-auto bg-white rounded-lg p-2 mt-2">
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Dignissimos quis quia veniam soluta facilis temporibus,
-                  dolores laudantium ratione distinctio. Blanditiis ea tenetur
-                  est necessitatibus, consectetur accusamus minus neque labore
-                  eos?
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Dignissimos quis quia veniam soluta facilis temporibus,
-                  dolores laudantium ratione distinctio. Blanditiis ea tenetur
-                  est necessitatibus, consectetur accusamus minus neque labore
-                  eos?
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Dignissimos quis quia veniam soluta facilis temporibus,
-                  dolores laudantium ratione distinctio. Blanditiis ea tenetur
-                  est necessitatibus, consectetur accusamus minus neque labore
-                  eos?
-                </p>
+                {loading || application === null ? (
+                  <div className="w-full flex justify-center">
+                    <Loading />
+                  </div>
+                ) : (
+                  <div className="w-full grid grid-cols-1 gap-px bg-gray-300">
+                    <div className="col-span-1 text-sm p-3">
+                      <div className="text-zinc-700 mb-2">Name</div>
+                      <div className="text-zinc-900">{application.name}</div>
+                    </div>
+                  </div>
+                )}
               </div>
               <button className="w-full h-10 mt-2 rounded-md bg-primary-900 text-white text-sm flex items-center justify-center">
                 Prepara per Invio
