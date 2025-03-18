@@ -84,6 +84,7 @@ function DetailsPage() {
                         ) : (
                           <a
                             href={application.document.files.original}
+                            className="leading-7 text-sm text-white bg-primary-900 rounded-md px-4 transition-colors hover:bg-primary-950"
                             download
                           >
                             Download
