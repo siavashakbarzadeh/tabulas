@@ -51,7 +51,9 @@ function FormPage() {
         },
       })
       .then((res) => {
-        navigate("/confirm");
+        console.log(res.data);
+        
+        // navigate("/confirm");
       })
       .catch((error) => {
         if (error.response.status === 422) {
