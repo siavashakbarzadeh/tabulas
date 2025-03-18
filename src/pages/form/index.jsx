@@ -147,7 +147,7 @@ function FormPage() {
                 className="w-full h-11 bg-neutral-200 text-sm rounded-xl border-none pl-18 ring-0 focus:ring-0 focus:border-none"
               />
               <img
-                src="/assets/search.svg"
+                src={SearchIcon}
                 alt="Search"
                 className="w-6 h-6 absolute left-4 top-1/2 transform -translate-y-1/2"
               />
@@ -157,7 +157,7 @@ function FormPage() {
 
             {/* Main content area with centered white card */}
             <div className="p-4 flex-1 flex justify-center items-start">
-              <div className="bg-white rounded-xl drop-shadow-lg w-full max-w-4xl p-6">
+              <div className="bg-gray-100 rounded-xl drop-shadow-lg w-full max-w-4xl p-6">
                 {/* Form Title (optional) */}
                 <h2 className="text-xl font-semibold mb-4">Inserisci Nuovo Atto</h2>
 
@@ -211,6 +211,8 @@ function FormPage() {
                             key={userItem.id}
                             className="cursor-pointer p-2 hover:bg-gray-200 border-b"
                             onClick={() => handleSelectFirmatario(userItem)}
+
+
                           >
                             {userItem.name}
                           </div>
@@ -248,7 +250,7 @@ function FormPage() {
                   </div>
 
                   {/* Document Upload */}
-                  <div>
+                  <div className="col-span-2">
                     <FileInput
                       id="document"
                       label="File da Inviare"
