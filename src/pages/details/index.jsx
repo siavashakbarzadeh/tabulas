@@ -49,17 +49,17 @@ function DetailsPage() {
                 ) : (
                   <div className="w-full grid grid-cols-2 gap-2">
                     <div className="col-span-1 text-sm p-2 border border-gray-100 rounded-lg">
-                      <div className="text-zinc-700 mb-1">Nome atto</div>
+                      <div className="text-zinc-300 mb-1">Nome atto</div>
                       <div className="text-zinc-900">{application.name}</div>
                     </div>
                     <div className="col-span-1 text-sm p-2 border border-gray-100 rounded-lg">
-                      <div className="text-zinc-700 mb-1">Tipo atto</div>
+                      <div className="text-zinc-300 mb-1">Tipo atto</div>
                       <div className="text-zinc-900">
                         {application.act_type}
                       </div>
                     </div>
                     <div className="col-span-1 text-sm p-2 border border-gray-100 rounded-lg">
-                      <div className="text-zinc-700 mb-1">
+                      <div className="text-zinc-300 mb-1">
                         Ufficio destinatario
                       </div>
                       <div className="text-zinc-900">
