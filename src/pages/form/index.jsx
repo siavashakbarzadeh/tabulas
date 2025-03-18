@@ -23,18 +23,18 @@ function FormPage() {
   const { user } = useAuth();
 
   const [formData, setFormData] = useState({
-    name: user?.email || "", // prefill with user's email
+    name: user?.email || "", // prefilled with user's email (or user?.name)
     act_type: "",
     recipient_office: "",
     submission_date: "",
     document: null,
-    firmatarios: [], // stores selected users
+    firmatarios: [], // stores the selected user objects
   });
 
-  // Holds the text typed into the firmatario textarea
-  const [firmatarioInput, setFirmatarioInput] = useState("");
+  // Holds the current search query (what the user types)
+  const [firmatarioQuery, setFirmatarioQuery] = useState("");
 
-  // Search results from the API (expects response.data.data.users)
+  // Holds the API search results
   const [searchResults, setSearchResults] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -45,11 +45,10 @@ function FormPage() {
     setFormData((prev) => ({ ...prev, [fieldName]: value }));
   };
 
-  // Trigger API search as the user types
-  const handleFirmatarioChange = (e) => {
+  // Handle changes to the firmatario search input
+  const handleFirmatarioQueryChange = (e) => {
     const value = e.target.value;
-    setFirmatarioInput(value);
-
+    setFirmatarioQuery(value);
     if (value.trim().length > 0) {
       handleSearch(value);
     } else {
@@ -57,12 +56,12 @@ function FormPage() {
     }
   };
 
-  // Perform API search and retrieve users from res.data.data.users
+  // Call the API to search for users by email (or name)
   const handleSearch = (query) => {
     axios
       .get(`/users/search?query=${query}`)
       .then((res) => {
-        // Adjusted to access the "users" array inside the data object
+        // Expecting the JSON response to include the users in res.data.data.users
         setSearchResults(res.data.data.users || []);
       })
       .catch(() => setSearchResults([]));
@@ -70,10 +69,9 @@ function FormPage() {
 
   // When a user is selected from the dropdown
   const handleSelectFirmatario = (selectedUser) => {
-    // Use name if available; otherwise, use email
+    // Use name if available; otherwise, fallback to email
     const displayValue = selectedUser.name || selectedUser.email;
-
-    // Prevent duplicates
+    // Avoid duplicates
     const alreadySelected = formData.firmatarios.some(
       (f) => f.id === selectedUser.id
     );
@@ -82,15 +80,18 @@ function FormPage() {
         ...prev,
         firmatarios: [...prev.firmatarios, selectedUser],
       }));
-      // Append the display value (email or name) to the textarea (with a comma)
-      setFirmatarioInput((prevText) =>
-        (prevText.trim() ? prevText.trim() + " " : "") + displayValue + ", "
-      );
     }
+    // Clear the query so the dropdown hides and the query field resets
+    setFirmatarioQuery("");
     setSearchResults([]);
   };
 
-  // Form submission handler
+  // Build a comma-separated display of selected firmatarios
+  const selectedFirmatariosDisplay = formData.firmatarios
+    .map((u) => u.name || u.email)
+    .join(", ");
+
+  // Handle form submission
   const handleSubmit = () => {
     setIsLoading(true);
     const formDataObj = new FormData();
@@ -126,10 +127,13 @@ function FormPage() {
           }, {});
           setErrors(result);
         } else {
-          toast.error(error.response?.data?.data?.message || "Error", {
-            position: "bottom-right",
-            hideProgressBar: true,
-          });
+          toast.error(
+            error.response?.data?.data?.message || "Error",
+            {
+              position: "bottom-right",
+              hideProgressBar: true,
+            }
+          );
         }
       })
       .finally(() => setIsLoading(false));
@@ -158,7 +162,7 @@ function FormPage() {
           <div className="flex w-full">
             {/* Main content area with centered white card */}
             <div className="p-4 flex-1 flex justify-center items-start">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-11/12 lg:w-10/12 p-4 bg-gray-100 rounded-xl drop-shadow-lg absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              <div className="gap-4 w-10/12 lg:w-10/12 p-4 bg-gray-100 rounded-xl drop-shadow-lg absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 {/* 2-column grid for fields */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {/* Nome Atto */}
@@ -186,24 +190,24 @@ function FormPage() {
                     />
                   </div>
                   {/* Firmatari */}
-                  <div className="col-span-2">
+                  <div className="col-span-2 relative">
                     <label
-                      htmlFor="firmatarioInput"
+                      htmlFor="firmatarioQuery"
                       className="block text-sm font-medium mb-1"
                     >
                       Firmatari
                     </label>
-                    <textarea
-                      id="firmatarioInput"
-                      rows={2}
+                    <input
+                      id="firmatarioQuery"
+                      type="text"
                       className="border p-2 rounded w-full"
                       placeholder="Digita per cercare e selezionare i firmatari..."
-                      value={firmatarioInput}
-                      onChange={handleFirmatarioChange}
+                      value={firmatarioQuery}
+                      onChange={handleFirmatarioQueryChange}
                     />
-                    {/* Dropdown for search suggestions */}
+                    {/* Dropdown for search suggestions (absolute positioned below input) */}
                     {searchResults.length > 0 && (
-                      <div className="border rounded bg-white max-h-40 overflow-auto mt-1">
+                      <div className="absolute z-50 top-full left-0 w-full border bg-white mt-1 max-h-40 overflow-auto">
                         {searchResults.map((userItem) => (
                           <div
                             key={userItem.id}
@@ -215,6 +219,14 @@ function FormPage() {
                         ))}
                       </div>
                     )}
+                    {/* Display selected firmatarios in a read-only textarea */}
+                    <textarea
+                      readOnly
+                      className="border p-2 rounded w-full mt-2"
+                      rows={2}
+                      value={selectedFirmatariosDisplay}
+                      placeholder="Firmatari selezionati appariranno qui..."
+                    />
                   </div>
                   {/* Ufficio destinatario */}
                   <div>
@@ -254,16 +266,17 @@ function FormPage() {
                       }
                     />
                   </div>
+                  <div className="mt-6 col-span-2">
+                    <CustomButton
+                      label="Prepara per Invio"
+                      isLoading={isLoading}
+                      disabled={isLoading}
+                      onClick={handleSubmit}
+                    />
+                  </div>
                 </div>
                 {/* Submit Button */}
-                <div className="mt-6">
-                  <CustomButton
-                    label="Prepara per Invio"
-                    isLoading={isLoading}
-                    disabled={isLoading}
-                    onClick={handleSubmit}
-                  />
-                </div>
+
               </div>
             </div>
           </div>
