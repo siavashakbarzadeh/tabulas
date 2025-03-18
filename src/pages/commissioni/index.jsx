@@ -6,8 +6,7 @@ function CommissioniPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
-  // We still have a modal, but maybe just for day columns. 
-  // If you don’t want *any* modal at all, you can remove all modal code.
+  // Modal state
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalContent, setModalContent] = useState("");
@@ -32,31 +31,8 @@ function CommissioniPage() {
   };
 
   /**
-   *  Opens a new tab with docContentUrl.
-   *  If docContentUrl is missing, tries docContentStreamContent (raw HTML).
-   */
-  const handleOpenUltimaSeduta = (node) => {
-    if (!node) return;
-
-    // If there's a URL, open it directly:
-    if (node.docContentUrl) {
-      window.open(node.docContentUrl, "_blank", "noopener,noreferrer");
-    }
-    // Otherwise, if we have raw HTML, open a blank tab and write the HTML there.
-    else if (node.docContentStreamContent) {
-      const newWin = window.open("", "_blank", "noopener,noreferrer");
-      if (newWin) {
-        newWin.document.write(node.docContentStreamContent);
-        newWin.document.close();
-      }
-    } else {
-      alert("Nessun contenuto disponibile per Ultima Seduta.");
-    }
-  };
-
-  /**
-   *  Opens a new tab for "Convocazioni" or day columns 
-   *  (since X-Frame-Options may block iframes).
+   * Opens a new tab for "Convocazioni" or day columns.
+   * (If senato.it is blocking iframes, we just open in a new window/tab.)
    */
   const handleOpenModalWithUrl = (url) => {
     if (!url) return;
@@ -64,16 +40,20 @@ function CommissioniPage() {
   };
 
   /**
-   * For the day columns, if you still prefer an actual modal with an iframe, 
-   * you could do that here. But typically it will be blocked by X-Frame-Options 
-   * if from senato.it. 
+   * The updated logic for "Ultima Seduta." 
+   * Instead of a new tab, it shows HTML in the same page (a React modal).
    */
-  const openModal = (title, node) => {
+  const handleOpenUltimaSeduta = (node) => {
     if (!node) return;
 
-    setModalTitle(title || "");
-    if (node.docContentUrl) {
-      // show in an iframe => might be blocked
+    setModalTitle("Ultima Seduta");
+
+    if (node.docContentStreamContent) {
+      // We have raw HTML => show it
+      setIsIframe(false);
+      setModalContent(node.docContentStreamContent);
+    } else if (node.docContentUrl) {
+      // We have a URL => load it in an iframe (note: might be blocked by X-Frame-Options)
       setIsIframe(true);
       const iframeHtml = `<iframe 
           src="${node.docContentUrl}" 
@@ -81,13 +61,10 @@ function CommissioniPage() {
           frameborder="0">
         </iframe>`;
       setModalContent(iframeHtml);
-    } else if (node.docContentStreamContent) {
-      // raw HTML
-      setIsIframe(false);
-      setModalContent(node.docContentStreamContent);
     } else {
-      setModalContent("Nessun contenuto disponibile.");
+      // No content at all
       setIsIframe(false);
+      setModalContent("Nessun contenuto disponibile.");
     }
 
     setShowModal(true);
@@ -199,7 +176,7 @@ function CommissioniPage() {
                     <tr key={rowIdx} className="odd:bg-white even:bg-gray-50">
                       {columns.map((col, colIdx) => {
                         if (col.id === "name") {
-                          //  Row's name
+                          // Row's name
                           return (
                             <td
                               key={colIdx}
@@ -209,12 +186,12 @@ function CommissioniPage() {
                             </td>
                           );
                         } else if (col.id === "convocazioni") {
-                          //  Child named "Convocazioni"
+                          // Child named "Convocazioni"
                           const convocazioniNode = findChildByName(
                             rowNode,
                             "Convocazioni"
                           );
-                          // Use a DIFFERENT icon, e.g. fa-calendar-alt
+                          // Use a different icon for Convocazioni (like fa-calendar-alt)
                           return (
                             <td
                               key={colIdx}
@@ -238,12 +215,11 @@ function CommissioniPage() {
                             </td>
                           );
                         } else if (col.id === "ultimaSeduta") {
-                          //  Child named "Ultima seduta"
+                          // Child named "Ultima seduta"
                           const ultimaNode = findChildByName(
                             rowNode,
                             "Ultima seduta"
                           );
-                          // Instead of a modal, open a new tab
                           return (
                             <td
                               key={colIdx}
@@ -263,7 +239,7 @@ function CommissioniPage() {
                             </td>
                           );
                         } else {
-                          //  Day columns
+                          // Day columns
                           const dayNode = getDayNode(rowNode, col.label);
                           if (dayNode?.docContentUrl) {
                             return (
@@ -304,8 +280,7 @@ function CommissioniPage() {
           ))}
       </div>
 
-      {/* We still have a modal for day columns if you prefer an iframe, 
-          or you could remove it entirely if you never want a modal. */}
+      {/* Single Modal – used now for “Ultima Seduta” only */}
       {showModal && (
         <div
           className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
@@ -318,6 +293,7 @@ function CommissioniPage() {
             <h2 className="text-lg font-semibold mb-4">{modalTitle}</h2>
             <div
               className="rich-text-content p-4 bg-gray-100 rounded"
+              // If it's an iframe, modalContent is the <iframe> HTML; otherwise raw HTML
               dangerouslySetInnerHTML={{ __html: modalContent }}
             />
             <button
