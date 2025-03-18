@@ -5,12 +5,7 @@ import Loading from "../../layout/components/Loading.jsx";
 function CommissioniPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
-
-  // For modal state
-  const [showModal, setShowModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState("");
-  const [modalContent, setModalContent] = useState("");
-
+  
   useEffect(() => {
     fetchData();
   }, []);
@@ -29,30 +24,12 @@ function CommissioniPage() {
       });
   };
 
-  /**
-   * Opens the modal with an iframe whose src is `url`.
-   */
-  const handleOpenModalWithUrl = (url) => {
-    setModalTitle("Convocazioni");
-    // We put an <iframe> into modalContent via dangerouslySetInnerHTML
-    const iframeHtml = `<iframe src="${url}" style="width:100%; height:600px;" frameborder="0"></iframe>`;
-    setModalContent(iframeHtml);
-    setShowModal(true);
-  };
-
-  /**
-   * Opens the modal with raw HTML (as in Ultima Seduta).
-   */
-  const handleOpenModalWithHtml = (htmlContent) => {
-    setModalTitle("Ultima Seduta");
-    setModalContent(htmlContent || "");
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setModalTitle("");
-    setModalContent("");
+  // Pop-up (or new tab) helper
+  const openPopup = (url) => {
+    // Using window.open with specs can create a pop-up
+    // But many browsers / popup-blockers may open it as a tab or block it.
+    // The 'noopener,noreferrer' is recommended to avoid security issues.
+    window.open(url, "_blank", "noopener,noreferrer,width=900,height=600");
   };
 
   if (loading) {
@@ -63,11 +40,9 @@ function CommissioniPage() {
     );
   }
 
-  // Generate dynamic headers for the current week
   const getCurrentWeekDays = () => {
     const days = [];
     const today = new Date();
-    // Anchor on Monday (JS: Sunday=0, Monday=1, etc.)
     const dayOfWeek = today.getDay() === 0 ? 7 : today.getDay();
     const monday = new Date(today);
     monday.setDate(today.getDate() - (dayOfWeek - 1));
@@ -75,7 +50,6 @@ function CommissioniPage() {
     for (let i = 0; i < 7; i++) {
       const currentDay = new Date(monday);
       currentDay.setDate(monday.getDate() + i);
-
       const label = currentDay.toLocaleDateString("it-IT", {
         weekday: "long",
         day: "numeric",
@@ -86,26 +60,22 @@ function CommissioniPage() {
     return days;
   };
 
-  // Columns
   const columns = [
-    { id: "name", label: "" }, // Commission name column
+    { id: "name", label: "" },
     { id: "convocazioni", label: "Convocazioni" },
     ...getCurrentWeekDays().map((dayLabel) => ({ id: dayLabel, label: dayLabel })),
     { id: "ultimaSeduta", label: "Ultima Seduta" },
   ];
 
-  // Utility: find child docNode by case-insensitive `name`
   const findChildByName = (parent, targetName) => {
-    if (!parent?.docNodes) return null;
-    return parent.docNodes.find(
+    return parent?.docNodes?.find(
       (child) => child.name?.toLowerCase() === targetName.toLowerCase()
     );
   };
 
-  // Since columns are "lunedì 20 marzo ..." we only match the first word
-  const getDayNode = (parentDocNode, fullLabel) => {
-    const firstWord = fullLabel.split(" ")[0].toLowerCase(); // e.g. "lunedì"
-    return findChildByName(parentDocNode, firstWord);
+  const getDayNode = (parent, fullLabel) => {
+    const firstWord = fullLabel.split(" ")[0].toLowerCase();
+    return findChildByName(parent, firstWord);
   };
 
   return (
@@ -122,7 +92,7 @@ function CommissioniPage() {
           </label>
         </form>
 
-        {/* For each first-level node => create a table */}
+        {/* For each top-level node => table */}
         {data?.docNodes
           ?.filter((topNode) => topNode.docNodes && topNode.docNodes.length > 0)
           .map((topNode, tableIdx) => (
@@ -130,7 +100,6 @@ function CommissioniPage() {
               key={tableIdx}
               className="border border-gray-300 rounded-md overflow-hidden mb-6"
             >
-              {/* Table Title = topNode.name */}
               <div className="bg-red-800 text-white px-4 py-2 text-lg font-semibold">
                 {topNode.name}
               </div>
@@ -149,12 +118,10 @@ function CommissioniPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* Each second-level node => row */}
                   {topNode.docNodes.map((rowNode, rowIdx) => (
                     <tr key={rowIdx} className="odd:bg-white even:bg-gray-50">
                       {columns.map((col, colIdx) => {
                         if (col.id === "name") {
-                          //  Row's name
                           return (
                             <td
                               key={colIdx}
@@ -163,13 +130,12 @@ function CommissioniPage() {
                               {rowNode.name}
                             </td>
                           );
-                        } else if (col.id === "convocazioni") {
-                          //  Child named "Convocazioni"
+                        }
+                        if (col.id === "convocazioni") {
                           const convocazioniNode = findChildByName(
                             rowNode,
                             "Convocazioni"
                           );
-                          // Instead of a link, show an icon that opens a modal with an iframe
                           return (
                             <td
                               key={colIdx}
@@ -179,80 +145,79 @@ function CommissioniPage() {
                                 <span
                                   className="inline-block cursor-pointer"
                                   onClick={() =>
-                                    handleOpenModalWithUrl(
-                                      convocazioniNode.docContentUrl
-                                    )
+                                    openPopup(convocazioniNode.docContentUrl)
                                   }
                                 >
                                   <i
                                     className="fas fa-file-alt text-xl"
                                     title="Apri Convocazioni"
-                                  ></i>
+                                  />
                                 </span>
                               )}
                             </td>
                           );
-                        } else if (col.id === "ultimaSeduta") {
-                          //  Child named "Ultima seduta"
-                          const ultimaNode = findChildByName(
-                            rowNode,
-                            "Ultima seduta"
-                          );
+                        }
+                        if (col.id === "ultimaSeduta") {
+                          const ultimaNode = findChildByName(rowNode, "Ultima seduta");
                           return (
                             <td
                               key={colIdx}
                               className="border border-gray-300 px-3 py-2 text-sm text-center"
                             >
-                              {ultimaNode && (
+                              {ultimaNode?.docContentStreamContent && (
                                 <span
                                   className="inline-block cursor-pointer"
                                   onClick={() =>
-                                    handleOpenModalWithHtml(
-                                      ultimaNode.docContentStreamContent
+                                    // If you still want “Ultima seduta” in a
+                                    // React-based modal with raw HTML,
+                                    // you could show it similarly to previous examples.
+                                    // For a direct pop-up approach:
+                                    // openPopup('data:text/html,' + encodeURIComponent(ultimaNode.docContentStreamContent))
+                                    // (but raw HTML in a new window can be messy)
+                                    openPopup(
+                                      // Option 1: If ultimaSeduta is actually a separate page,
+                                      // you can store a docContentUrl. Otherwise, there's no
+                                      // direct, safe way to open raw HTML in a new window
+                                      ultimaNode.docContentUrl || "#"
                                     )
                                   }
                                 >
                                   <i
                                     className="fas fa-file-alt text-xl"
                                     title="Ultima Seduta"
-                                  ></i>
+                                  />
                                 </span>
                               )}
                             </td>
                           );
-                        } else {
-                          //  Day columns
-                          const dayNode = getDayNode(rowNode, col.label);
-                          if (dayNode?.docContentUrl) {
-                            return (
-                              <td
-                                key={colIdx}
-                                className="border border-gray-300 px-3 py-2 text-sm text-center"
-                              >
-                                <span
-                                  className="inline-block cursor-pointer"
-                                  onClick={() =>
-                                    handleOpenModalWithUrl(dayNode.docContentUrl)
-                                  }
-                                >
-                                  <i
-                                    className="fas fa-file-alt text-xl"
-                                    title="Apri Documento"
-                                  ></i>
-                                </span>
-                              </td>
-                            );
-                          } else {
-                            return (
-                              <td
-                                key={colIdx}
-                                className="border border-gray-300 px-3 py-2 text-sm text-center"
-                              >
-                                {/* No link for that day */}
-                              </td>
-                            );
-                          }
                         }
+
+                        // Else it's one of the day columns
+                        const dayNode = getDayNode(rowNode, col.label);
+                        if (dayNode?.docContentUrl) {
+                          return (
+                            <td
+                              key={colIdx}
+                              className="border border-gray-300 px-3 py-2 text-sm text-center"
+                            >
+                              <span
+                                className="inline-block cursor-pointer"
+                                onClick={() => openPopup(dayNode.docContentUrl)}
+                              >
+                                <i
+                                  className="fas fa-file-alt text-xl"
+                                  title="Apri Documento"
+                                />
+                              </span>
+                            </td>
+                          );
+                        }
+                        return (
+                          <td
+                            key={colIdx}
+                            className="border border-gray-300 px-3 py-2 text-sm text-center"
+                          />
+                        );
                       })}
                     </tr>
                   ))}
@@ -261,31 +226,6 @@ function CommissioniPage() {
             </div>
           ))}
       </div>
-
-      {/* Modal */}
-      {showModal && (
-        <div
-          className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
-          onClick={handleCloseModal}
-        >
-          <div
-            className="bg-white rounded-lg p-6 w-3/4 max-w-4xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-lg font-semibold mb-4">{modalTitle}</h2>
-            <div
-              className="rich-text-content p-4 bg-gray-100 rounded"
-              dangerouslySetInnerHTML={{ __html: modalContent }}
-            />
-            <button
-              onClick={handleCloseModal}
-              className="mt-4 px-4 py-2 bg-red-600 text-white rounded"
-            >
-              Chiudi
-            </button>
-          </div>
-        </div>
-      )}
     </>
   );
 }
