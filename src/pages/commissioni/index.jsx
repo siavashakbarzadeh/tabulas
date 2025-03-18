@@ -284,27 +284,33 @@ function CommissioniPage() {
       {/* Single Modal – used now for “Ultima Seduta” only */}
       {showModal && (
         <div
-          className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
-          onClick={handleCloseModal}
+        className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
+        onClick={handleCloseModal}
+      >
+        <div
+          className="bg-white rounded-lg p-6 w-3/4 max-w-4xl"
+          onClick={(e) => e.stopPropagation()}
         >
+          
+          {/* 
+            Add maxHeight and scrolling here
+            - overflow-y-auto (Tailwind) ensures a scrollbar if content overflows
+            - maxHeight: "70vh" limits the container’s vertical size to 70% of the viewport
+          */}
           <div
-            className="bg-white rounded-lg p-6 w-3/4 max-w-4xl"
-            onClick={(e) => e.stopPropagation()}
+            className="rich-text-content p-4 bg-gray-100 rounded overflow-y-auto"
+            style={{ maxHeight: "70vh" }}
+            dangerouslySetInnerHTML={{ __html: modalContent }}
+          />
+      
+          <button
+            onClick={handleCloseModal}
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded"
           >
-            <h2 className="text-lg font-semibold mb-4">{modalTitle}</h2>
-            <div
-              className="rich-text-content p-4 bg-gray-100 rounded"
-              // If it's an iframe, modalContent is the <iframe> HTML; otherwise raw HTML
-              dangerouslySetInnerHTML={{ __html: modalContent }}
-            />
-            <button
-              onClick={handleCloseModal}
-              className="mt-4 px-4 py-2 bg-red-600 text-white rounded"
-            >
-              Chiudi
-            </button>
-          </div>
+            Chiudi
+          </button>
         </div>
+      </div>
       )}
     </>
   );
