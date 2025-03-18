@@ -22,7 +22,7 @@ function DetailsPage() {
       .get(`applications/${id}`)
       .then((res) => {
         setLoading(false);
-        setApplication(res.data.application);
+        setApplication(res.data.data.application);
       })
       .catch((err) => {
         console.log(err);
