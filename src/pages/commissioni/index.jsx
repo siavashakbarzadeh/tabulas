@@ -66,6 +66,39 @@ function CommissioniPage() {
     ) : null;
   };
 
+  const renderDocNode = (docNode) => {
+    const days = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"];
+    const dayColumns = days.map((day) => {
+      return (
+        <td key={day} className="border border-gray-300 px-3 py-2 text-sm text-center">
+          {getDayContent(docNode, day)}
+        </td>
+      );
+    });
+
+    return (
+      <tr className="odd:bg-white even:bg-gray-50">
+        <td className="border border-gray-300 px-3 py-2 font-semibold text-sm">
+          {docNode.name}
+        </td>
+        {/* Days columns */}
+        {dayColumns}
+
+        {/* Ultima Seduta */}
+        <td className="border border-gray-300 px-3 py-2 text-sm text-center">
+          {docNode.docNodes?.some((n) => n.name === "Ultima seduta") && (
+            <span
+              className="inline-block cursor-pointer"
+              onClick={() => handleOpenModal(docNode.docContentStreamContent)}
+            >
+              <i className="fas fa-file-alt text-xl" title="Ultima Seduta"></i>
+            </span>
+          )}
+        </td>
+      </tr>
+    );
+  };
+
   return (
     <>
       <div className="w-full bg-white rounded-lg relative px-4 pt-4 pb-10">
@@ -107,30 +140,9 @@ function CommissioniPage() {
               </thead>
               <tbody>
                 {topNode.docNodes?.map((subNode, sIdx) => (
-                  <tr key={sIdx} className="odd:bg-white even:bg-gray-50">
-                    <td className="border border-gray-300 px-3 py-2 font-semibold text-sm">
-                      {subNode.name}
-                    </td>
-
-                    {/* Days columns */}
-                    {columns.slice(1, 8).map((col, idx) => (
-                      <td key={idx} className="border border-gray-300 px-3 py-2 text-sm text-center">
-                        {getDayContent(subNode, col.label)}
-                      </td>
-                    ))}
-
-                    {/* Ultima Seduta */}
-                    <td className="border border-gray-300 px-3 py-2 text-sm text-center">
-                      {subNode.docNodes?.some((n) => n.name === "Ultima seduta") && (
-                        <span
-                          className="inline-block cursor-pointer"
-                          onClick={() => handleOpenModal(subNode.docContentStreamContent)}
-                        >
-                          <i className="fas fa-file-alt text-xl" title="Ultima Seduta"></i>
-                        </span>
-                      )}
-                    </td>
-                  </tr>
+                  <React.Fragment key={sIdx}>
+                    {renderDocNode(subNode)}
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>
