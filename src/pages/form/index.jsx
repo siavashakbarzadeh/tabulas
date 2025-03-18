@@ -51,9 +51,7 @@ function FormPage() {
         },
       })
       .then((res) => {
-        console.log(res.data);
-        
-        // navigate("/confirm");
+        navigate(`details/${res.data.data.application.id}`);
       })
       .catch((error) => {
         if (error.response.status === 422) {
