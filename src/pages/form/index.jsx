@@ -61,7 +61,7 @@ function FormPage() {
     axios
       .get(`/users/search?query=${query}`)
       .then((res) => {
-        // Expecting the JSON response to include the users in res.data.data.users
+        // Expecting the JSON response to include users in res.data.data.users
         setSearchResults(res.data.data.users || []);
       })
       .catch(() => setSearchResults([]));
@@ -81,15 +81,18 @@ function FormPage() {
         firmatarios: [...prev.firmatarios, selectedUser],
       }));
     }
-    // Clear the query so the dropdown hides and the query field resets
+    // Clear the query so the dropdown hides and the input resets
     setFirmatarioQuery("");
     setSearchResults([]);
   };
 
-  // Build a comma-separated display of selected firmatarios
-  const selectedFirmatariosDisplay = formData.firmatarios
-    .map((u) => u.name || u.email)
-    .join(", ");
+  // Allow removal of a selected firmatario
+  const removeFirmatario = (userId) => {
+    setFormData((prev) => ({
+      ...prev,
+      firmatarios: prev.firmatarios.filter((f) => f.id !== userId),
+    }));
+  };
 
   // Handle form submission
   const handleSubmit = () => {
@@ -108,9 +111,7 @@ function FormPage() {
 
     axios
       .post("/applications", formDataObj, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       })
       .then(() => {
         navigate("/confirm");
@@ -189,7 +190,7 @@ function FormPage() {
                       options={act_types}
                     />
                   </div>
-                  {/* Firmatari */}
+                  {/* Firmatari Section */}
                   <div className="col-span-2 relative">
                     <label
                       htmlFor="firmatarioQuery"
@@ -205,7 +206,7 @@ function FormPage() {
                       value={firmatarioQuery}
                       onChange={handleFirmatarioQueryChange}
                     />
-                    {/* Dropdown for search suggestions (absolute positioned below input) */}
+                    {/* Dropdown for search suggestions */}
                     {searchResults.length > 0 && (
                       <div className="absolute z-50 top-full left-0 w-full border bg-white mt-1 max-h-40 overflow-auto">
                         {searchResults.map((userItem) => (
@@ -219,14 +220,24 @@ function FormPage() {
                         ))}
                       </div>
                     )}
-                    {/* Display selected firmatarios in a read-only textarea */}
-                    <textarea
-                      readOnly
-                      className="border p-2 rounded w-full mt-2"
-                      rows={2}
-                      value={selectedFirmatariosDisplay}
-                      placeholder="Firmatari selezionati appariranno qui..."
-                    />
+                    {/* Display selected firmatarios as chips */}
+                    <div className="flex flex-wrap mt-2 gap-2">
+                      {formData.firmatarios.map((userItem) => (
+                        <div
+                          key={userItem.id}
+                          className="bg-gray-200 text-sm rounded-full px-3 py-1 flex items-center"
+                        >
+                          <span>{userItem.name || userItem.email}</span>
+                          <button
+                            type="button"
+                            className="ml-2 text-gray-600 hover:text-gray-800"
+                            onClick={() => removeFirmatario(userItem.id)}
+                          >
+                            &times;
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                   {/* Ufficio destinatario */}
                   <div>
@@ -266,6 +277,7 @@ function FormPage() {
                       }
                     />
                   </div>
+                  {/* Submit Button */}
                   <div className="mt-6 col-span-2">
                     <CustomButton
                       label="Prepara per Invio"
@@ -275,7 +287,6 @@ function FormPage() {
                     />
                   </div>
                 </div>
-                {/* Submit Button */}
 
               </div>
             </div>
