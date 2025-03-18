@@ -23,7 +23,7 @@ function FormPage() {
   const { user } = useAuth();
 
   const [formData, setFormData] = useState({
-    name: user?.email || "", // prefilled with user's email (or user?.name)
+    name: user?.email, // prefilled with user's email (or user?.name)
     act_type: "",
     recipient_office: "",
     submission_date: "",
