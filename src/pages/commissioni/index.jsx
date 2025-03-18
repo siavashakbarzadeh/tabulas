@@ -5,7 +5,6 @@ import Loading from "../../layout/components/Loading.jsx";
 function CommissioniPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
-  const [selectedContent, setSelectedContent] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
 
@@ -46,7 +45,8 @@ function CommissioniPage() {
   }
 
   const columns = [
-    { label: "Convocazioni", link: "https://www.senato.it/CLS/pub/conv/0/1" },
+    { label: "" }, // Empty header for the first column
+    { label: "Convocazioni" },
     { label: "Lunedì" },
     { label: "Martedì" },
     { label: "Mercoledì" },
@@ -57,34 +57,32 @@ function CommissioniPage() {
     { label: "Ultima Seduta" },
   ];
 
-  const getDayContent = (docNode, dayName) => {
-    const dayNode = docNode.docNodes?.find((node) => node.name === dayName);
-    return dayNode ? (
-      <a href={dayNode.docContentUrl} target="_blank" rel="noopener noreferrer">
-        {dayName}
-      </a>
-    ) : null;
-  };
-
   const renderDocNode = (docNode) => {
-    const days = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"];
-    const dayColumns = days.map((day) => {
-      return (
-        <td key={day} className="border border-gray-300 px-3 py-2 text-sm text-center">
-          {getDayContent(docNode, day)}
-        </td>
-      );
-    });
-
     return (
       <tr className="odd:bg-white even:bg-gray-50">
+        {/* First column: Name */}
         <td className="border border-gray-300 px-3 py-2 font-semibold text-sm">
           {docNode.name}
         </td>
-        {/* Days columns */}
-        {dayColumns}
 
-        {/* Ultima Seduta */}
+        {/* Convocazioni - Display as an icon with link */}
+        <td className="border border-gray-300 px-3 py-2 text-sm text-center">
+          {docNode.name === "Convocazioni" ? (
+            <span
+              className="inline-block cursor-pointer"
+              onClick={() => handleOpenModal("<p>Convocazioni Content</p>")}
+            >
+              <i className="fas fa-link text-xl" title="Convocazioni"></i>
+            </span>
+          ) : null}
+        </td>
+
+        {/* Days of the week columns - Empty for now */}
+        {columns.slice(2, 8).map((col, idx) => (
+          <td key={idx} className="border border-gray-300 px-3 py-2 text-sm text-center"></td>
+        ))}
+
+        {/* Ultima Seduta - Display as an icon with popup */}
         <td className="border border-gray-300 px-3 py-2 text-sm text-center">
           {docNode.docNodes?.some((n) => n.name === "Ultima seduta") && (
             <span
@@ -122,18 +120,7 @@ function CommissioniPage() {
                 <tr className="bg-red-700 text-white">
                   {columns.map((col, cIdx) => (
                     <th key={cIdx} className="py-2 px-3 border border-red-800 text-center">
-                      {col.link ? (
-                        <a
-                          href={col.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="underline font-medium"
-                        >
-                          {col.label}
-                        </a>
-                      ) : (
-                        col.label
-                      )}
+                      {col.label}
                     </th>
                   ))}
                 </tr>
@@ -150,7 +137,7 @@ function CommissioniPage() {
         ))}
       </div>
 
-      {/* Modal for Ultima Seduta */}
+      {/* Modal for Convocazioni and Ultima Seduta */}
       {showModal && (
         <div
           className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
@@ -160,7 +147,7 @@ function CommissioniPage() {
             className="bg-white rounded-lg p-6 w-3/4 max-w-4xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-lg font-semibold mb-4">Ultima Seduta</h2>
+            <h2 className="text-lg font-semibold mb-4">Contenuto</h2>
             <div
               className="rich-text-content p-4 bg-gray-100 rounded"
               dangerouslySetInnerHTML={{ __html: modalContent }}
