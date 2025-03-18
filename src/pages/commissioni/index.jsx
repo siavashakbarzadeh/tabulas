@@ -1,5 +1,5 @@
+// CommissioniPage.jsx
 import React, { useEffect, useState } from "react";
-import SearchIcon from "../../assets/svg/search.svg";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
 
@@ -7,13 +7,15 @@ function CommissioniPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
+  // Modal controls
+  const [showModal, setShowModal] = useState(false);
+  // We'll store the structured result of parsing the "Convocazioni" HTML here
+  const [convocazioniSchedule, setConvocazioniSchedule] = useState([]);
+  const [modalTitle, setModalTitle] = useState("");
+
   useEffect(() => {
     fetchData();
   }, []);
-
-  useEffect(() => {
-    setLoading(false);
-  }, [data]);
 
   const fetchData = () => {
     setLoading(true);
@@ -21,118 +23,199 @@ function CommissioniPage() {
       .get("tabulas/mobile/commissioni")
       .then((res) => {
         setData(res.data);
+        setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
+        setLoading(false);
       });
   };
 
+  /**
+   * This function takes the entire HTML snippet (the <html>… from senato.it)
+   * and parses out an array of days, where each day has an array of "events".
+   */
+  const parseConvocazioniHtml = (htmlString) => {
+    if (!htmlString) return [];
+
+    // 1) Parse HTML via DOMParser
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, "text/html");
+
+    // We’ll store the final result here
+    // Example shape: [ { day: "Mar 18", events: [ { time: "13:20", substructure: "...", text: "..."}, ... ] }, ... ]
+    let schedule = [];
+
+    // Each <table class="csc-table"> can contain multiple days
+    const tables = doc.querySelectorAll("table.csc-table");
+
+    tables.forEach((table) => {
+      // Each row that belongs to the schedule has class "ls-rcs-row"
+      // The day is in a <td> with class "day-column"
+      const rows = table.querySelectorAll("tr.ls-rcs-row");
+
+      let currentDay = null; // We'll update this whenever we see a "day-column" cell.
+
+      rows.forEach((row) => {
+        // If there's a <td class="day-column">, that tells us the day for subsequent rows
+        const dayTd = row.querySelector(".day-column");
+        if (dayTd) {
+          currentDay = dayTd.textContent.trim();
+          // Start a new day entry in schedule
+          schedule.push({ day: currentDay, events: [] });
+        }
+
+        // Time is usually in <td class="time-column"> 
+        const timeTd = row.querySelector(".time-column");
+        const timeText = timeTd?.innerText?.trim() || "";
+
+        // Substructure (like "Plenaria," "Assemblea," "Sottocommissione pareri")
+        // is in <td class="sottostruttura-column">
+        const substructureTd = row.querySelector(".sottostruttura-column");
+        // We'll keep the inner HTML so we can preserve <br> etc.
+        const substructureHtml = substructureTd?.innerHTML?.trim() || "";
+
+        // The main text of the convocazione is in <td class="views-field-field-testo-convocazione">
+        const textTd = row.querySelector(".views-field-field-testo-convocazione");
+        const textHtml = textTd?.innerHTML?.trim() || "";
+
+        // Add an event to the *most recent* day in our schedule array
+        // If for some reason "day-column" never appeared, schedule.length might be 0, so check
+        if (schedule.length > 0) {
+          schedule[schedule.length - 1].events.push({
+            time: timeText,
+            substructure: substructureHtml,
+            text: textHtml,
+          });
+        }
+      });
+    });
+
+    return schedule;
+  };
+
+  /**
+   * Called when user clicks the “Convocazioni” icon.
+   * We parse the HTML, store it in state, and show the modal.
+   */
+  const handleOpenConvocazioniModal = (title, htmlString) => {
+    setModalTitle(title);
+
+    // parse the HTML into a structured array of days
+    const scheduleData = parseConvocazioniHtml(htmlString);
+
+    setConvocazioniSchedule(scheduleData);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setConvocazioniSchedule([]);
+    setModalTitle("");
+  };
+
+  if (loading) {
+    return (
+      <div className="w-full flex justify-center">
+        <Loading />
+      </div>
+    );
+  }
+
+  // Example columns, etc. (shortened for clarity)
+  // We just show how to call handleOpenConvocazioniModal with the HTML snippet
   return (
     <>
       <div className="w-full bg-white rounded-lg relative px-4 pt-4 pb-10">
-        <form className="w-full">
-          <label className="w-full block relative">
-            <input
-              type="text"
-              placeholder="Cerca..."
-              className="w-full h-10 bg-neutral-200 text-sm rounded-md border border-neutral-300 px-4 focus:outline-none"
-            />
-            <img
-              src={SearchIcon}
-              alt="Search"
-              className="w-5 h-5 absolute right-4 top-1/2 transform -translate-y-1/2"
-            />
-          </label>
-        </form>
-        <div className="w-full flex mt-4">
-          {loading || data === null ? (
-            <div className="w-full flex justify-center">
-              <Loading />
-            </div>
-          ) : (
-            <div className="w-full">
-              <div className="w-full font-medium">{data.name}</div>
-              <div className="w-full space-y-2 mt-2">
-                {data.docNodes
-                  .filter((i) => i.docNodes && i.docNodes.length)
-                  .map((item, key) => (
-                    <div key={key} className="w-full">
-                      <div className="w-full">{item.name}</div>
-                      {item.docNodes
-                        .filter((i) => i.docNodes && i.docNodes.length)
-                        .map((subItem, subKey) => (
-                          <div key={subKey} className="w-full p-2">
-                            {/* Change bg-primary-950 to rgb(151, 0, 45) */}
-                            <div
-                              className="text-sm text-white px-2 rounded-md"
-                              style={{ backgroundColor: "rgb(151, 0, 45)", padding: "6px" }}
-                            >
-                              {subItem.name}
-                            </div>
-                            {subItem.docNodes
-                              .filter((i) => i.docContentStreamContent)
-                              .map((subSubItem, subSubKey) => (
-                                <div key={subSubKey} className="w-full mt-2">
-                                  {/* Display Tag in Custom Color if it Exists */}
-                                  {subSubItem.tag && (
-                                    <div
-                                      className="text-sm text-white px-3 rounded-md inline-block"
-                                      style={{
-                                        backgroundColor: "rgb(151, 0, 45)",
-                                        padding: "4px",
-                                      }}
-                                    >
-                                      {subSubItem.tag}
-                                    </div>
-                                  )}
+        <h1 className="text-2xl font-bold mb-4">Commissioni</h1>
 
-                                  <div className="text-sm text-zinc-900 bg-gray-200 inline-block leading-6 px-3 rounded-md">
-                                    {subSubItem.name}
-                                  </div>
-
-                                  {/* Wrap dynamic HTML inside a div with a custom class */}
-                                  <div
-                                    className="w-full px-2 rich-text-content"
-                                    dangerouslySetInnerHTML={{
-                                      __html:
-                                        subSubItem.docContentStreamContent,
-                                    }}
-                                  ></div>
-
-                                  {/* Display Button in Custom Color if it Exists */}
-                                  {subSubItem.button && (
-                                    <button
-                                      className="w-full mt-2 p-2 text-white rounded-md"
-                                      style={{ backgroundColor: "rgb(151, 0, 45)" }}
-                                    >
-                                      {subSubItem.button.text || "Click Me"}
-                                    </button>
-                                  )}
-                                </div>
-                              ))}
-                          </div>
-                        ))}
-                    </div>
-                  ))}
-              </div>
-            </div>
-          )}
-        </div>
-        <div className="absolute inset-x-0 bottom-0 text-white bg-zinc-800 px-2 text-sm leading-8 h-8 overflow-hidden rounded-b-md">
-          News Section Here...
-        </div>
+        {data?.docNodes?.map((topNode, idx) => (
+          <div key={idx} className="mb-6">
+            <h2 className="bg-red-800 text-white px-4 py-2">
+              {topNode.name}
+            </h2>
+            {topNode.docNodes?.map((child, cIdx) => {
+              // If this child is “Convocazioni”, we show an icon to parse & open it
+              if (child.name === "Convocazioni") {
+                return (
+                  <div key={cIdx} className="p-2">
+                    <span
+                      className="inline-block cursor-pointer text-blue-600"
+                      onClick={() =>
+                        handleOpenConvocazioniModal(
+                          `${topNode.name} - Convocazioni`,
+                          child.docContentStreamContent // The big HTML snippet
+                        )
+                      }
+                    >
+                      <i className="fas fa-file-alt text-xl" /> Apri Convocazioni
+                    </span>
+                  </div>
+                );
+              }
+              // else show something else...
+              return null;
+            })}
+          </div>
+        ))}
       </div>
 
-      {/* Style the links inside dynamically inserted content */}
-      <style>
-        {`
-          .rich-text-content a {
-            color: rgb(151, 0, 45) !important;
-            font-weight: bold;
-            text-decoration: underline;
-          }
-        `}
-      </style>
+      {/* Modal that shows the "parsed" data (days & events) */}
+      {showModal && (
+        <div
+          className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50"
+          onClick={handleCloseModal}
+        >
+          <div
+            className="bg-white rounded-lg p-6 w-11/12 max-w-5xl max-h-[90vh] overflow-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-bold mb-4">{modalTitle}</h3>
+
+            {convocazioniSchedule.map((dayObj, dIdx) => (
+              <div key={dIdx} className="mb-4 border-b border-gray-200 pb-2">
+                <h4 className="font-semibold text-red-700">{dayObj.day}</h4>
+                {/* Each day has an array of “events” */}
+                <table className="w-full mt-2 border-collapse">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="px-2 py-1 border">Ora</th>
+                      <th className="px-2 py-1 border">Sottostruttura</th>
+                      <th className="px-2 py-1 border">Testo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dayObj.events.map((evt, eIdx) => (
+                      <tr key={eIdx} className="odd:bg-white even:bg-gray-50">
+                        <td className="border px-2 py-1 text-sm">
+                          {evt.time}
+                        </td>
+                        <td
+                          className="border px-2 py-1 text-sm"
+                          dangerouslySetInnerHTML={{ __html: evt.substructure }}
+                        />
+                        <td
+                          className="border px-2 py-1 text-sm"
+                          dangerouslySetInnerHTML={{ __html: evt.text }}
+                        />
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ))}
+
+            <div className="mt-4 text-right">
+              <button
+                onClick={handleCloseModal}
+                className="bg-red-600 text-white px-4 py-2 rounded"
+              >
+                Chiudi
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

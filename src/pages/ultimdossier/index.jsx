@@ -21,13 +21,16 @@ function Ultimidossierage() {
   useEffect(() => {
     if (data) {
       setLoading(false);
-      modifyPdfLinks();
+      // If there are docNodes, set the first as active if not already
       if (data.docNodes && data.docNodes.length > 0 && !activeNode) {
         setActiveNode(data.docNodes[0].name);
       }
     }
   }, [data, activeNode]);
 
+  // -----------------------
+  // 1) Fetch Data from API
+  // -----------------------
   const fetchData = () => {
     setLoading(true);
     axios
@@ -40,23 +43,50 @@ function Ultimidossierage() {
       });
   };
 
-  const modifyPdfLinks = () => {
-    setTimeout(() => {
-      document.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
-        // Remove any existing text or child nodes in the link
-        link.innerHTML = "";
-  
-        // Create the PDF icon element
-        const icon = document.createElement("i");
-        icon.className = "fas fa-file-pdf custom-pdf-icon";
-        icon.style.color = "rgb(151, 0, 45)";
-  
-        // Append only the icon to the link
-        link.appendChild(icon);
-      });
-    }, 100);
-  };
+  // -----------------------------------
+  // 2) Helper to Remove Parentheses
+  // -----------------------------------
+  function removeParenthesesFrom(element) {
+    element.childNodes.forEach((child) => {
+      if (child.nodeType === Node.TEXT_NODE) {
+        // Strip all '(' and ')' from the text
+        child.textContent = child.textContent.replace(/[()]/g, "");
+      } else {
+        removeParenthesesFrom(child);
+      }
+    });
+  }
 
+  // -----------------------------------
+  // 3) Helper to Remove PDF Icon <img>
+  // -----------------------------------
+  function removePdfIconsFrom(element) {
+    element
+      .querySelectorAll('img[src="https://www.senato.it//img/icona_pdf.gif"]')
+      .forEach((img) => {
+        img.remove();
+      });
+  }
+
+  // --------------------------------------------------------
+  // 4) Helper to Transform .pdf Links into PDF Icon Only
+  // --------------------------------------------------------
+  function transformPdfLinks(element) {
+    element.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
+      // Remove any existing text or child nodes in the link
+      link.innerHTML = "";
+      // Create the PDF icon element
+      const icon = document.createElement("i");
+      icon.className = "fas fa-file-pdf custom-pdf-icon";
+      icon.style.color = "rgb(151, 0, 45)";
+      // Append only the icon to the link
+      link.appendChild(icon);
+    });
+  }
+
+  // -----------------------------------
+  // Render Loading State
+  // -----------------------------------
   if (loading || data === null) {
     return (
       <div className="w-full flex justify-center">
@@ -65,39 +95,66 @@ function Ultimidossierage() {
     );
   }
 
-  // Find the active document node from the fetched data
+  // Find the active document node
   const activeDocNode = data.docNodes.find((node) => node.name === activeNode);
+
+  // Handle pagination
   const totalItems = activeDocNode?.docContentStreamContent
     ? activeDocNode.docContentStreamContent.split('<HR class="defrss">').length
     : 0;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+  // -----------------------------------
+  // 5) Build Paginated Table Rows
+  // -----------------------------------
   const paginatedContent = activeDocNode?.docContentStreamContent
     ?.split('<HR class="defrss">')
     .slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
     .map((item, index) => {
+      // Create a temporary DOM container for each chunk
       const tempElement = document.createElement("div");
       tempElement.innerHTML = item;
+
+      // Apply transformations in memory
+      removeParenthesesFrom(tempElement);
+      removePdfIconsFrom(tempElement);
+      transformPdfLinks(tempElement);
+
+      // Convert each child element into a table cell
       const rows = Array.from(tempElement.children).map((child, idx) => (
-        <td key={idx} className="py-3 px-4 text-left">
+        <td
+          key={idx}
+          className="py-3 px-4 text-left"
+          style={{ verticalAlign: "middle" }}
+        >
           {child.tagName === "A" ? (
-            <a href={child.href} target="_blank" rel="noopener noreferrer">
-              <i
-                className="fas fa-file-pdf mr-2 custom-pdf-icon"
-                style={{ color: "rgb(151, 0, 45)" }}
-              ></i>
-              {child.textContent}
-            </a>
+            <span style={{ display: "table-caption" }}>
+              <a href={child.href} target="_blank" rel="noopener noreferrer">
+                <i
+                  className="fas fa-file-pdf mr-2 custom-pdf-icon"
+                  style={{ color: "rgb(151, 0, 45)" }}
+                ></i>
+                {child.textContent}
+              </a>
+            </span>
           ) : (
-            <span dangerouslySetInnerHTML={{ __html: child.innerHTML }}></span>
+            <span dangerouslySetInnerHTML={{ __html: child.innerHTML }} />
           )}
         </td>
       ));
-      return <tr key={index} className="border-b">{rows}</tr>;
+
+      return (
+        <tr key={index} className="border-b">
+          {rows}
+        </tr>
+      );
     });
 
+  // -----------------------------------
+  // Final JSX Return
+  // -----------------------------------
   return (
     <div className="flex flex-col min-h-screen w-full">
-      {/* Main Content Area */}
       <div className="flex-1 bg-white rounded-2xl relative p-4">
         {/* Search Bar */}
         <form className="w-full mb-4">
@@ -114,7 +171,7 @@ function Ultimidossierage() {
             />
           </label>
         </form>
-        {/* Inner Content Layout */}
+
         <div className="flex w-full">
           {/* Inner Sidebar */}
           <InnerSidebar
@@ -125,29 +182,36 @@ function Ultimidossierage() {
               setCurrentPage(1);
             }}
           />
-          {/* Main Table Content */}
+
+          {/* Main Content Area */}
           <div className="flex-1 ml-4 overflow-x-auto">
             <table className="w-full border-collapse border border-gray-300">
               <tbody>{paginatedContent}</tbody>
             </table>
+
+            {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="flex justify-center mt-4 space-x-2">
                 <button
                   onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1}
-                  className={`px-3 py-1 border rounded ${
-                    currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-200"
-                  }`}
+                  className={`px-3 py-1 border rounded ${currentPage === 1
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:bg-gray-200"
+                    }`}
                 >
                   Prev
                 </button>
                 <span className="text-sm px-3 py-1">{`Page ${currentPage} of ${totalPages}`}</span>
                 <button
-                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
                   disabled={currentPage === totalPages}
-                  className={`px-3 py-1 border rounded ${
-                    currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-200"
-                  }`}
+                  className={`px-3 py-1 border rounded ${currentPage === totalPages
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:bg-gray-200"
+                    }`}
                 >
                   Next
                 </button>
