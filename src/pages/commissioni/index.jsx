@@ -35,17 +35,36 @@ function CommissioniPage() {
   const handleOpenModalWithUrl = (url) => {
     setModalTitle("Convocazioni");
     // We put an <iframe> into modalContent via dangerouslySetInnerHTML
-    const iframeHtml = `<iframe src="${url}" style="width:100%; height:600px;" frameborder="0"></iframe>`;
-    setModalContent(iframeHtml);
-    setShowModal(true);
+    window.open(url, "_blank", "noopener,noreferrer,width=900,height=600");
+
   };
 
   /**
    * Opens the modal with raw HTML (as in Ultima Seduta).
    */
-  const handleOpenModalWithHtml = (htmlContent) => {
-    setModalTitle("Ultima Seduta");
-    setModalContent(htmlContent || "");
+  const openModal = (title, node) => {
+    if (!node) return;
+
+    setModalTitle(title || "");
+    if (node.docContentStreamContent) {
+      // Show raw HTML
+      setIsIframe(false);
+      setModalContent(node.docContentStreamContent);
+    } else if (node.docContentUrl) {
+      // Show iframe
+      setIsIframe(true);
+      // We’ll store an <iframe> in `modalContent`, rendered via dangerouslySetInnerHTML
+      const iframeHtml = `<iframe 
+          src="${node.docContentUrl}" 
+          style="width:100%; height:600px;" 
+          frameborder="0">
+        </iframe>`;
+      setModalContent(iframeHtml);
+    } else {
+      setModalContent("Nessun contenuto disponibile.");
+      setIsIframe(false);
+    }
+
     setShowModal(true);
   };
 
@@ -53,6 +72,7 @@ function CommissioniPage() {
     setShowModal(false);
     setModalTitle("");
     setModalContent("");
+    setIsIframe(false);
   };
 
   if (loading) {
@@ -193,7 +213,6 @@ function CommissioniPage() {
                             </td>
                           );
                         } else if (col.id === "ultimaSeduta") {
-                          //  Child named "Ultima seduta"
                           const ultimaNode = findChildByName(
                             rowNode,
                             "Ultima seduta"
@@ -206,16 +225,12 @@ function CommissioniPage() {
                               {ultimaNode && (
                                 <span
                                   className="inline-block cursor-pointer"
-                                  onClick={() =>
-                                    handleOpenModalWithHtml(
-                                      ultimaNode.docContentStreamContent
-                                    )
-                                  }
+                                  onClick={() => openModal("Ultima Seduta", ultimaNode)}
                                 >
                                   <i
                                     className="fas fa-file-alt text-xl"
                                     title="Ultima Seduta"
-                                  ></i>
+                                  />
                                 </span>
                               )}
                             </td>
