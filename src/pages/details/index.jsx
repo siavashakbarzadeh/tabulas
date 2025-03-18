@@ -66,6 +66,12 @@ function DetailsPage() {
                         {application.act_type}
                       </div>
                     </div>
+                    <div className="col-span-1 text-sm p-2 border border-gray-100 rounded-lg">
+                      <div className="text-zinc-300 mb-1">Data Invio</div>
+                      <div className="text-zinc-900">
+                        {application.submission_date}
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
