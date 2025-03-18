@@ -84,7 +84,27 @@ function DetailsPage() {
                         ) : (
                           <a
                             href={application.document.files.original}
-                            className="leading-7 text-sm text-white bg-primary-900 rounded-md px-4 transition-colors hover:bg-primary-950"
+                            className="inline-block leading-7 text-sm text-white bg-primary-900 rounded-md px-4 transition-colors hover:bg-primary-950"
+                            download
+                          >
+                            Download
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                    <div className="col-span-1 text-sm p-3 border border-gray-100 rounded-lg">
+                      <div className="text-zinc-300 mb-1">Sign</div>
+                      <div className="text-zinc-900">
+                        {application.sign.type != "image" ? (
+                          <img
+                            src={application.sign.files.original}
+                            alt={application.name}
+                            className="w-full max-w-full"
+                          />
+                        ) : (
+                          <a
+                            href={application.sign.files.original}
+                            className="inline-block leading-7 text-sm text-white bg-primary-900 rounded-md px-4 transition-colors hover:bg-primary-950"
                             download
                           >
                             Download
