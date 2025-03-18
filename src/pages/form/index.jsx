@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import SearchIcon from "../../assets/svg/search.svg";
 import TextInput from "../../componenets/forms/TextInput";
 import CustomSelect from "../../componenets/forms/CustomSelect";
 import DateInput from "../../componenets/forms/DateInput";
@@ -9,7 +10,6 @@ import axios from "../../configs/axiosConfig.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-// Example dropdown data
 const act_types = ["DDL 1", "DDL 2", "DDL 3", "DDL 4", "DDL 5"];
 const recipient_offices = [
   "Ufficio 1",
@@ -20,41 +20,36 @@ const recipient_offices = [
 ];
 
 function FormPage() {
-  // Logged-in user from context
   const { user } = useAuth();
 
-  // Local form state
+  // Form state
   const [formData, setFormData] = useState({
-    name: user?.email || "", // or user?.name
+    name: user?.email || "", // Prefill with logged-in user's email
     act_type: "",
     recipient_office: "",
     submission_date: "",
     document: null,
-    firmatarios: [], // will hold actual selected user objects
+    firmatarios: [], // Array of selected firmatario user objects
   });
 
-  // This holds the text typed by the user for searching/adding firmatarios
+  // This state holds the text typed into the firmatario textarea.
   const [firmatarioInput, setFirmatarioInput] = useState("");
 
-  // Search results returned by the API
+  // For API search results
   const [searchResults, setSearchResults] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  // Handle updating form data fields (except firmatarios)
   const handleUpdateFormData = (fieldName, value) => {
     setFormData((prev) => ({ ...prev, [fieldName]: value }));
   };
 
-  // Handle changes to the firmatario text area
+  // When user types in the textarea for firmatari, update the input and trigger a search.
   const handleFirmatarioChange = (e) => {
     const value = e.target.value;
     setFirmatarioInput(value);
-
-    // Basic example: search the entire text. 
-    // In a real scenario, you might parse the last typed "word" or use a mention approach.
     if (value.trim().length > 0) {
       handleSearch(value);
     } else {
@@ -62,28 +57,28 @@ function FormPage() {
     }
   };
 
-  // Search API call
+  // API call to search for users based on the query.
   const handleSearch = (query) => {
     axios
       .get(`/users/search?query=${query}`)
       .then((res) => {
-        // Adjust as per your actual API response structure
         setSearchResults(res.data.data || []);
       })
       .catch(() => setSearchResults([]));
   };
 
-  // When user clicks a search suggestion
+  // When the user selects a suggestion from the dropdown.
   const handleSelectFirmatario = (selectedUser) => {
-    // Avoid duplicates
-    const alreadySelected = formData.firmatarios.some((f) => f.id === selectedUser.id);
+    // Prevent duplicates.
+    const alreadySelected = formData.firmatarios.some(
+      (f) => f.id === selectedUser.id
+    );
     if (!alreadySelected) {
-      // Add to the array of selected firmatarios
       setFormData((prev) => ({
         ...prev,
         firmatarios: [...prev.firmatarios, selectedUser],
       }));
-      // Append the user's name to the text area, plus a comma or space
+      // Append the selected user's name (with a comma separator) to the textarea.
       setFirmatarioInput((prevText) =>
         (prevText.trim() ? prevText.trim() + " " : "") + selectedUser.name + ", "
       );
@@ -91,18 +86,16 @@ function FormPage() {
     setSearchResults([]);
   };
 
-  // Handle form submission
+  // Form submission.
   const handleSubmit = () => {
     setIsLoading(true);
-
     const formDataObj = new FormData();
     formDataObj.append("name", formData.name);
     formDataObj.append("act_type", formData.act_type);
     formDataObj.append("recipient_office", formData.recipient_office);
     formDataObj.append("submission_date", formData.submission_date);
     formDataObj.append("document", formData.document);
-
-    // Append each firmatario ID
+    // Append each selected firmatario's ID.
     formData.firmatarios.forEach((f) => {
       formDataObj.append("firmatarios[]", f.id);
     });
@@ -138,19 +131,28 @@ function FormPage() {
   };
 
   return (
-    <>
-      {/* Header / Search Bar */}
+    <div className="flex flex-col min-h-screen w-full">
+      {/* Header Search Bar */}
       <div className="p-4 border-b border-gray-300">
-        <input
-          type="text"
-          placeholder="Cerca..."
-          className="w-full h-11 bg-neutral-200 text-sm rounded-xl border-none pl-4 ring-0 focus:ring-0 focus:border-none"
-        />
+        <form className="w-full">
+          <label className="w-full block relative">
+            <input
+              type="text"
+              placeholder="Cerca..."
+              className="w-full h-11 bg-neutral-200 text-sm rounded-xl border-none pl-16 ring-0 focus:ring-0 focus:border-none"
+            />
+            <img
+              src={SearchIcon}
+              alt="Search"
+              className="w-6 h-6 absolute left-4 top-1/2 transform -translate-y-1/2"
+            />
+          </label>
+        </form>
       </div>
 
       {/* Main Form Container */}
-      <div className="p-4">
-        {/* Nome atto - disabled */}
+      <div className="p-4 bg-white rounded-2xl relative">
+        {/* Nome atto (prefilled and disabled) */}
         <div className="mb-4">
           <TextInput
             id="name"
@@ -162,7 +164,7 @@ function FormPage() {
           />
         </div>
 
-        {/* Tipo atto & Ufficio destinatario */}
+        {/* Act Type and Ufficio destinatario */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
           <div>
             <CustomSelect
@@ -188,7 +190,7 @@ function FormPage() {
           </div>
         </div>
 
-        {/* Firmatari - single textarea with dynamic suggestions */}
+        {/* Firmatari Selection */}
         <div className="mb-4">
           <label htmlFor="firmatarioInput" className="block text-sm font-medium mb-1">
             Firmatari
@@ -201,7 +203,7 @@ function FormPage() {
             value={firmatarioInput}
             onChange={handleFirmatarioChange}
           />
-          {/* Dropdown with search results */}
+          {/* Dropdown for API search suggestions */}
           {searchResults.length > 0 && (
             <div className="border rounded bg-white max-h-40 overflow-auto mt-1">
               {searchResults.map((userItem) => (
@@ -217,7 +219,7 @@ function FormPage() {
           )}
         </div>
 
-        {/* Data Invio & Document */}
+        {/* Data Invio & Document Upload */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
           <div>
             <DateInput
@@ -254,7 +256,7 @@ function FormPage() {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
