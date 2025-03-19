@@ -14,19 +14,21 @@ function InboxPage() {
     const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
-        axios
-            .get("/applications/inbox")
-            .then((res) => {
-                // Assuming response structure: res.data.data.applications (an array)
-                setApplications(res.data.data.applications || []);
-            })
-            .catch(() => {
-                toast.error("Failed to load inbox applications");
-            })
-            .finally(() => setLoading(false));
-    }, []);
+        if (user && user.id) {
+            axios
+                .get(`/applications/inbox/${user.id}`)
+                .then((res) => {
+                    // Assuming response structure: res.data.data.applications (an array)
+                    setApplications(res.data.data.applications || []);
+                })
+                .catch(() => {
+                    toast.error("Failed to load inbox applications");
+                })
+                .finally(() => setLoading(false));
+        }
+    }, [user]);
 
-    // Optional: you could implement filtering on the front end using searchQuery.
+    // Optional filtering on the front end
     const filteredApplications = applications.filter((app) =>
         app.act_type.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -36,7 +38,7 @@ function InboxPage() {
     };
 
     const handleQuickVerify = (id) => {
-        // Example quick verification; adjust as needed.
+        // Example quick verification call (adjust as needed)
         axios
             .post(`/applications/${id}/verify`)
             .then(() => {

@@ -14,16 +14,18 @@ function OutboxPage() {
     const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
-        axios
-            .get("/applications/outbox")
-            .then((res) => {
-                setApplications(res.data.data.applications || []);
-            })
-            .catch(() => {
-                toast.error("Failed to load outbox applications");
-            })
-            .finally(() => setLoading(false));
-    }, []);
+        if (user && user.id) {
+            axios
+                .get(`/applications/outbox/${user.id}`)
+                .then((res) => {
+                    setApplications(res.data.data.applications || []);
+                })
+                .catch(() => {
+                    toast.error("Failed to load outbox applications");
+                })
+                .finally(() => setLoading(false));
+        }
+    }, [user]);
 
     const filteredApplications = applications.filter((app) =>
         app.act_type.toLowerCase().includes(searchQuery.toLowerCase())
