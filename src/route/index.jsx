@@ -122,6 +122,8 @@ import UltimiattiPage from "../pages/ultimiatti";
 import UltimdossierPage from "../pages/ultimdossier";
 import FormPage from "../pages/form";
 import DetailsPage from "../pages/details";
+import InboxPage from "../pages/inbox";
+import OutboxPage from "../pages/outbox";
 
 const ScrollToTop = (props) => {
   const location = useLocation();
@@ -153,6 +155,8 @@ function Router() {
                 <Route path="commissioni" element={<CommissioniPage />} />
                 <Route path="ultimiatti" element={<UltimiattiPage />} />
                 <Route path="ultimdossier" element={<UltimdossierPage />} />
+                <Route path="/inbox" element={<InboxPage />} />
+                <Route path="/outbox" element={<OutboxPage />} />
 
               </Route>
             </Route>
