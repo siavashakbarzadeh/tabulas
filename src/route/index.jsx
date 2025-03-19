@@ -108,7 +108,7 @@ import { useLocation } from "react-router";
 import MainPage from "../pages/main";
 import NewLoginPage from "../pages/login";
 import ConfirmPage from "../pages/confirm";
-import FinalizePage from "../pages/FinalizePage";
+import FinalizePage from "../pages/finalize";
 import EmailPage from "../pages/email";
 import ThemeProvider2 from "../layout/context2";
 import DashboardLayout from "../layout/dashboard";
