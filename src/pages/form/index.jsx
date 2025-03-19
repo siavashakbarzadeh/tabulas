@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import SearchIcon from "../../assets/svg/search.svg";
 import TextInput from "../../componenets/forms/TextInput";
@@ -21,15 +21,26 @@ const recipient_offices = [
 
 function FormPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: user?.email, // prefilled with user's email (or user?.name)
+    name: "", // start empty; update when user is available
     act_type: "",
     recipient_office: "",
     submission_date: "",
     document: null,
     firmatarios: [], // stores the selected user objects
   });
+
+  // When the user object becomes available, update "name" field.
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        name: user.email || user.name,
+      }));
+    }
+  }, [user]);
 
   // Holds the current search query (what the user types)
   const [firmatarioQuery, setFirmatarioQuery] = useState("");
@@ -39,7 +50,6 @@ function FormPage() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
 
   const handleUpdateFormData = (fieldName, value) => {
     setFormData((prev) => ({ ...prev, [fieldName]: value }));
@@ -287,7 +297,6 @@ function FormPage() {
                     />
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
