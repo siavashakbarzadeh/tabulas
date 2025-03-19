@@ -28,7 +28,8 @@ function OutboxPage() {
     }, [user]);
 
     const filteredApplications = applications.filter((app) =>
-        app.act_type.toLowerCase().includes(searchQuery.toLowerCase())
+        (app.act_type && app.act_type.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (app.document && app.document.original_name && app.document.original_name.toLowerCase().includes(searchQuery.toLowerCase()))
     );
 
     const handleView = (id) => {
@@ -63,29 +64,36 @@ function OutboxPage() {
                     <div className="bg-white rounded-xl shadow-md p-4">
                         <h2 className="text-xl font-semibold mb-4">Outbox</h2>
                         {filteredApplications.length === 0 ? (
-                            <p>No applications found.</p>
+                            <div className="flex flex-col items-center justify-center h-64">
+                                <i className="fas fa-envelope-open text-6xl text-gray-300 mb-4"></i>
+                                <p className="text-gray-500">Nessuna applicazione trovata.</p>
+                            </div>
                         ) : (
                             <table className="w-full table-auto">
                                 <thead>
                                     <tr className="border-b">
-                                        <th className="px-4 py-2 text-left">ID</th>
+                                        <th className="px-4 py-2 text-left">Nome File</th>
+                                        <th className="px-4 py-2 text-left">Data e Ora Invio</th>
                                         <th className="px-4 py-2 text-left">Tipo Atto</th>
-                                        <th className="px-4 py-2 text-left">Data Invio</th>
                                         <th className="px-4 py-2 text-left">Azioni</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {filteredApplications.map((app) => (
                                         <tr key={app.id} className="border-b hover:bg-gray-100">
-                                            <td className="px-4 py-2">{app.id}</td>
+                                            <td className="px-4 py-2">
+                                                {app.document?.original_name || "N/A"}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {app.submission_date}
+                                            </td>
                                             <td className="px-4 py-2">{app.act_type}</td>
-                                            <td className="px-4 py-2">{app.submission_date}</td>
                                             <td className="px-4 py-2">
                                                 <button
-                                                    className="bg-blue-600 text-white px-3 py-1 rounded"
+                                                    className="text-gray-600 hover:text-gray-800"
                                                     onClick={() => handleView(app.id)}
                                                 >
-                                                    Visualizza
+                                                    <i className="fas fa-eye"></i>
                                                 </button>
                                             </td>
                                         </tr>
