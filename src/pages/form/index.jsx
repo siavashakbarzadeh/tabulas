@@ -124,6 +124,7 @@ function FormPage() {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then(() => {
+        console.log($res.data.application_id)
         navigate(`/confirm/${res.data.application_id}`);
       })
       .catch((error) => {
