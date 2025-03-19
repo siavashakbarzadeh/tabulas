@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "../configs/axiosConfig.js";
+import axios from "../../configs/axiosConfig.js";
 
 function ConfirmPage() {
   const { id } = useParams(); // the application_id from the URL
