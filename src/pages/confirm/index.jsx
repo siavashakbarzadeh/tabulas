@@ -75,7 +75,7 @@ function ConfirmPage() {
             </label>
           </form>
           <div className="bg-white rounded-xl p-6 shadow-md w-full max-w-4xl mx-auto">
-            <h2 className="text-2xl font-semibold mb-4">Anteprima Applicazione</h2>
+            <h2 className="text-2xl font-semibold mb-4">Anteprima Atto</h2>
             {pdfUrl ? (
               <iframe
                 src={pdfUrl}
