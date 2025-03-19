@@ -12,7 +12,6 @@ import CryptoHomepage from "../pages/dashboard/Crypto";
 import SalesHomepage from "../pages/dashboard/Sales";
 
 import MessagesPage from "../pages/apps/Messages";
-import InboxPage from "../pages/apps/Inbox";
 import FileManagerPage from "../pages/apps/FileManager";
 import ChatsPage from "../pages/apps/Chats";
 import CalendarPage from "../pages/apps/Calendar";
@@ -222,7 +221,6 @@ function Router() {
               <Route path="invest" element={<InvestHomepage />} />
 
               <Route path="apps-messages" element={<MessagesPage />} />
-              <Route path="apps-inbox" element={<InboxPage />} />
               <Route path="apps-file-manager" element={<FileManagerPage />} />
               <Route path="apps-chats" element={<ChatsPage />} />
               <Route path="apps-calendar" element={<CalendarPage />} />
