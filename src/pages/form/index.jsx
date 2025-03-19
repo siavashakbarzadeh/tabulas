@@ -123,9 +123,10 @@ function FormPage() {
       .post("/applications", formDataObj, {
         headers: { "Content-Type": "multipart/form-data" },
       })
-      .then(() => {
-        console.log($res.data.application_id)
-        navigate(`/confirm/${res.data.application_id}`);
+      .then((res) => {
+        // Extract the application ID from the response
+        const applicationId = res.data.data.application.id;
+        navigate(`/confirm/${applicationId}`);
       })
       .catch((error) => {
         if (error.response?.status === 422) {
@@ -141,10 +142,7 @@ function FormPage() {
         } else {
           toast.error(
             error.response?.data?.data?.message || "Error",
-            {
-              position: "bottom-right",
-              hideProgressBar: true,
-            }
+            { position: "bottom-right", hideProgressBar: true }
           );
         }
       })
