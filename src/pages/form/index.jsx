@@ -124,7 +124,7 @@ function FormPage() {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then(() => {
-        navigate("/confirm");
+        navigate(`/confirm/${res.data.application_id}`);
       })
       .catch((error) => {
         if (error.response?.status === 422) {
