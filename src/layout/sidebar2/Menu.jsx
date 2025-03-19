@@ -21,22 +21,29 @@ const Menu = [
     title: "Assemblea",
     icon: <PaperIcon className="w-6 h-6" />,
     subMenu: [
-      { id: 1, title: "Confirm", link: "/confirm" },
-      { id: 2, title: "Email", icon: <EmailIcon className="w-6 h-6" />, link: "/email" },
-      { id: 3, title: "Form", icon: <FormIcon className="w-6 h-6" />, link: "/form" },
-      { id: 4, title: "Services", icon: <ServicesIcon className="w-6 h-6" />, link: "/services" },
-      { id: 5, title: "Guidemanuali", icon: <GuideManualsIcon className="w-6 h-6" />, link: "/guidemanuali" },
-      { id: 6, title: "Ebook", icon: <EbookIcon className="w-6 h-6" />, link: "/ebook" },
-      { id: 7, title: "Commissioni", icon: <UsersIcon className="w-6 h-6" />, link: "/commissioni" },
-      { id: 8, title: "Ultimiatti", icon: <LatestActsIcon className="w-6 h-6" />, link: "/ultimiatti" },
-      { id: 9, title: "Ultimdossier", icon: <LatestDossiersIcon className="w-6 h-6" />, link: "/ultimdossier" },
+      { id: 1, title: "Services", icon: <ServicesIcon className="w-6 h-6" />, link: "/services" },
+      { id: 2, title: "Guidemanuali", icon: <GuideManualsIcon className="w-6 h-6" />, link: "/guidemanuali" },
+      { id: 3, title: "Ebook", icon: <EbookIcon className="w-6 h-6" />, link: "/ebook" },
+      { id: 4, title: "Commissioni", icon: <UsersIcon className="w-6 h-6" />, link: "/commissioni" },
+      { id: 5, title: "Ultimiatti", icon: <LatestActsIcon className="w-6 h-6" />, link: "/ultimiatti" },
+      { id: 6, title: "Ultimdossier", icon: <LatestDossiersIcon className="w-6 h-6" />, link: "/ultimdossier" },
     ],
   },
   { id: 2, title: "Commissioni permanenti", icon: <User className="w-6 h-6" />, link: "/commissioni-permanenti" },
   { id: 3, title: "Giunte e altre comissioni", icon: <ChatIcon className="w-6 h-6" />, link: "/giunte-e-altre-comissioni" },
   { id: 4, title: "Bicamerali e delegazioni", icon: <UsersIcon className="w-6 h-6" />, link: "/giunte-e-altre-comissioni" },
+
   { id: 5, title: "Diretta Senato", icon: <Play2Icon className="w-6 h-6" />, link: "/" },
   { id: 6, title: "INFORMAZIONE", icon: <NoticeIcon className="w-6 h-6" />, link: "/" },
+  {
+    id: 7, title: "Documenti da firmare", icon: <FormIcon className="w-6 h-6" />,
+    submenu: [
+      { id: 1, title: "Nuovo", icon: <EmailIcon className="w-6 h-6" />, link: "/form" },
+      { id: 2, title: "Inbox", icon: <EmailIcon className="w-6 h-6" />, link: "/inbox" },
+      { id: 3, title: "Outbox", icon: <EmailIcon className="w-6 h-6" />, link: "/outbox" },
+    ]
+  },
+
 ];
 
 function Menu2() {
@@ -59,16 +66,14 @@ function Menu2() {
           {item.subMenu ? (
             <div
               onClick={toggleMenuHandler(item.id)}
-              className={`w-full h-10 flex items-center space-x-2 px-2 text-sm text-white cursor-pointer ${
-                activeMain === item.id ? "bg-gray-700" : ""
-              }`}
+              className={`w-full h-10 flex items-center space-x-2 px-2 text-sm text-white cursor-pointer ${activeMain === item.id ? "bg-gray-700" : ""
+                }`}
             >
               {item.icon}
               <span>{item.title}</span>
               <ArraowDownIcon
-                className={`w-2.5 transition-transform duration-150 ${
-                  activeMain === item.id ? "" : "-rotate-90"
-                }`}
+                className={`w-2.5 transition-transform duration-150 ${activeMain === item.id ? "" : "-rotate-90"
+                  }`}
               />
             </div>
           ) : (
@@ -78,9 +83,8 @@ function Menu2() {
                 setActiveMain(item.id);
                 setActiveSub(null);
               }}
-              className={`w-full h-10 flex items-center space-x-2 px-2 text-sm text-white cursor-pointer ${
-                activeMain === item.id ? "bg-gray-700" : ""
-              }`}
+              className={`w-full h-10 flex items-center space-x-2 px-2 text-sm text-white cursor-pointer ${activeMain === item.id ? "bg-gray-700" : ""
+                }`}
             >
               {item.icon}
               <span>{item.title}</span>
@@ -98,9 +102,8 @@ function Menu2() {
                       setActiveMain(item.id);
                       setActiveSub(subItem.id);
                     }}
-                    className={`w-full h-10 flex items-center px-2 space-x-2 text-white bg-white/5 cursor-pointer ${
-                      activeSub === subItem.id ? "bg-red-600" : ""
-                    }`}
+                    className={`w-full h-10 flex items-center px-2 space-x-2 text-white bg-white/5 cursor-pointer ${activeSub === subItem.id ? "bg-red-600" : ""
+                      }`}
                   >
                     {subItem.icon && <span>{subItem.icon}</span>}
                     <span>{subItem.title}</span>
