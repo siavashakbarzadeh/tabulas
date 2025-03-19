@@ -33,7 +33,7 @@ function FinalizePage() {
                         </p>
                         <button
                             onClick={() => navigate("/")}
-                            className="bg-blue-600 text-white px-4 py-2 rounded"
+                            className="bg-red-700 text-white px-4 py-2 rounded"
                         >
                             Torna alla Home
                         </button>

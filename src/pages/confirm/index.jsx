@@ -97,16 +97,16 @@ function ConfirmPage() {
               </p>
               {/* Add any additional fields as needed */}
             </div>
-            <div className="flex justify-end mt-6 space-x-4">
+            <div className="flex justify-start mt-6 space-x-5">
               <button
                 onClick={handleConfirm}
-                className="bg-green-600 text-white px-4 py-2 rounded"
+                className="bg-red-700 text-white px-4 py-2 rounded w-10/12"
               >
                 Conferma
               </button>
               <button
                 onClick={handleDecline}
-                className="bg-red-600 text-white px-4 py-2 rounded"
+                className="bg-neutral-200 text-white px-4 py-2 rounded"
               >
                 No Grazie
               </button>
