@@ -37,7 +37,7 @@ const Menu = [
   { id: 6, title: "INFORMAZIONE", icon: <NoticeIcon className="w-6 h-6" />, link: "/" },
   {
     id: 7, title: "Documenti da firmare", icon: <FormIcon className="w-6 h-6" />,
-    submenu: [
+    subMenu: [
       { id: 1, title: "Nuovo", icon: <EmailIcon className="w-6 h-6" />, link: "/form" },
       { id: 2, title: "Inbox", icon: <EmailIcon className="w-6 h-6" />, link: "/inbox" },
       { id: 3, title: "Outbox", icon: <EmailIcon className="w-6 h-6" />, link: "/outbox" },
