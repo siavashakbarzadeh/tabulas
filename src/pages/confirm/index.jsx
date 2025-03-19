@@ -1,83 +1,88 @@
-import { useEffect, useState } from "react";
+// src/pages/ConfirmPage.jsx
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../configs/axiosConfig.js";
+import { toast } from "react-toastify";
 
 function ConfirmPage() {
-  const { id } = useParams(); // the application_id from the URL
+  const { id } = useParams();
   const navigate = useNavigate();
   const [application, setApplication] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(`/applications/${id}`)
+    axios
+      .get(`/applications/${id}`)
       .then((res) => {
-        setApplication(res.data.data.application); // or however your API returns it
+        // Assuming the API returns the application in res.data.data.application
+        setApplication(res.data.data.application);
       })
       .catch((err) => {
-        console.error(err);
+        toast.error("Failed to load application preview");
       })
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <div>Loading...</div>;
+  if (!application) return <div>No application found.</div>;
 
-  if (!application) {
-    return <div>No application found.</div>;
-  }
-
-  // Suppose your API returns a "document" relationship with a "files" array
-  // that includes a URL to the PDF, e.g. application.document.files.pdf
-  const pdfUrl = application.document?.[0]?.files?.pdf || null;
+  // Extract the PDF URL from the document relationship (adjust as needed)
+  const pdfUrl = application.document?.files?.original || null;
 
   const handleConfirm = () => {
-    // Handle “SI” action, e.g. finalize or do something
-    // ...
-    navigate("/thank-you");
+    // Handle confirmation (e.g., finalize the application)
+    // You can also navigate to a final thank-you page
+    navigate(`/finalize/${id}`);
   };
 
-  const handleCancel = () => {
-    // Handle “No Grazie” action
-    navigate("/");
+  const handleDecline = () => {
+    // For example, call an API to decline the application or update its status
+    axios
+      .post(`/applications/${id}/decline`)
+      .then(() => {
+        toast.success("Application declined");
+        navigate("/");
+      })
+      .catch(() => {
+        toast.error("Failed to decline application");
+      });
   };
 
   return (
     <div className="flex flex-col items-center p-4">
-      <div className="bg-white rounded-xl p-6 shadow-md w-full max-w-xl">
-        <h2 className="text-xl font-semibold mb-4">Anteprima Documento Firmato</h2>
-
-        {/* Show the PDF preview */}
+      <div className="bg-white rounded-xl p-6 shadow-md w-full max-w-4xl">
+        <h2 className="text-2xl font-semibold mb-4">Anteprima Applicazione</h2>
         {pdfUrl ? (
           <iframe
             src={pdfUrl}
             title="PDF Preview"
-            width="100%"
-            height="400px"
+            className="w-full h-96 mb-4"
           />
         ) : (
           <p>Nessun documento caricato.</p>
         )}
-
-        {/* Show the form data fields */}
-        <div className="mt-4">
-          <p><strong>Tipo Atto:</strong> {application.act_type}</p>
-          <p><strong>Ufficio Destinatario:</strong> {application.recipient_office}</p>
-          <p><strong>Data Invio:</strong> {application.submission_date}</p>
-          {/* ... any other fields you need to show ... */}
+        <div className="mb-4">
+          <p>
+            <strong>Tipo Atto:</strong> {application.act_type}
+          </p>
+          <p>
+            <strong>Ufficio Destinatario:</strong> {application.recipient_office}
+          </p>
+          <p>
+            <strong>Data Invio:</strong> {application.submission_date}
+          </p>
+          {/* Add more fields as needed */}
         </div>
-
-        {/* Confirmation Buttons */}
-        <div className="flex justify-end mt-6 space-x-2">
+        <div className="flex justify-end space-x-4">
           <button
-            className="bg-red-600 text-white px-4 py-2 rounded"
             onClick={handleConfirm}
+            className="bg-green-600 text-white px-4 py-2 rounded"
           >
-            Invia
+            Conferma
           </button>
           <button
-            className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
-            onClick={handleCancel}
+            onClick={handleDecline}
+            className="bg-red-600 text-white px-4 py-2 rounded"
           >
             No Grazie
           </button>

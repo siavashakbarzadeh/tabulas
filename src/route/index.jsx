@@ -108,6 +108,7 @@ import { useLocation } from "react-router";
 import MainPage from "../pages/main";
 import NewLoginPage from "../pages/login";
 import ConfirmPage from "../pages/confirm";
+import FinalizePage from "./pages/FinalizePage";
 import EmailPage from "../pages/email";
 import ThemeProvider2 from "../layout/context2";
 import DashboardLayout from "../layout/dashboard";
@@ -141,7 +142,8 @@ function Router() {
             <Route element={<PrivateRoute />}>
               <Route element={<DashboardLayout />}>
                 <Route index element={<MainPage />} />
-                <Route path="confirm" element={<ConfirmPage />} />
+                <Route path="/confirm/:id" element={<ConfirmPage />} />
+                <Route path="/finalize/:id" element={<FinalizePage />} />
                 <Route path="email" element={<EmailPage />} />
                 <Route path="services" element={<ServicePage />} />
                 <Route path="form" element={<FormPage />} />
@@ -151,6 +153,7 @@ function Router() {
                 <Route path="commissioni" element={<CommissioniPage />} />
                 <Route path="ultimiatti" element={<UltimiattiPage />} />
                 <Route path="ultimdossier" element={<UltimdossierPage />} />
+
               </Route>
             </Route>
             <Route path="login" element={<NewLoginPage />} />
