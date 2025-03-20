@@ -20,7 +20,7 @@ function Sidebar2({ isSidebarActive = false }) {
           )}
         </div>
         <div className="w-full flex flex-col justify-center">
-          <div className="leading-6 text-white">Roberto Battistoni</div>
+          <div className="leading-6 text-white">-</div>
           <span className="text-xs leading-5 text-white/50">{user?.email}</span>
         </div>
       </Link>
