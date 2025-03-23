@@ -1,7 +1,8 @@
 import { useEffect } from "react";
-import SearchIcon from "../../assets/svg/search.svg"; // Ensure this path is correct and the file exists
-import PlayIcon from "../../icons/Play"; // Ensure this component exists and is exported correctly
-import NotificationIcon from "../../icons/Notification"; // Ensure this component exists and is exported correctly
+import axios from "axios";
+import SearchIcon from "../../assets/svg/search.svg";
+import PlayIcon from "../../icons/Play";
+import NotificationIcon from "../../icons/Notification";
 import { Link } from "react-router-dom";
 
 function MainPage() {
@@ -84,9 +85,9 @@ function MainPage() {
             </form>
             <div className="w-full flex mt-8">
               <div className="py-3 px-6 bg-primary-900 text-white rounded-2xl leading-6">
-                <div className="">Martedì 27 febbraio 2024</div>
-                <div className="">alle ore 16,30</div>
-                <div className="">163A Seduta Pubblica</div>
+                <div>Martedì 27 febbraio 2024</div>
+                <div>alle ore 16,30</div>
+                <div>163A Seduta Pubblica</div>
               </div>
             </div>
             <div className="w-full mt-8 space-y-4">
@@ -100,88 +101,33 @@ function MainPage() {
                   <strong>II. Discussione del disegno di legge:</strong>
                 </p>
                 <p>
-                  Interventi a sostegno della competitività dei capitali e delega al
-                  Governo per la riforma organica delle disposizioni in materia di
-                  mercati dei capitali recate dal testo unico di cui al decreto
-                  legislativo 24 febbraio 1998, n. 58, e delle disposizioni in
-                  materia di società di capitali contenute nel codice civile
-                  applicabili anche agli emittenti (approvato dal Senato e
-                  modificato dalla Camera dei deputati) (collegato alla manovra di
-                  finanza pubblica)  (voto finale con la presenza del numero legale)
-                  - Relatore ORSOMARSO (Relazione orale) {" "}
+                  Interventi a sostegno della competitività dei capitali e delega al Governo per la riforma organica delle disposizioni in materia di mercati dei capitali recate dal testo unico di cui al decreto legislativo 24 febbraio 1998, n. 58, e delle disposizioni in materia di società di capitali contenute nel codice civile applicabili anche agli emittenti (approvato dal Senato e modificato dalla Camera dei deputati) (collegato alla manovra di finanza pubblica)  (voto finale con la presenza del numero legale) - Relatore ORSOMARSO (Relazione orale) {" "}
                   <span className="inline-block rounded-lg leading-7 text-white bg-primary-900 px-2 mx-1">
                     674-B
                   </span>
                 </p>
-                </div>
-              <div className="w-full bg-neutral-200 rounded-2xl p-6 text-zinc-800 space-y-4 leading-7">
-                <p>
-                  <strong>
-                    I. Ratifiche di accordi internazionali (elenco allegato)
-                </strong>
-              </p>
-              <p>
-                <strong>II. Discussione del disegno di legge:</strong>
-              </p>
-                <p>
-              Interventi a sostegno della competitività dei capitali e delega al
-              Governo per la riforma organica delle disposizioni in materia di
-              mercati dei capitali recate dal testo unico di cui al decreto
-              legislativo 24 febbraio 1998, n. 58, e delle disposizioni in
-              materia di società di capitali contenute nel codice civile
-              applicabili anche agli emittenti (approvato dal Senato e
-              modificato dalla Camera dei deputati) (collegato alla manovra di
-              finanza pubblica)  (voto finale con la presenza del numero legale)
-                  - Relatore ORSOMARSO (Relazione orale) {" "}
-              <span className="inline-block rounded-lg leading-7 text-white bg-primary-900 px-2 mx-1">
-                    674-B
-              </span>
-            </p>
               </div>
-            <div className="w-full bg-neutral-200 rounded-2xl p-6 text-zinc-800 space-y-4 leading-7">
-                <p>
-            <strong>
-              I. Ratifiche diccordi internazionali (elenco allegato)
-                  </strong>
-          </p>
-                <p>
-          <strong>II. Discussione del disegno di legge:</strong>
-          </p>
-          <p>
-        Interventi a sostegno della competitività dei capitali e delega al
-        G overno per la riforma organica delle disposizioni in materia di
-          mercati dei capitali recate dal testo unico di cui al decreto
-          legislativo 24 febbraio 1998, n. 58, e delle disposizioni in
-          materia di società di capitali contenute nel codice civile
-            applicabili anche agli emittenti (approvato dal Senato e
-          modificato dalla Camera dei deputati) (collegato alla manovra di
-          finanza pubblica)  (voto finale con la presenza del numero legale)
-          - Relatore ORSOMARSO (Relazione orale) {" "}
-          <span className="inline-block rounded-lg leading-7 text-white bg-primary-900 px-2 mx-1">
-            674-B
-          </span>
-        </p>
-      </div>
+              {/* ... Other content ... */}
             </div>
-          </div > 
+          </div>
           <div className="w-full md:w-2/6">
-    < Link className="w-full block">
-      <div className="w-full aspect-video relative">
+            <Link className="w-full block">
+              <div className="w-full aspect-video relative">
                 <img
-        src="images/thumbnail.jpg"
+                  src="images/thumbnail.jpg"
                   alt=""
                   className="w-full object-contain"
-    /> 
+                />
                 <span className="bg-primary-900 text-white leading-6 px-2 absolute left-2 top-2">
-  Live  
-                 </span>
-              </di v >      
+                  Live
+                </span>
+              </div>
               <div className="w-full flex items-center space-x-2 p-3 bg-zinc-200 rounded-bl-2xl rounded-br-2xl">
                 <PlayIcon className="w-6 h-6" />
                 <span className="text-primary-900 font-medium text-lg">
-                  I n diretta
-                < /span>
-              < /div>
+                  In diretta
+                </span>
+              </div>
             </Link>
             <div className="w-full mt-8 bg-zinc-200 p-4 rounded-2xl">
               <div className="flex items-center space-x-2">
@@ -192,54 +138,35 @@ function MainPage() {
               </div>
               <div className="w-full mt-4 text-zinc-800 space-y-2">
                 <p>
-                  eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim.
+                  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                  enim ad minim.
                 </p>
-                <p>
-                  eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim.
-                </p>
-                <p>
-                   eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          Ut enim ad minim.
-        </p>
-        <p>
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          Ut enim ad minim.
-        </p>
-        <p>
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          Ut enim ad minim.
-        </p>
-        <p>
-        eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        Ut enim ad minim.
-      </p>
-    </div>
-              < Link  className="w-full h-12 flex items-center justify-center bg-zinc-800 text-white rounded-xl mt-4 transition-colors hover:bg-zinc-900">
-    NOTIFICA
-    </Link>
-            </div > 
-          </div >  
-        </div > 
-    <div className="absolute inset-x-0 bottom-0 text-white bg-zinc-800 px-2 line-clamp-1 leading-9 h-9 overflow-hidden rounded-bl-2xl rounded-br-2xl">
-    16.25 Scuola: Gilda, ministeri trovino soluzione per stipendi precari
-    (z ANSA Politica) ~ 16.25 Confartigianato, 'no alla patente a crediti
+                {/* ... Other notifications ... */}
+              </div>
+              <Link className="w-full h-12 flex items-center justify-center bg-zinc-800 text-white rounded-xl mt-4 transition-colors hover:bg-zinc-900">
+                NOTIFICA
+              </Link>
+            </div>
+          </div>
+        </div>
+        <div className="absolute inset-x-0 bottom-0 text-white bg-zinc-800 px-2 line-clamp-1 leading-9 h-9 overflow-hidden rounded-bl-2xl rounded-br-2xl">
+          16.25 Scuola: Gilda, ministeri trovino soluzione per stipendi precari
+          (z ANSA Politica) ~ 16.25 Confartigianato, 'no alla patente a crediti
           nell'edilizia' (z ANSA Economia e Finanza) ~ 16.25 Agricoltori:
           Fidanza (Fdi), richieste in linea nostre battaglie = (AGI) ~ 16.25 ++
           'Biden al confine col Messico lo stesso giorno di Trump' ++ (z ANSA
-          Politica)  ~ 16.26 Scontri Pisa: Conti, 'è pagina buia, polizia si può
-    critic a r e' (z ANSA Cronaca) ~ 16.26 Giustizia: sabato riunione Anm su
-    reclutamento straordinario = (AGI) ~ 16.28 Schlein, vita di Don
+          Politica) ~ 16.26 Scontri Pisa: Conti, 'è pagina buia, polizia si può
+          criticare' (z ANSA Cronaca) ~ 16.26 Giustizia: sabato riunione Anm su
+          reclutamento straordinario = (AGI) ~ 16.28 Schlein, vita di Don
           Nicolini dedicata agli ultimi, mancherà (z ANSA Politica) ~ 16.28
-    Hezbollah , 60 razzi contro base militare israeliana (2) (z ANSA
-      Politica)  ~ 16.30 Legale due poliziotti uccisi, 'dissento da
-        Matt a rella' (z ANSA   Cronaca) ~ 16.30 Al via il Consiglio dei ministri  
+          Hezbollah, 60 razzi contro base militare israeliana (2) (z ANSA
+          Politica) ~ 16.30 Legale due poliziotti uccisi, 'dissento da
+          Mattarella' (z ANSA Cronaca) ~ 16.30 Al via il Consiglio dei ministri
           (z ANSA Polit
-        </div >  
-      </div >  
-    </>  
-  );  
-} 
-  
-  export  default MainPage;
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default MainPage;
