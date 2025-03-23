@@ -3,92 +3,135 @@ import { Link } from "react-router-dom";
 import SearchIcon from "../../assets/svg/search.svg";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
-import InnerSidebar from "../../layout/sidebar2/InnerSidebar.jsx"; // If you have an inner sidebar
+import InnerSidebar from "../../layout/sidebar2/InnerSidebar.jsx"; // Optional inner sidebar
 
-const ITEMS_PER_PAGE = 20;
-// We'll define the maximum number of columns we expect per row
-const MAX_COLUMNS = 4;
+// --- PARSING FUNCTION ---
+// Assumes raw data is a string with dossier records separated by empty lines.
+function parseDossierData(rawData) {
+  const records = [];
+  // Split records by one or more blank lines
+  const rawRecords = rawData.split(/\n\s*\n/);
+  rawRecords.forEach((recordStr) => {
+    // Split each record into lines, trimming whitespace
+    const lines = recordStr.split("\n").map((line) => line.trim()).filter((line) => line !== "");
+    if (lines.length === 0) return;
+    // The first line is the header.
+    // We try to split by tab or by two or more spaces.
+    const headerParts = lines[0].split(/\t+|\s{2,}/).filter((p) => p !== "");
+    const documentIdentifier = headerParts[0] || "-";
+    const servizio = headerParts[1] || "-";
+    const date = headerParts[2] || "-";
+    const label = headerParts[3] || "-";
+    // The remaining lines are the description and references.
+    let description = "";
+    const riferimenti = [];
+    let inReferences = false;
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i];
+      if (line.startsWith("Riferimenti:")) {
+        inReferences = true;
+        const refLine = line.replace("Riferimenti:", "").trim();
+        if (refLine) {
+          riferimenti.push(refLine);
+        }
+      } else if (inReferences) {
+        riferimenti.push(line);
+      } else {
+        description += (description ? " " : "") + line;
+      }
+    }
+    records.push({
+      documentIdentifier,
+      servizio,
+      date,
+      label,
+      description,
+      riferimenti,
+    });
+  });
+  return records;
+}
 
+// --- TABLE COMPONENT ---
+// Displays the structured dossier records in a table.
+function DossierTable({ records }) {
+  return (
+    <table className="w-full border-collapse border border-gray-300">
+      <thead>
+        <tr className="bg-gray-100">
+          <th className="py-3 px-4">Document Identifier</th>
+          <th className="py-3 px-4">Servizio</th>
+          <th className="py-3 px-4">Date</th>
+          <th className="py-3 px-4">Label</th>
+        </tr>
+      </thead>
+      <tbody>
+        {records.map((record, index) => (
+          <React.Fragment key={index}>
+            {/* Header row */}
+            <tr className="border-b bg-gray-100">
+              <td className="py-3 px-4">{record.documentIdentifier}</td>
+              <td className="py-3 px-4">{record.servizio}</td>
+              <td className="py-3 px-4">{record.date}</td>
+              <td className="py-3 px-4">{record.label}</td>
+            </tr>
+            {/* Content row */}
+            <tr className="border-b">
+              <td colSpan={4} className="py-3 px-4">
+                <strong>Description:</strong> {record.description || "-"}
+                {record.riferimenti.length > 0 && (
+                  <>
+                    <br />
+                    <strong>Riferimenti:</strong>
+                    <ul className="list-disc ml-6">
+                      {record.riferimenti.map((ref, idx) => (
+                        <li key={idx}>{ref}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </td>
+            </tr>
+          </React.Fragment>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+// --- MAIN COMPONENT ---
 function Ultimidossierage() {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
+  const [records, setRecords] = useState([]);
+  // Optionally, if you still need the inner sidebar you can use activeNode, etc.
   const [activeNode, setActiveNode] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (data) {
-      setLoading(false);
-      // If there are docNodes, set the first as active if not already
-      if (data.docNodes && data.docNodes.length > 0 && !activeNode) {
-        setActiveNode(data.docNodes[0].name);
-      }
-    }
-  }, [data, activeNode]);
-
-  // -----------------------
-  // 1) Fetch Data from API
-  // -----------------------
+  // Fetch raw dossier data and parse it
   const fetchData = () => {
     setLoading(true);
     axios
       .get("tabulas/mobile/ultimdossier")
       .then((res) => {
-        setData(res.data);
+        // Assume res.data is raw text
+        const parsedRecords = parseDossierData(res.data);
+        setRecords(parsedRecords);
+        // Optionally, set activeNode if needed based on parsedRecords
+        if (parsedRecords.length > 0 && !activeNode) {
+          setActiveNode(parsedRecords[0].documentIdentifier);
+        }
+        setLoading(false);
       })
       .catch((err) => {
         console.error(err);
+        setLoading(false);
       });
   };
 
-  // -----------------------------------
-  // 2) Helper to Remove Parentheses
-  // -----------------------------------
-  function removeParenthesesFrom(element) {
-    element.childNodes.forEach((child) => {
-      if (child.nodeType === Node.TEXT_NODE) {
-        // Strip all '(' and ')' from the text
-        child.textContent = child.textContent.replace(/[()]/g, "");
-      } else {
-        removeParenthesesFrom(child);
-      }
-    });
-  }
-
-  // -----------------------------------
-  // 3) Helper to Remove PDF Icon <img>
-  // -----------------------------------
-  function removePdfIconsFrom(element) {
-    element
-      .querySelectorAll('img[src="https://www.senato.it//img/icona_pdf.gif"]')
-      .forEach((img) => {
-        img.remove();
-      });
-  }
-
-  // --------------------------------------------------------
-  // 4) Helper to Transform .pdf Links into PDF Icon Only
-  // --------------------------------------------------------
-  function transformPdfLinks(element) {
-    element.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
-      // Remove any existing text or child nodes in the link
-      link.innerHTML = "";
-      // Create the PDF icon element
-      const icon = document.createElement("i");
-      icon.className = "fas fa-file-pdf custom-pdf-icon";
-      icon.style.color = "rgb(151, 0, 45)";
-      // Append only the icon to the link
-      link.appendChild(icon);
-    });
-  }
-
-  // -----------------------------------
-  // Render Loading State
-  // -----------------------------------
-  if (loading || data === null) {
+  if (loading) {
     return (
       <div className="w-full flex justify-center">
         <Loading />
@@ -96,133 +139,6 @@ function Ultimidossierage() {
     );
   }
 
-  // Find the active document node
-  const activeDocNode = data.docNodes.find((node) => node.name === activeNode);
-
-  // Handle pagination
-  const totalItems = activeDocNode?.docContentStreamContent
-    ? activeDocNode.docContentStreamContent.split('<HR class="defrss">').length
-    : 0;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
-  // -----------------------------------
-  // 5) Build Paginated Table Rows
-  // -----------------------------------
-  const paginatedContent = activeDocNode?.docContentStreamContent
-    ?.split('<HR class="defrss">')
-    .slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
-    .map((item, index) => {
-      // Create a temporary DOM container for each chunk
-      const tempElement = document.createElement("div");
-      tempElement.innerHTML = item;
-
-      // Apply transformations in memory
-      removeParenthesesFrom(tempElement);
-      removePdfIconsFrom(tempElement);
-      transformPdfLinks(tempElement);
-
-      // Convert each child element into an array
-      let childElements = Array.from(tempElement.children);
-
-      // 1) Check if we have at least 4 children
-      //    If the 3rd + 4th combined text length > 70,
-      //    move them to a second row that spans the table width
-      let secondRowContent = null;
-      if (childElements.length >= 4) {
-        const thirdText = childElements[2].textContent.trim();
-        const fourthText = childElements[3].textContent.trim();
-        const combinedLength = thirdText.length + fourthText.length;
-
-        if (combinedLength > 70) {
-          // Combine the 3rd & 4th child's HTML for a single cell
-          secondRowContent =
-            childElements[2].innerHTML + "<br/>" + childElements[3].innerHTML;
-
-          // Remove them from the main row: keep the first 2 and any beyond the 4th
-          const afterFourth = childElements.slice(4);
-          childElements.splice(2);
-          childElements.push(...afterFourth);
-        }
-      }
-
-      // 2) Apply the max column procedure
-      //    - Fill missing cells with "-"
-      //    - Truncate if there are more than MAX_COLUMNS
-      while (childElements.length < MAX_COLUMNS) {
-        const placeholder = document.createElement("div");
-        placeholder.innerHTML = "-";
-        childElements.push(placeholder);
-      }
-      childElements = childElements.slice(0, MAX_COLUMNS);
-
-      // 3) Build the main row cells (first row)
-      const mainRowCells = childElements.map((child, idx) => {
-        if (child.tagName === "A") {
-          return (
-            <td
-              key={idx}
-              className="py-3 px-4 text-left"
-              style={{ verticalAlign: "middle" }}
-            >
-              <span style={{ display: "table-caption" }}>
-                <a href={child.href} target="_blank" rel="noopener noreferrer">
-                  {child.textContent || "-"}
-                </a>
-              </span>
-            </td>
-          );
-        } else {
-          return (
-            <td
-              key={idx}
-              className="py-3 px-4 text-left"
-              style={{ verticalAlign: "middle" }}
-            >
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: child.innerHTML || "-",
-                }}
-              />
-            </td>
-          );
-        }
-      });
-
-      // We'll make the first row have a light-gray background
-      // (Tailwind className: bg-gray-100)
-      const mainRow = (
-        <tr key={`main-${index}`} className="border-b bg-gray-100">
-          {mainRowCells}
-        </tr>
-      );
-
-      // 4) Build the second row if needed
-      //    If secondRowContent is not null, we place it in a single cell
-      //    spanning the full number of columns (MAX_COLUMNS).
-      let secondRow = null;
-      if (secondRowContent) {
-        secondRow = (
-          <tr key={`second-${index}`} className="border-b">
-            <td colSpan={MAX_COLUMNS} className="py-3 px-4 text-left">
-              <span
-                dangerouslySetInnerHTML={{ __html: secondRowContent }}
-              />
-            </td>
-          </tr>
-        );
-      }
-
-      return (
-        <React.Fragment key={index}>
-          {mainRow}
-          {secondRow}
-        </React.Fragment>
-      );
-    });
-
-  // -----------------------------------
-  // Final JSX Return
-  // -----------------------------------
   return (
     <div className="flex flex-col min-h-screen w-full">
       <div className="flex-1 bg-white rounded-2xl relative p-4">
@@ -243,54 +159,16 @@ function Ultimidossierage() {
         </form>
 
         <div className="flex w-full">
-          {/* Inner Sidebar */}
+          {/* Inner Sidebar (if needed) */}
           <InnerSidebar
-            docNodes={data.docNodes}
+            docNodes={[]} // Provide appropriate data if needed
             activeNode={activeNode}
-            onSelect={(name) => {
-              setActiveNode(name);
-              setCurrentPage(1);
-            }}
+            onSelect={(name) => setActiveNode(name)}
           />
 
           {/* Main Content Area */}
           <div className="flex-1 ml-4 overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-300">
-              <tbody>{paginatedContent}</tbody>
-            </table>
-
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="flex justify-center mt-4 space-x-2">
-                <button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(prev - 1, 1))
-                  }
-                  disabled={currentPage === 1}
-                  className={`px-3 py-1 border rounded ${currentPage === 1
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:bg-gray-200"
-                    }`}
-                >
-                  Prev
-                </button>
-                <span className="text-sm px-3 py-1">
-                  {`Page ${currentPage} of ${totalPages}`}
-                </span>
-                <button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                  }
-                  disabled={currentPage === totalPages}
-                  className={`px-3 py-1 border rounded ${currentPage === totalPages
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:bg-gray-200"
-                    }`}
-                >
-                  Next
-                </button>
-              </div>
-            )}
+            <DossierTable records={records} />
           </div>
         </div>
       </div>
