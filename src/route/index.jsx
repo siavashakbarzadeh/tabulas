@@ -123,7 +123,7 @@ import FormPage from "../pages/form";
 import DetailsPage from "../pages/details";
 import InboxPage from "../pages/inbox";
 import OutboxPage from "../pages/outbox";
-import NotificationPage from "../pages/notification";
+import NotificationPage from "../pages/notification/index.jsx";
 
 const ScrollToTop = (props) => {
   const location = useLocation();
