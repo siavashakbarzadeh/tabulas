@@ -118,7 +118,7 @@ import GuidemanualiPage from "../pages/guidemanuali";
 import EbookPage from "../pages/ebook";
 import CommissioniPage from "../pages/commissioni";
 import UltimiattiPage from "../pages/ultimiatti";
-import UltimdossierPage from "../pages/ultimdossier";
+import Ultimidossierage from "../pages/ultimdossier";
 import FormPage from "../pages/form";
 import DetailsPage from "../pages/details";
 import InboxPage from "../pages/inbox";
@@ -154,7 +154,7 @@ function Router() {
                 <Route path="ebook" element={<EbookPage />} />
                 <Route path="commissioni" element={<CommissioniPage />} />
                 <Route path="ultimiatti" element={<UltimiattiPage />} />
-                <Route path="ultimdossier" element={<UltimdossierPage />} />
+                <Route path="ultimdossier" element={<Ultimidossierage />} />
                 <Route path="notification" element={<NotificationPage />} />
                 <Route path="inbox" element={<InboxPage />} />
                 <Route path="outbox" element={<OutboxPage />} />

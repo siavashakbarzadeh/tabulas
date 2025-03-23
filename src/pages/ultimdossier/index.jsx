@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import SearchIcon from "../../assets/svg/search.svg";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
-import Sidebar from "../../layout/sidebar2/Menu.jsx"; // Global sidebar (if needed)
-import InnerSidebar from "../../layout/sidebar2/InnerSidebar.jsx"; // Inner sidebar with pagination
+import InnerSidebar from "../../layout/sidebar2/InnerSidebar.jsx"; // If you have an inner sidebar
 
 const ITEMS_PER_PAGE = 20;
 
@@ -120,8 +119,35 @@ function Ultimidossierage() {
       removePdfIconsFrom(tempElement);
       transformPdfLinks(tempElement);
 
-      // Convert each child element into a table cell
-      const rows = Array.from(tempElement.children).map((child, idx) => (
+      // Convert each child element into an array of <td> elements
+      const childElements = Array.from(tempElement.children);
+
+      // If we have at least 4 children, check if #2 and #3 combined length > 70
+      let secondRowContent = null;
+      if (childElements.length >= 4) {
+        const thirdText = childElements[2].textContent.trim();
+        const fourthText = childElements[3].textContent.trim();
+        const combinedLength = thirdText.length + fourthText.length;
+
+        if (combinedLength > 70) {
+          // Combine the third & fourth child's HTML for a single cell
+          const combinedHTML =
+            childElements[2].innerHTML + "<br/>" + childElements[3].innerHTML;
+
+          // Remove them from the childElements for the main row
+          // Keep the first 2, and any beyond the 4th
+          const afterFourth = childElements.slice(4); // If there are more than 4
+          childElements.splice(2); // remove everything after second index
+          childElements.push(...afterFourth);
+
+          // Prepare a "second row" cell that spans the entire table width
+          // We'll just store it in secondRowContent, then render it below
+          secondRowContent = combinedHTML;
+        }
+      }
+
+      // Build the main row's cells
+      const mainRowCells = childElements.map((child, idx) => (
         <td
           key={idx}
           className="py-3 px-4 text-left"
@@ -143,10 +169,30 @@ function Ultimidossierage() {
         </td>
       ));
 
+      // If we created a secondRowContent, we render an additional row
+      // with a single cell spanning all columns
+      const numColumns = mainRowCells.length || 1;
+
       return (
-        <tr key={index} className="border-b">
-          {rows}
-        </tr>
+        <React.Fragment key={index}>
+          {/* First (main) row */}
+          <tr className="border-b">{mainRowCells}</tr>
+
+          {/* Second row if needed */}
+          {secondRowContent && (
+            <tr className="border-b">
+              <td
+                colSpan={numColumns}
+                className="py-3 px-4 text-left"
+                style={{ verticalAlign: "middle" }}
+              >
+                <span
+                  dangerouslySetInnerHTML={{ __html: secondRowContent }}
+                />
+              </td>
+            </tr>
+          )}
+        </React.Fragment>
       );
     });
 
@@ -202,7 +248,9 @@ function Ultimidossierage() {
                 >
                   Prev
                 </button>
-                <span className="text-sm px-3 py-1">{`Page ${currentPage} of ${totalPages}`}</span>
+                <span className="text-sm px-3 py-1">
+                  {`Page ${currentPage} of ${totalPages}`}
+                </span>
                 <button
                   onClick={() =>
                     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
