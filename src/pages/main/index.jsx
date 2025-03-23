@@ -13,7 +13,7 @@ function MainPage() {
           const registration = await navigator.serviceWorker.register("/sw.js");
           console.log("Service Worker registered:", registration);
 
-          // Request permission for notifications
+          // Check for notification support and request permission
           if (!("Notification" in window)) {
             console.log("This browser does not support notifications.");
             return;
@@ -40,17 +40,11 @@ function MainPage() {
           };
 
           // Subscribe the user to push notifications
-          const subscription = await registration.pushManager.subscribe(
-            subscribeOptions
-          );
+          const subscription = await registration.pushManager.subscribe(subscribeOptions);
           console.log("User is subscribed:", subscription);
 
-          // Send subscription to your backend to store it for later push notifications
-          await fetch("/api/v1/save-subscription", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(subscription),
-          });
+          // Send subscription to your backend using axios
+          await axios.post("/api/v1/save-subscription", subscription);
         } catch (error) {
           console.error("Error during service worker registration or subscription", error);
         }
