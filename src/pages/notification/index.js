@@ -87,54 +87,74 @@ function NotificationPage() {
     };
 
     return (
-        <div className="w-full bg-white rounded-tl-none lg:rounded-tl-2xl rounded-tr-none lg:rounded-tr-2xl rounded-bl-2xl rounded-br-2xl relative px-4 pt-4 pb-13">
-            <div className="w-full flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
-
-                {/* Main Notification Form Column */}
-                <div className="w-full md:w-2/3">
-                    <div className="bg-neutral-200 rounded-2xl p-6 text-zinc-800 space-y-4 leading-7">
-                        <h2 className="text-lg font-semibold mb-4">Send Notification</h2>
-                        <form onSubmit={handleSubmit} className="space-y-3">
-                            <input
-                                type="text"
-                                name="title"
-                                placeholder="Title"
-                                value={notification.title}
-                                onChange={handleChange}
-                                className="w-full p-2 border rounded"
-                            />
-                            <textarea
-                                name="body"
-                                placeholder="Body"
-                                value={notification.body}
-                                onChange={handleChange}
-                                className="w-full p-2 border rounded"
-                            ></textarea>
-                            <input
-                                type="text"
-                                name="icon"
-                                placeholder="Icon URL"
-                                value={notification.icon}
-                                onChange={handleChange}
-                                className="w-full p-2 border rounded"
-                            />
-                            <input
-                                type="text"
-                                name="url"
-                                placeholder="Target URL"
-                                value={notification.url}
-                                onChange={handleChange}
-                                className="w-full p-2 border rounded"
-                            />
-                            <button type="submit" className="w-full py-2 bg-primary-900 text-white rounded">
-                                Send Notification
-                            </button>
+        <>
+            <div className="w-full bg-white rounded-tl-none lg:rounded-tl-2xl rounded-tr-none lg:rounded-tr-2xl rounded-bl-2xl rounded-br-2xl relative px-4 pt-4 pb-13">
+                <div className="w-full flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                    {/* Sidebar Column */}
+                    <div className="w-full md:w-1/3">
+                        <form>
+                            <label className="w-full block relative before:w-px before:h-2/3 before:bg-neutral-300 before:absolute before:left-14 before:top-1/2 before:-translate-y-1/2">
+                                <input
+                                    type="text"
+                                    placeholder="Cerca..."
+                                    className="w-full h-11 bg-neutral-200 text-sm rounded-xl border-none pl-18 ring-0 focus:ring-0 focus:border-none"
+                                />
+                                <img
+                                    src={SearchIcon}
+                                    alt="Search"
+                                    className="w-6 h-6 select-none absolute left-4 top-1/2 -translate-y-1/2"
+                                />
+                            </label>
                         </form>
-                        {messageStatus && <p className="mt-2 text-sm">{messageStatus}</p>}
+                        {/* Additional sidebar content (if needed) can be added here */}
+                    </div>
+
+                    {/* Main Notification Form Column */}
+                    <div className="w-full md:w-2/3">
+                        <div className="bg-neutral-200 rounded-2xl p-6 text-zinc-800 space-y-4 leading-7">
+                            <h2 className="text-lg font-semibold mb-4">Send Notification</h2>
+                            <form onSubmit={handleSubmit} className="space-y-3">
+                                <input
+                                    type="text"
+                                    name="title"
+                                    placeholder="Title"
+                                    value={notification.title}
+                                    onChange={handleChange}
+                                    className="w-full p-2 border rounded"
+                                />
+                                <textarea
+                                    name="body"
+                                    placeholder="Body"
+                                    value={notification.body}
+                                    onChange={handleChange}
+                                    className="w-full p-2 border rounded"
+                                ></textarea>
+                                <input
+                                    type="text"
+                                    name="icon"
+                                    placeholder="Icon URL"
+                                    value={notification.icon}
+                                    onChange={handleChange}
+                                    className="w-full p-2 border rounded"
+                                />
+                                <input
+                                    type="text"
+                                    name="url"
+                                    placeholder="Target URL"
+                                    value={notification.url}
+                                    onChange={handleChange}
+                                    className="w-full p-2 border rounded"
+                                />
+                                <button type="submit" className="w-full py-2 bg-primary-900 text-white rounded">
+                                    Send Notification
+                                </button>
+                            </form>
+                            {messageStatus && <p className="mt-2 text-sm">{messageStatus}</p>}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 
