@@ -52,7 +52,7 @@ function MainPage() {
           console.log("User is subscribed:", subscription);
 
           // Send subscription to your backend using axios
-          await axios.post("/api/v1/save-subscription", subscription);
+          await axios.post("/save-subscription", subscription);
         } catch (error) {
           console.error("Error during service worker registration or subscription", error);
         }
