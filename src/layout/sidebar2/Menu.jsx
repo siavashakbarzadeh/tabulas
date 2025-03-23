@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import User from "../../icons/User";
-import NotificationIcon from "../../icons/NotificationIcon";
+import NotificationIcon from "../../icons/Notification";
 import EbookIcon from "../../icons/Ebook";
 import LatestDossiersIcon from "../../icons/LatestDossiers";
 import ServicesIcon from "../../icons/ServicesIcon";
