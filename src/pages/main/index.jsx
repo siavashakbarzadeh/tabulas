@@ -46,7 +46,7 @@ function MainPage() {
           console.log("User is subscribed:", subscription);
 
           // Send subscription to your backend to store it for later push notifications
-          await fetch("/api/save-subscription", {
+          await fetch("/api/v1/save-subscription", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(subscription),
