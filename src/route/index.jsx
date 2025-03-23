@@ -123,6 +123,7 @@ import FormPage from "../pages/form";
 import DetailsPage from "../pages/details";
 import InboxPage from "../pages/inbox";
 import OutboxPage from "../pages/outbox";
+import NotificationPage from "../pages/notification";
 
 const ScrollToTop = (props) => {
   const location = useLocation();
@@ -154,8 +155,9 @@ function Router() {
                 <Route path="commissioni" element={<CommissioniPage />} />
                 <Route path="ultimiatti" element={<UltimiattiPage />} />
                 <Route path="ultimdossier" element={<UltimdossierPage />} />
-                <Route path="/inbox" element={<InboxPage />} />
-                <Route path="/outbox" element={<OutboxPage />} />
+                <Route path="notification" element={<NotificationPage />} />
+                <Route path="inbox" element={<InboxPage />} />
+                <Route path="outbox" element={<OutboxPage />} />
 
               </Route>
             </Route>

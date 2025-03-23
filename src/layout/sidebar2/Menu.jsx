@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import User from "../../icons/User";
+import NotificationIcon from "../../icons/NotificationIcon";
 import EbookIcon from "../../icons/Ebook";
 import LatestDossiersIcon from "../../icons/LatestDossiers";
 import ServicesIcon from "../../icons/ServicesIcon";
@@ -25,8 +26,8 @@ const Menu = [
       { id: 2, title: "Guidemanuali", icon: <GuideManualsIcon className="w-6 h-6" />, link: "/guidemanuali" },
       { id: 3, title: "Ebook", icon: <EbookIcon className="w-6 h-6" />, link: "/ebook" },
       { id: 4, title: "Commissioni", icon: <UsersIcon className="w-6 h-6" />, link: "/commissioni" },
-      { id: 5, title: "Ultimiatti", icon: <LatestActsIcon className="w-6 h-6" />, link: "/ultimiatti" },
-      { id: 6, title: "Ultimdossier", icon: <LatestDossiersIcon className="w-6 h-6" />, link: "/ultimdossier" },
+      { id: 5, title: "Ultimi atti", icon: <LatestActsIcon className="w-6 h-6" />, link: "/ultimiatti" },
+      { id: 6, title: "Ultimi dossier", icon: <LatestDossiersIcon className="w-6 h-6" />, link: "/ultimdossier" },
     ],
   },
   { id: 2, title: "Commissioni permanenti", icon: <User className="w-6 h-6" />, link: "/commissioni-permanenti" },
@@ -43,6 +44,7 @@ const Menu = [
       { id: 3, title: "Outbox", icon: '', link: "/outbox" },
     ]
   },
+  { id: 6, title: "Push notification", icon: <NotificationIcon className="w-6 h-6" />, link: "/notification" },
 
 ];
 
