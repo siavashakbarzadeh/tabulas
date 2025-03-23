@@ -6,8 +6,7 @@ import Loading from "../../layout/components/Loading.jsx";
 import InnerSidebar from "../../layout/sidebar2/InnerSidebar.jsx"; // If you have an inner sidebar
 
 const ITEMS_PER_PAGE = 20;
-
-// We'll define the maximum number of columns we expect per row.
+// We'll define the maximum number of columns we expect per row
 const MAX_COLUMNS = 4;
 
 function Ultimidossierage() {
@@ -125,22 +124,39 @@ function Ultimidossierage() {
       // Convert each child element into an array
       let childElements = Array.from(tempElement.children);
 
-      // Ensure the row has exactly MAX_COLUMNS cells.
-      // If there are fewer, add placeholder elements.
-      while (childElements.length < MAX_COLUMNS) {
-        const placeholder = document.createElement("div");
-        placeholder.innerHTML = "-"; // Fill with a dash if missing
-        childElements.push(placeholder);
+      // 1) Check if we have at least 4 children
+      //    If the 3rd + 4th combined text length > 70,
+      //    move them to a second row that spans the table width
+      let secondRowContent = null;
+      if (childElements.length >= 4) {
+        const thirdText = childElements[2].textContent.trim();
+        const fourthText = childElements[3].textContent.trim();
+        const combinedLength = thirdText.length + fourthText.length;
+
+        if (combinedLength > 70) {
+          // Combine the 3rd & 4th child's HTML for a single cell
+          secondRowContent =
+            childElements[2].innerHTML + "<br/>" + childElements[3].innerHTML;
+
+          // Remove them from the main row: keep the first 2 and any beyond the 4th
+          const afterFourth = childElements.slice(4);
+          childElements.splice(2);
+          childElements.push(...afterFourth);
+        }
       }
 
-      // If there are more than MAX_COLUMNS child elements,
-      // you can decide whether to keep or ignore them.
-      // For now, we'll only take the first MAX_COLUMNS:
+      // 2) Apply the max column procedure
+      //    - Fill missing cells with "-"
+      //    - Truncate if there are more than MAX_COLUMNS
+      while (childElements.length < MAX_COLUMNS) {
+        const placeholder = document.createElement("div");
+        placeholder.innerHTML = "-";
+        childElements.push(placeholder);
+      }
       childElements = childElements.slice(0, MAX_COLUMNS);
 
-      // Build the <td> cells
+      // 3) Build the main row cells (first row)
       const mainRowCells = childElements.map((child, idx) => {
-        // If the element is a link, handle differently
         if (child.tagName === "A") {
           return (
             <td
@@ -156,7 +172,6 @@ function Ultimidossierage() {
             </td>
           );
         } else {
-          // Otherwise, treat as normal cell
           return (
             <td
               key={idx}
@@ -173,10 +188,35 @@ function Ultimidossierage() {
         }
       });
 
-      return (
-        <tr key={index} className="border-b">
+      // We'll make the first row have a light-gray background
+      // (Tailwind className: bg-gray-100)
+      const mainRow = (
+        <tr key={`main-${index}`} className="border-b bg-gray-100">
           {mainRowCells}
         </tr>
+      );
+
+      // 4) Build the second row if needed
+      //    If secondRowContent is not null, we place it in a single cell
+      //    spanning the full number of columns (MAX_COLUMNS).
+      let secondRow = null;
+      if (secondRowContent) {
+        secondRow = (
+          <tr key={`second-${index}`} className="border-b">
+            <td colSpan={MAX_COLUMNS} className="py-3 px-4 text-left">
+              <span
+                dangerouslySetInnerHTML={{ __html: secondRowContent }}
+              />
+            </td>
+          </tr>
+        );
+      }
+
+      return (
+        <React.Fragment key={index}>
+          {mainRow}
+          {secondRow}
+        </React.Fragment>
       );
     });
 
@@ -223,7 +263,9 @@ function Ultimidossierage() {
             {totalPages > 1 && (
               <div className="flex justify-center mt-4 space-x-2">
                 <button
-                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
                   disabled={currentPage === 1}
                   className={`px-3 py-1 border rounded ${currentPage === 1
                       ? "opacity-50 cursor-not-allowed"
