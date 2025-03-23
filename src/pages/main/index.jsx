@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import axios from "axios";
+import axios from "../../configs/axiosConfig.js";
 import SearchIcon from "../../assets/svg/search.svg";
 import PlayIcon from "../../icons/Play";
 import NotificationIcon from "../../icons/Notification";
