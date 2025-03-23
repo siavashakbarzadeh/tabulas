@@ -28,8 +28,7 @@ function MainPage() {
           // Check if there's an existing subscription and unsubscribe it to force a new subscription
           const existingSubscription = await registration.pushManager.getSubscription();
           if (existingSubscription) {
-            await existingSubscription.unsubscribe();
-            console.log("Existing subscription removed.");
+            console.log("exists", existingSubscription);
           }
 
           // Helper function to convert VAPID key from base64 to a Uint8Array
