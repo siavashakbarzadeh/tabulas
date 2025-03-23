@@ -1,10 +1,67 @@
-import SearchIcon from "../../assets/svg/search.svg";
-import PlayIcon from "../../icons/Play";
-import NotificationIcon from "../../icons/Notification";
+import { useEffect } from "react";
+import SearchIcon from "../../assets/svg/search.svg"; // Ensure this path is correct and the file exists
+import PlayIcon from "../../icons/Play"; // Ensure this component exists and is exported correctly
+import NotificationIcon from "../../icons/Notification"; // Ensure this component exists and is exported correctly
 import { Link } from "react-router-dom";
 
 function MainPage() {
-  
+  useEffect(() => {
+    async function registerPushNotifications() {
+      if ("serviceWorker" in navigator && "PushManager" in window) {
+        try {
+          // Register the service worker from the public folder
+          const registration = await navigator.serviceWorker.register("/sw.js");
+          console.log("Service Worker registered:", registration);
+
+          // Request permission for notifications
+          if (!("Notification" in window)) {
+            console.log("This browser does not support notifications.");
+            return;
+          }
+          const permission = await Notification.requestPermission();
+          if (permission !== "granted") {
+            console.log("Notification permission denied");
+            return;
+          }
+
+          // Helper function to convert VAPID key from base64 to a Uint8Array
+          function urlBase64ToUint8Array(base64String) {
+            const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+            const base64 = (base64String + padding)
+              .replace(/-/g, "+")
+              .replace(/_/g, "/");
+            const rawData = window.atob(base64);
+            return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
+          }
+
+          const subscribeOptions = {
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array("BDHaWPVr-4KGYKxoavcU_w2TUq5XqCDQHQQdJj4nhBBp2dqTExCrr8f2vUCr5Enp-dGkCD4Omohgk8qRjHtszBs"),
+          };
+
+          // Subscribe the user to push notifications
+          const subscription = await registration.pushManager.subscribe(
+            subscribeOptions
+          );
+          console.log("User is subscribed:", subscription);
+
+          // Send subscription to your backend to store it for later push notifications
+          await fetch("/api/save-subscription", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(subscription),
+          });
+        } catch (error) {
+          console.error("Error during service worker registration or subscription", error);
+        }
+      } else {
+        console.log("Push messaging is not supported in this browser.");
+      }
+    }
+
+    registerPushNotifications();
+  }, []);
+
   return (
     <>
       <div className="w-full bg-white rounded-tl-none lg:rounded-tl-2xl rounded-tr-none lg:rounded-tr-2xl rounded-bl-2xl rounded-br-2xl relative px-4 pt-4 pb-13">
@@ -42,15 +99,15 @@ function MainPage() {
                   <strong>II. Discussione del disegno di legge:</strong>
                 </p>
                 <p>
-                  Interventi a sostegno della competitività dei capitali e
-                  delega al Governo per la riforma organica delle disposizioni
-                  in materia di mercati dei capitali recate dal testo unico di
-                  cui al decreto legislativo 24 febbraio 1998, n. 58, e delle
-                  disposizioni in materia di società di capitali contenute nel
-                  codice civile applicabili anche agli emittenti (approvato dal
-                  Senato e modificato dalla Camera dei deputati) (collegato alla
-                  manovra di finanza pubblica)  (voto finale con la presenza del
-                  numero legale) - Relatore ORSOMARSO (Relazione orale) {" "}
+                  Interventi a sostegno della competitività dei capitali e delega al
+                  Governo per la riforma organica delle disposizioni in materia di
+                  mercati dei capitali recate dal testo unico di cui al decreto
+                  legislativo 24 febbraio 1998, n. 58, e delle disposizioni in
+                  materia di società di capitali contenute nel codice civile
+                  applicabili anche agli emittenti (approvato dal Senato e
+                  modificato dalla Camera dei deputati) (collegato alla manovra di
+                  finanza pubblica)  (voto finale con la presenza del numero legale)
+                  - Relatore ORSOMARSO (Relazione orale) {" "}
                   <span className="inline-block rounded-lg leading-7 text-white bg-primary-900 px-2 mx-1">
                     674-B
                   </span>
@@ -66,15 +123,15 @@ function MainPage() {
                   <strong>II. Discussione del disegno di legge:</strong>
                 </p>
                 <p>
-                  Interventi a sostegno della competitività dei capitali e
-                  delega al Governo per la riforma organica delle disposizioni
-                  in materia di mercati dei capitali recate dal testo unico di
-                  cui al decreto legislativo 24 febbraio 1998, n. 58, e delle
-                  disposizioni in materia di società di capitali contenute nel
-                  codice civile applicabili anche agli emittenti (approvato dal
-                  Senato e modificato dalla Camera dei deputati) (collegato alla
-                  manovra di finanza pubblica)  (voto finale con la presenza del
-                  numero legale) - Relatore ORSOMARSO (Relazione orale) {" "}
+                  Interventi a sostegno della competitività dei capitali e delega al
+                  Governo per la riforma organica delle disposizioni in materia di
+                  mercati dei capitali recate dal testo unico di cui al decreto
+                  legislativo 24 febbraio 1998, n. 58, e delle disposizioni in
+                  materia di società di capitali contenute nel codice civile
+                  applicabili anche agli emittenti (approvato dal Senato e
+                  modificato dalla Camera dei deputati) (collegato alla manovra di
+                  finanza pubblica)  (voto finale con la presenza del numero legale)
+                  - Relatore ORSOMARSO (Relazione orale) {" "}
                   <span className="inline-block rounded-lg leading-7 text-white bg-primary-900 px-2 mx-1">
                     674-B
                   </span>
@@ -83,22 +140,22 @@ function MainPage() {
               <div className="w-full bg-neutral-200 rounded-2xl p-6 text-zinc-800 space-y-4 leading-7">
                 <p>
                   <strong>
-                    I. Ratifiche di accordi internazionali (elenco allegato)
+                    I. Ratifiche diccordi internazionali (elenco allegato)
                   </strong>
                 </p>
                 <p>
                   <strong>II. Discussione del disegno di legge:</strong>
                 </p>
                 <p>
-                  Interventi a sostegno della competitività dei capitali e
-                  delega al Governo per la riforma organica delle disposizioni
-                  in materia di mercati dei capitali recate dal testo unico di
-                  cui al decreto legislativo 24 febbraio 1998, n. 58, e delle
-                  disposizioni in materia di società di capitali contenute nel
-                  codice civile applicabili anche agli emittenti (approvato dal
-                  Senato e modificato dalla Camera dei deputati) (collegato alla
-                  manovra di finanza pubblica)  (voto finale con la presenza del
-                  numero legale) - Relatore ORSOMARSO (Relazione orale) {" "}
+                  Interventi a sostegno della competitività dei capitali e delega al
+                  Governo per la riforma organica delle disposizioni in materia di
+                  mercati dei capitali recate dal testo unico di cui al decreto
+                  legislativo 24 febbraio 1998, n. 58, e delle disposizioni in
+                  materia di società di capitali contenute nel codice civile
+                  applicabili anche agli emittenti (approvato dal Senato e
+                  modificato dalla Camera dei deputati) (collegato alla manovra di
+                  finanza pubblica)  (voto finale con la presenza del numero legale)
+                  - Relatore ORSOMARSO (Relazione orale) {" "}
                   <span className="inline-block rounded-lg leading-7 text-white bg-primary-900 px-2 mx-1">
                     674-B
                   </span>
@@ -134,28 +191,28 @@ function MainPage() {
               </div>
               <div className="w-full mt-4 text-zinc-800 space-y-2">
                 <p>
-                  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                  enim ad minim.
+                  eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim.
                 </p>
                 <p>
-                  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                  enim ad minim.
+                  eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim.
                 </p>
                 <p>
-                  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                  enim ad minim.
+                  eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim.
                 </p>
                 <p>
-                  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                  enim ad minim.
+                  eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim.
                 </p>
                 <p>
-                  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                  enim ad minim.
+                  eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim.
                 </p>
                 <p>
-                  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                  enim ad minim.
+                  eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim.
                 </p>
               </div>
               <Link className="w-full h-12 flex items-center justify-center bg-zinc-800 text-white rounded-xl mt-4 transition-colors hover:bg-zinc-900">
@@ -184,4 +241,4 @@ function MainPage() {
   );
 }
 
-export default MainPage;
+          export  default MainPage;
