@@ -7,6 +7,9 @@ import InnerSidebar from "../../layout/sidebar2/InnerSidebar.jsx"; // If you hav
 
 const ITEMS_PER_PAGE = 20;
 
+// We'll define the maximum number of columns we expect per row.
+const MAX_COLUMNS = 4;
+
 function Ultimidossierage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
@@ -119,80 +122,61 @@ function Ultimidossierage() {
       removePdfIconsFrom(tempElement);
       transformPdfLinks(tempElement);
 
-      // Convert each child element into an array of <td> elements
-      const childElements = Array.from(tempElement.children);
+      // Convert each child element into an array
+      let childElements = Array.from(tempElement.children);
 
-      // If we have at least 4 children, check if #2 and #3 combined length > 70
-      let secondRowContent = null;
-      if (childElements.length >= 4) {
-        const thirdText = childElements[2].textContent.trim();
-        const fourthText = childElements[3].textContent.trim();
-        const combinedLength = thirdText.length + fourthText.length;
-
-        if (combinedLength > 70) {
-          // Combine the third & fourth child's HTML for a single cell
-          const combinedHTML =
-            childElements[2].innerHTML + "<br/>" + childElements[3].innerHTML;
-
-          // Remove them from the childElements for the main row
-          // Keep the first 2, and any beyond the 4th
-          const afterFourth = childElements.slice(4); // If there are more than 4
-          childElements.splice(2); // remove everything after second index
-          childElements.push(...afterFourth);
-
-          // Prepare a "second row" cell that spans the entire table width
-          // We'll just store it in secondRowContent, then render it below
-          secondRowContent = combinedHTML;
-        }
+      // Ensure the row has exactly MAX_COLUMNS cells.
+      // If there are fewer, add placeholder elements.
+      while (childElements.length < MAX_COLUMNS) {
+        const placeholder = document.createElement("div");
+        placeholder.innerHTML = "-"; // Fill with a dash if missing
+        childElements.push(placeholder);
       }
 
-      // Build the main row's cells
-      const mainRowCells = childElements.map((child, idx) => (
-        <td
-          key={idx}
-          className="py-3 px-4 text-left"
-          style={{ verticalAlign: "middle" }}
-        >
-          {child.tagName === "A" ? (
-            <span style={{ display: "table-caption" }}>
-              <a href={child.href} target="_blank" rel="noopener noreferrer">
-                <i
-                  className="fas fa-file-pdf mr-2 custom-pdf-icon"
-                  style={{ color: "rgb(151, 0, 45)" }}
-                ></i>
-                {child.textContent}
-              </a>
-            </span>
-          ) : (
-            <span dangerouslySetInnerHTML={{ __html: child.innerHTML }} />
-          )}
-        </td>
-      ));
+      // If there are more than MAX_COLUMNS child elements,
+      // you can decide whether to keep or ignore them.
+      // For now, we'll only take the first MAX_COLUMNS:
+      childElements = childElements.slice(0, MAX_COLUMNS);
 
-      // If we created a secondRowContent, we render an additional row
-      // with a single cell spanning all columns
-      const numColumns = mainRowCells.length || 1;
+      // Build the <td> cells
+      const mainRowCells = childElements.map((child, idx) => {
+        // If the element is a link, handle differently
+        if (child.tagName === "A") {
+          return (
+            <td
+              key={idx}
+              className="py-3 px-4 text-left"
+              style={{ verticalAlign: "middle" }}
+            >
+              <span style={{ display: "table-caption" }}>
+                <a href={child.href} target="_blank" rel="noopener noreferrer">
+                  {child.textContent || "-"}
+                </a>
+              </span>
+            </td>
+          );
+        } else {
+          // Otherwise, treat as normal cell
+          return (
+            <td
+              key={idx}
+              className="py-3 px-4 text-left"
+              style={{ verticalAlign: "middle" }}
+            >
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: child.innerHTML || "-",
+                }}
+              />
+            </td>
+          );
+        }
+      });
 
       return (
-        <React.Fragment key={index}>
-          {/* First (main) row */}
-          <tr className="border-b">{mainRowCells}</tr>
-
-          {/* Second row if needed */}
-          {secondRowContent && (
-            <tr className="border-b">
-              <td
-                colSpan={numColumns}
-                className="py-3 px-4 text-left"
-                style={{ verticalAlign: "middle" }}
-              >
-                <span
-                  dangerouslySetInnerHTML={{ __html: secondRowContent }}
-                />
-              </td>
-            </tr>
-          )}
-        </React.Fragment>
+        <tr key={index} className="border-b">
+          {mainRowCells}
+        </tr>
       );
     });
 
