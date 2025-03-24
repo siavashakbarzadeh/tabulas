@@ -18,7 +18,7 @@ export default function PushedMessagesPage() {
     const fetchMessages = async () => {
         try {
             // Fetch from your Laravel endpoint
-            const res = await axios.get("/api/pushed-messages");
+            const res = await axios.get("/pushed-messages");
             setMessages(res.data);
             setLoading(false);
         } catch (error) {
@@ -29,7 +29,7 @@ export default function PushedMessagesPage() {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center min-h-screen bg-gray-100">
+            <div className="flex justify-center items-center min-h-screen bg-white w-full">
                 <Loading />
             </div>
         );
