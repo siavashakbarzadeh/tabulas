@@ -105,7 +105,7 @@ export default function PushedMessagesPage() {
                         <div className="flex justify-center mt-6">
                             <button
                                 onClick={handleLoadMore}
-                                className="w-full bg-red-800 text-white px-4 py-2 rounded hover:bg-blue-700"
+                                className="w-full bg-red-800 text-white px-4 py-2 rounded hover:bg-red-700"
                             >
                                 Load More
                             </button>
