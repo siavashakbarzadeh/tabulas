@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "../../configs/axiosConfig"; // Adjust path if needed
-import Loading from "../../components/Loading"; // Adjust if you have a different loading component
+import Loading from "../../layout/components/Loading.jsx";
 
 // Helper to format date/time
 function formatDate(dateString) {
