@@ -48,7 +48,7 @@ export default function PushedMessagesPage() {
                             className="flex items-center p-4 bg-white shadow-sm rounded-md"
                         >
                             {/* Left icon area (with partial opacity/blur) */}
-                            <div className="flex-shrink-0 mr-4 relative w-14 h-14 bg-gray-100 rounded-md overflow-hidden">
+                            <div className="flex-shrink-0 mr-4 relative w-14 h-14 rounded-md overflow-hidden">
                                 {msg.icon && (
                                     <>
                                         {/* Blurred/opaque background image */}
@@ -56,14 +56,8 @@ export default function PushedMessagesPage() {
                                             src={msg.icon}
                                             alt="icon"
                                             className="absolute inset-0 w-full h-full object-cover opacity-30"
-                                            style={{ filter: "blur(1px)" }}
+                                            style={{ filter: "blur(0px)" }}
                                         />
-                                        {/* Foreground icon (smaller, not blurred) */}
-                                        {/* <img
-                                            src={msg.icon}
-                                            alt="icon"
-                                            className="absolute w-6 h-6 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                                        /> */}
                                     </>
                                 )}
                             </div>
@@ -86,7 +80,7 @@ export default function PushedMessagesPage() {
                                         href={msg.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-block mt-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                                        className="inline-block mt-2 bg-red-800 text-white px-3 py-1 rounded hover:bg-red-700"
                                     >
                                         Read more
                                     </a>
