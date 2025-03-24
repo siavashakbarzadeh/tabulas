@@ -91,7 +91,7 @@ function NotificationPage() {
             <div className="w-full bg-white rounded-tl-none lg:rounded-tl-2xl rounded-tr-none lg:rounded-tr-2xl rounded-bl-2xl rounded-br-2xl relative px-4 pt-4 pb-13">
                 <div className="w-full flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
                     {/* Sidebar Column */}
-                    <div className="w-full md:w-1/3">
+                    <div className="w-full">
                         <form>
                             <label className="w-full block relative before:w-px before:h-2/3 before:bg-neutral-300 before:absolute before:left-14 before:top-1/2 before:-translate-y-1/2">
                                 <input
@@ -110,7 +110,7 @@ function NotificationPage() {
                     </div>
 
                     {/* Main Notification Form Column */}
-                    <div className="w-full md:w-2/3">
+                    <div className="w-full">
                         <div className="bg-neutral-200 rounded-2xl p-6 text-zinc-800 space-y-4 leading-7">
                             <h2 className="text-lg font-semibold mb-4">Send Notification</h2>
                             <form onSubmit={handleSubmit} className="space-y-3">
