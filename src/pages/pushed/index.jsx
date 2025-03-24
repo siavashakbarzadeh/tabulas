@@ -67,12 +67,7 @@ export default function PushedMessagesPage() {
                                                 className="absolute inset-0 w-full h-full object-cover opacity-30"
                                                 style={{ filter: "blur(1px)" }}
                                             />
-                                            {/* Smaller foreground icon in the center */}
-                                            <img
-                                                src={msg.icon}
-                                                alt="icon"
-                                                className="absolute w-6 h-6 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                                            />
+
                                         </>
                                     )}
                                 </div>
@@ -110,7 +105,7 @@ export default function PushedMessagesPage() {
                         <div className="flex justify-center mt-6">
                             <button
                                 onClick={handleLoadMore}
-                                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                                className="w-full bg-red-800 text-white px-4 py-2 rounded hover:bg-blue-700"
                             >
                                 Load More
                             </button>
