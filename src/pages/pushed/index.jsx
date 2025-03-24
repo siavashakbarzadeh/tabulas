@@ -10,6 +10,7 @@ function formatDate(dateString) {
 export default function PushedMessagesPage() {
     const [loading, setLoading] = useState(true);
     const [messages, setMessages] = useState([]);
+    const [visibleCount, setVisibleCount] = useState(5); // Show 5 at a time
 
     useEffect(() => {
         fetchMessages();
@@ -27,6 +28,13 @@ export default function PushedMessagesPage() {
         }
     };
 
+    // Slice the messages array based on visibleCount
+    const visibleMessages = messages.slice(0, visibleCount);
+
+    const handleLoadMore = () => {
+        setVisibleCount((prev) => prev + 5);
+    };
+
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen bg-white w-full">
@@ -41,54 +49,74 @@ export default function PushedMessagesPage() {
             {messages.length === 0 ? (
                 <p className="text-center text-gray-600">No messages found.</p>
             ) : (
-                <div className="space-y-4">
-                    {messages.map((msg) => (
-                        <div
-                            key={msg.id}
-                            className="flex items-center p-4 bg-white shadow-sm rounded-md"
-                        >
-                            {/* Left icon area (with partial opacity/blur) */}
-                            <div className="flex-shrink-0 mr-4 relative w-14 h-14 rounded-md overflow-hidden">
-                                {msg.icon && (
-                                    <>
-                                        {/* Blurred/opaque background image */}
-                                        <img
-                                            src={msg.icon}
-                                            alt="icon"
-                                            className="absolute inset-0 w-full h-full object-cover opacity-30"
-                                            style={{ filter: "blur(0px)" }}
-                                        />
-                                    </>
-                                )}
-                            </div>
+                <>
+                    <div className="space-y-4">
+                        {visibleMessages.map((msg) => (
+                            <div
+                                key={msg.id}
+                                className="flex items-center p-4 bg-white shadow-sm rounded-md"
+                            >
+                                {/* Left icon area with blurred background + small foreground icon */}
+                                <div className="flex-shrink-0 mr-4 relative w-14 h-14 rounded-md overflow-hidden">
+                                    {msg.icon && (
+                                        <>
+                                            {/* Blurred, opaque background image */}
+                                            <img
+                                                src={msg.icon}
+                                                alt="icon"
+                                                className="absolute inset-0 w-full h-full object-cover opacity-30"
+                                                style={{ filter: "blur(1px)" }}
+                                            />
+                                            {/* Smaller foreground icon in the center */}
+                                            <img
+                                                src={msg.icon}
+                                                alt="icon"
+                                                className="absolute w-6 h-6 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                                            />
+                                        </>
+                                    )}
+                                </div>
 
-                            {/* Middle content: title + body */}
-                            <div className="flex-1">
-                                <h2 className="text-lg font-semibold text-gray-800">
-                                    {msg.title}
-                                </h2>
-                                <p className="text-gray-600">{msg.body}</p>
-                            </div>
+                                {/* Middle content: title + body */}
+                                <div className="flex-1">
+                                    <h2 className="text-lg font-semibold text-gray-800">
+                                        {msg.title}
+                                    </h2>
+                                    <p className="text-gray-600">{msg.body}</p>
+                                </div>
 
-                            {/* Right side: date + button */}
-                            <div className="ml-4 flex flex-col items-end">
-                                <p className="text-xs text-gray-500">
-                                    {formatDate(msg.created_at)}
-                                </p>
-                                {msg.url && (
-                                    <a
-                                        href={msg.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-block mt-2 bg-red-800 text-white px-3 py-1 rounded hover:bg-red-700"
-                                    >
-                                        Read more
-                                    </a>
-                                )}
+                                {/* Right side: date + button */}
+                                <div className="ml-4 flex flex-col items-end">
+                                    <p className="text-xs text-gray-500">
+                                        {formatDate(msg.created_at)}
+                                    </p>
+                                    {msg.url && (
+                                        <a
+                                            href={msg.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-block mt-2 bg-red-800 text-white px-3 py-1 rounded hover:bg-red-700"
+                                        >
+                                            Read more
+                                        </a>
+                                    )}
+                                </div>
                             </div>
+                        ))}
+                    </div>
+
+                    {/* Load More button if there are more messages to show */}
+                    {visibleCount < messages.length && (
+                        <div className="flex justify-center mt-6">
+                            <button
+                                onClick={handleLoadMore}
+                                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                            >
+                                Load More
+                            </button>
                         </div>
-                    ))}
-                </div>
+                    )}
+                </>
             )}
         </div>
     );
