@@ -124,6 +124,7 @@ import DetailsPage from "../pages/details";
 import InboxPage from "../pages/inbox";
 import OutboxPage from "../pages/outbox";
 import NotificationPage from "../pages/notification/index.jsx";
+import PushedMessagesPage from "../pages/pushed/index.jsx";
 
 const ScrollToTop = (props) => {
   const location = useLocation();
@@ -156,6 +157,7 @@ function Router() {
                 <Route path="ultimiatti" element={<UltimiattiPage />} />
                 <Route path="ultimdossier" element={<Ultimidossierage />} />
                 <Route path="notification" element={<NotificationPage />} />
+                <Route path="pushed" element={<PushedMessagesPage />} />
                 <Route path="inbox" element={<InboxPage />} />
                 <Route path="outbox" element={<OutboxPage />} />
 

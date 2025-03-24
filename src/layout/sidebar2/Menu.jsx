@@ -44,8 +44,13 @@ const Menu = [
       { id: 3, title: "Outbox", icon: '', link: "/outbox" },
     ]
   },
-  { id: 6, title: "Push notification", icon: <NotificationIcon className="w-6 h-6" />, link: "/notification" },
-
+  {
+    id: 8, title: "Push notification", icon: <NotificationIcon className="w-6 h-6" />,
+    subMenu: [
+      { id: 1, title: "Nuova", icon: '', link: "/notification" },
+      { id: 2, title: "Messages", icon: '', link: "/pushed" },
+    ]
+  },
 ];
 
 function Menu2() {
