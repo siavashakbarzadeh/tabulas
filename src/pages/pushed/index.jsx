@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "../../configs/axiosConfig.js";
-import Loading from "../components/Loading"; // Adjust path if needed
+import Loading from "../../layout/components/Loading.jsx";
 
 function PushedMessagesPage() {
     const [loading, setLoading] = useState(true);
