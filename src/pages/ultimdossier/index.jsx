@@ -65,10 +65,10 @@ function Ultimidossierage() {
         <table className="w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-100">
-              <th className="py-3 px-4 text-right">Document Identifier</th>
-              <th className="py-3 px-4 text-right">Servizio</th>
-              <th className="py-3 px-4 text-right">Date</th>
-              <th className="py-3 px-4 text-right">Label</th>
+              <th className="py-3 px-4 text-left">Document Identifier</th>
+              <th className="py-3 px-4 text-left">Servizio</th>
+              <th className="py-3 px-4 text-left">Date</th>
+              <th className="py-3 px-4 text-left">Label</th>
             </tr>
           </thead>
           <tbody>
@@ -76,20 +76,20 @@ function Ultimidossierage() {
               <React.Fragment key={index}>
                 {/* Header row */}
                 <tr className="border-b bg-gray-100">
-                  <td className="py-3 px-4 text-right">{record.documentIdentifier}</td>
-                  <td className="py-3 px-4 text-right">{record.servizio}</td>
-                  <td className="py-3 px-4 text-right">{record.date}</td>
-                  <td className="py-3 px-4 text-right">{record.label}</td>
+                  <td className="py-3 px-4 text-left">{record.documentIdentifier}</td>
+                  <td className="py-3 px-4 text-left">{record.servizio}</td>
+                  <td className="py-3 px-4 text-left">{record.date}</td>
+                  <td className="py-3 px-4 text-left">{record.label}</td>
                 </tr>
                 {/* Content row */}
                 <tr className="border-b bg-white">
-                  <td colSpan="4" className="py-3 px-4 text-right">
+                  <td colSpan="4" className="py-3 px-4 text-left">
                     <strong>Description:</strong> {record.description || "-"}
                     {record.riferimenti.length > 0 && (
                       <>
                         <br />
                         <strong>Riferimenti:</strong>
-                        <ul className="list-disc ml-6 text-right">
+                        <ul className="list-disc ml-6 text-left">
                           {record.riferimenti.map((ref, idx) => (
                             <li key={idx}>{ref}</li>
                           ))}
