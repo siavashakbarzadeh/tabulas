@@ -65,7 +65,7 @@ export default function PushedMessagesPage() {
                                                 src={msg.icon}
                                                 alt="icon"
                                                 className="absolute inset-0 w-full h-full object-cover opacity-30"
-                                                style={{ filter: "blur(1px)" }}
+                                                style={{ filter: "blur(0px)" }}
                                             />
 
                                         </>
