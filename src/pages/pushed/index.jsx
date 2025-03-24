@@ -31,8 +31,8 @@ function PushedMessagesPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 p-8">
-            <h1 className="text-3xl font-bold mb-6 text-center">Pushed Messages</h1>
+        <div className="min-h-screen bg-gray-50 p-8 w-full">
+            <h1 className="text-3xl font-bold mb-6 text-left">Pushed Messages</h1>
             {messages.length === 0 ? (
                 <p className="text-center text-gray-600">No messages found.</p>
             ) : (
