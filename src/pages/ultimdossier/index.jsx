@@ -64,7 +64,7 @@ function Ultimidossierage() {
 
         <table className="w-full border-collapse border border-gray-300">
           <thead>
-            <tr className="bg-gray-100">
+            <tr className="bg-red-800 text-white">
               <th className="py-3 px-4 text-left">Document Identifier</th>
               <th className="py-3 px-4 text-left">Servizio</th>
               <th className="py-3 px-4 text-left">Date</th>
