@@ -1,6 +1,6 @@
-// pages/pushed-messages.js
+
 import { useEffect, useState } from "react";
-import axios from "../configs/axiosConfig"; // Adjust path as needed
+import axios from "../../configs/axiosConfig.js";
 import Loading from "../components/Loading"; // Adjust path if needed
 
 function PushedMessagesPage() {
