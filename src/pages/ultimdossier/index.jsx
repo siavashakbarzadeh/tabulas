@@ -1,131 +1,152 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
 import SearchIcon from "../../assets/svg/search.svg";
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 10; // Adjust as needed
 
-function Ultimidossierage() {
+function EbookPage() {
   const [loading, setLoading] = useState(true);
-  const [records, setRecords] = useState([]);
+  const [ebookHtml, setEbookHtml] = useState("");
+  const [ebooks, setEbooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  const fetchData = () => {
+  // When ebookHtml is loaded, parse it into ebook items
+  useEffect(() => {
+    if (ebookHtml) {
+      parseEbookHtml(ebookHtml);
+    }
+  }, [ebookHtml]);
+
+  const fetchData = async () => {
     setLoading(true);
-    axios
-      .get("tabulas/mobile/ultimdossier")
-      .then((res) => {
-        setRecords(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
+    try {
+      // Fetch your ebook JSON from the backend
+      const res = await axios.get("tabulas/mobile/ebook");
+      // Assume the JSON structure contains docContentStreamContent
+      setEbookHtml(res.data.docContentStreamContent || "");
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching ebook data:", error);
+      setLoading(false);
+    }
   };
 
-  if (loading) {
-    return (
-      <div className="w-full flex justify-center">
-        <Loading />
-      </div>
+  const parseEbookHtml = (htmlString) => {
+    // Use DOMParser to parse the HTML string
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, "text/html");
+    // Select all <p> elements (assuming each ebook entry is in a <p>)
+    const paragraphs = Array.from(doc.querySelectorAll("p"));
+    // Filter paragraphs that contain both an <img> and an <a>
+    const ebookEntries = paragraphs.filter(
+      (p) => p.querySelector("a") && p.querySelector("img")
     );
-  }
+    const parsed = ebookEntries.map((p) => {
+      const linkEl = p.querySelector("a");
+      const imgEl = p.querySelector("img");
+      return {
+        name: linkEl ? linkEl.textContent.trim() : "",
+        href: linkEl ? linkEl.getAttribute("href") : "",
+        icon: imgEl ? imgEl.getAttribute("src") : "",
+      };
+    });
+    setEbooks(parsed);
+  };
 
-  // Pagination logic
-  const totalPages = Math.ceil(records.length / ITEMS_PER_PAGE);
-  const displayedRecords = records.slice(
+  // Filter ebooks if a search query is provided
+  const filteredEbooks = query
+    ? ebooks.filter((ebook) =>
+      ebook.name.toLowerCase().includes(query.toLowerCase())
+    )
+    : ebooks;
+
+  // Pagination logic: slice filtered results
+  const totalPages = Math.ceil(filteredEbooks.length / ITEMS_PER_PAGE);
+  const displayedEbooks = filteredEbooks.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
 
   return (
-    <div className="flex flex-col min-h-screen w-full">
-      <div className="flex-1 bg-white rounded-2xl relative p-4">
-        {/* Search Bar */}
-        <form className="w-full mb-4">
-          <label className="w-full block relative">
-            <input
-              type="text"
-              placeholder="Cerca..."
-              className="w-full h-11 bg-neutral-200 text-sm rounded-xl border-none pl-18 ring-0 focus:ring-0 focus:border-none"
-            />
-            <img
-              src={SearchIcon}
-              alt="Search"
-              className="w-6 h-6 absolute left-4 top-1/2 transform -translate-y-1/2"
-            />
-          </label>
-        </form>
+    <div className="flex flex-col min-h-screen w-full p-4 md:p-8">
+      {/* Full-width Search Bar */}
+      <form className="w-full mb-6">
+        <label className="relative w-full flex items-center bg-gray-100 border border-gray-200 rounded-xl px-4">
+          <img src={SearchIcon} alt="Search" className="w-6 h-6 mr-2" />
+          <input
+            type="text"
+            placeholder="Cerca ebook..."
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="w-full h-12 bg-gray-100 text-gray-800 text-sm border-none focus:outline-none focus:ring-2 focus:ring-gray-400 rounded-xl"
+          />
+        </label>
+      </form>
 
-        <table className="w-full border-collapse border border-gray-300">
-          <thead>
-            <tr className="bg-red-800 text-white">
-              <th className="py-3 px-4 text-left">Document Identifier</th>
-              <th className="py-3 px-4 text-left">Servizio</th>
-              <th className="py-3 px-4 text-left">Date</th>
-              <th className="py-3 px-4 text-left">Label</th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayedRecords.map((record, index) => (
-              <React.Fragment key={index}>
-                {/* Header row */}
-                <tr className="border-b bg-gray-100">
-                  <td className="py-3 px-4 text-left">{record.documentIdentifier}</td>
-                  <td className="py-3 px-4 text-left">{record.servizio}</td>
-                  <td className="py-3 px-4 text-left">{record.date}</td>
-                  <td className="py-3 px-4 text-left">{record.label}</td>
-                </tr>
-                {/* Content row */}
-                <tr className="border-b bg-white">
-                  <td colSpan="4" className="py-3 px-4 text-left">
-                    <strong>Description:</strong> {record.description || "-"}
-                    {record.riferimenti.length > 0 && (
-                      <>
-                        <br />
-                        <strong>Riferimenti:</strong>
-                        <ul className="list-disc ml-6 text-left">
-                          {record.riferimenti.map((ref, idx) => (
-                            <li key={idx}>{ref}</li>
-                          ))}
-                        </ul>
-                      </>
+      <div className="flex-1 bg-white rounded-2xl shadow-lg p-6 mx-auto w-full max-w-3xl">
+        {loading ? (
+          <Loading />
+        ) : ebooks.length === 0 ? (
+          <p className="text-center text-gray-600">No ebooks found.</p>
+        ) : (
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-red-800 text-white">
+                <th className="py-3 px-4 text-left">Ebook Name</th>
+                <th className="py-3 px-4 text-left">Icon</th>
+              </tr>
+            </thead>
+            <tbody>
+              {displayedEbooks.map((ebook, index) => (
+                <tr key={index} className="border-b">
+                  <td className="py-3 px-4">{ebook.name || "-"}</td>
+                  <td className="py-3 px-4">
+                    {ebook.icon ? (
+                      <a
+                        href={ebook.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      // Optionally, use window.open in an onClick handler to pop up a new tab
+                      >
+                        <img
+                          src={ebook.icon}
+                          alt={ebook.name}
+                          className="w-10 h-10"
+                        />
+                      </a>
+                    ) : (
+                      "-"
                     )}
                   </td>
                 </tr>
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        )}
 
-        {/* Pagination Controls */}
-        <div className="flex justify-center mt-4 space-x-4">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-4 py-2 border rounded disabled:opacity-50"
-          >
-            Prev
-          </button>
-          <span className="px-4 py-2">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 border rounded disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+        {/* Pagination: Show "Load More" button if there are more ebooks */}
+        {currentPage < totalPages && (
+          <div className="flex justify-center mt-6">
+            <button
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              Load More
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-export default Ultimidossierage;
+export default EbookPage;
