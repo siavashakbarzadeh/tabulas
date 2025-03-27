@@ -81,19 +81,19 @@ const Menu = [
       {
         id: 1,
         title: "Nuova",
-        icon: <i className="fa-regular fa-file-pen w-6 h-6"></i>,
+        icon: <i className="fa-duotone text-sm fa-file-pen w-6 h-6"></i>,
         link: "/form"
       },
       {
         id: 2,
         title: "Inbox",
-        icon: <i className="fa-regular fa-inbox w-6 h-6"></i>,
+        icon: <i className="fa-duotone text-sm fa-inbox w-6 h-6"></i>,
         link: "/inbox"
       },
       {
         id: 3,
         title: "Outbox",
-        icon: <i className="fa-regular fa-paper-plane w-6 h-6"></i>,
+        icon: <i className="fa-duotone text-sm fa-paper-plane w-6 h-6"></i>,
         link: "/outbox"
       },
     ],
@@ -106,13 +106,13 @@ const Menu = [
       {
         id: 1,
         title: "Nuova",
-        icon: <i className="fa-regular fa-bell w-6 h-6"></i>,
+        icon: <i className="fa-duotone text-sm fa-bell w-6 h-6"></i>,
         link: "/notification"
       },
       {
         id: 2,
         title: "Messages",
-        icon: <i className="fa-regular fa-envelope-open-text w-6 h-6"></i>,
+        icon: <i className="fa-duotone text-sm fa-envelope-open-text w-6 h-6"></i>,
         link: "/pushed"
       },
     ],
