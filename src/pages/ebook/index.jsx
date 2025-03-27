@@ -74,7 +74,7 @@ function EbookPage() {
   );
 
   return (
-    <div className="flex flex-col min-h-screen w-full p-4 md:p-8">
+    <div className="flex flex-col min-h-screen w-full p-4 md:p-8 bg-white rounded-md">
       {/* Full-width Search Bar */}
       <form className="w-full mb-6">
         <label className="relative w-full flex items-center bg-gray-100 border border-gray-200 rounded-xl px-4">
@@ -92,7 +92,7 @@ function EbookPage() {
         </label>
       </form>
 
-      <div className="flex-1 bg-white rounded-2xl shadow-lg p-6 mx-auto w-full max-w-3xl">
+      <div className="flex-1 bg-white mx-auto w-full">
         {loading ? (
           <Loading />
         ) : ebooks.length === 0 ? (
@@ -102,7 +102,7 @@ function EbookPage() {
             <thead>
               <tr className="bg-red-800 text-white">
                 <th className="py-3 px-4 text-left">Ebook Name</th>
-                <th className="py-3 px-4 text-left">Icon</th>
+                <th className="py-3 px-4 text-left"></th>
               </tr>
             </thead>
             <tbody>
