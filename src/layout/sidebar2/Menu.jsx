@@ -139,7 +139,7 @@ function Menu2() {
           {item.subMenu ? (
             <div
               onClick={toggleMenuHandler(item.id)}
-              className={`w-full h-10 flex items-center space-x-2 px-2 text-md cursor-pointer ${activeMain === item.id ? "bg-white text-red-700 rounded-md" : "text-white"
+              className={`w-full h-10 flex items-center space-x-2 px-2 text-md cursor-pointer ${activeMain === item.id ? "bg-white text-red-700 rounded-md hover:text-red-600" : "text-white hover:text-white/80"
                 }`}
             >
               {item.icon}
@@ -156,7 +156,7 @@ function Menu2() {
                 setActiveMain(item.id);
                 setActiveSub(null);
               }}
-              className={`w-full h-10 flex items-center space-x-2 px-2 text-sm cursor-pointer ${activeMain === item.id ? "bg-white text-red-700 rounded-md" : "text-white"
+              className={`w-full h-10 flex items-center space-x-2 px-2 text-sm cursor-pointer ${activeMain === item.id ? "bg-white text-red-700 rounded-md hover:text-red-600 hover:text-white/80" : "text-white"
                 }`}
             >
               {item.icon}
