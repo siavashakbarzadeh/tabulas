@@ -89,7 +89,7 @@ function NotificationPage() {
     return (
         <>
             <div className="w-full bg-white rounded-tl-none lg:rounded-tl-2xl rounded-tr-none lg:rounded-tr-2xl rounded-bl-2xl rounded-br-2xl relative px-4 pt-4 pb-13">
-                <div className="w-full flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                <div className="w-full space-y-4">
                     {/* Sidebar Column */}
                     <div className="w-full">
                         <form>

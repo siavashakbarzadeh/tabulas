@@ -3,6 +3,7 @@ import Sidebar2 from "./sidebar2";
 import AppIcon from "../icons/App";
 import User from "../icons/User";
 import { useState } from "react";
+import BackToTopButton from "./components/BackToTopButton"; // Adjust path as needed
 
 function DashboardLayout({ ...props }) {
   const [isSidebarActive, setIsSidebarActive] = useState(false);
@@ -30,6 +31,8 @@ function DashboardLayout({ ...props }) {
           <AppIcon className="w-6 h-6" />
         </div>
       </div>
+      {/* Back to Top Button */}
+      <BackToTopButton />
     </div>
   );
 }
