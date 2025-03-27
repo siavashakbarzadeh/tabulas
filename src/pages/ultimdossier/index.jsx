@@ -5,6 +5,12 @@ import SearchIcon from "../../assets/svg/search.svg";
 
 const ITEMS_PER_PAGE = 20;
 
+// Helper function to extract href attribute from an HTML string
+const extractHref = (htmlString) => {
+  const match = htmlString.match(/href="([^"]+)"/);
+  return match ? match[1] : "#";
+};
+
 function Ultimidossierage() {
   const [loading, setLoading] = useState(true);
   const [records, setRecords] = useState([]);
@@ -64,11 +70,16 @@ function Ultimidossierage() {
 
         <table className="w-full border-collapse border border-gray-300">
           <thead>
-            <tr className="bg-red-800 text-white">
-              <th className="py-3 px-4 text-left">Identificativo Documento</th>
+            <tr
+              style={{ position: "sticky", top: 0, zIndex: 10 }}
+              className="bg-red-800 text-white"
+            >
+              <th className="py-3 px-4 text-left">
+                Identificativo Documento
+              </th>
               <th className="py-3 px-4 text-left">Servizio</th>
               <th className="py-3 px-4 text-left">Data</th>
-              <th className="py-3 px-4 text-left"></th>
+              <th className="py-3 px-4 text-left">Link</th>
             </tr>
           </thead>
           <tbody>
@@ -76,15 +87,35 @@ function Ultimidossierage() {
               <React.Fragment key={index}>
                 {/* Header row */}
                 <tr className="border-b bg-gray-100">
-                  <td className="py-3 px-4 text-left">{record.documentIdentifier}</td>
+                  <td className="py-3 px-4 text-left">
+                    {record.documentIdentifier}
+                  </td>
                   <td className="py-3 px-4 text-left">{record.servizio}</td>
                   <td className="py-3 px-4 text-left">{record.date}</td>
-                  <td className="py-3 px-4 text-left">{record.label}</td>
+                  <td className="py-3 px-4 text-left">
+                    <div className="flex space-x-4">
+                      <a
+                        href={extractHref(record.label)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <i className="fa-duotone fa-globe text-xl text-white"></i>
+                      </a>
+                      <a
+                        href={extractHref(record.pdf)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <i className="fa-duotone fa-file-pdf text-xl text-red-800"></i>
+                      </a>
+                    </div>
+                  </td>
                 </tr>
                 {/* Content row */}
                 <tr className="border-b bg-white">
                   <td colSpan="4" className="py-3 px-4 text-left">
-                    <strong>Description:</strong> {record.description || "-"}
+                    <strong>Description:</strong>{" "}
+                    {record.description || "-"}
                     {record.riferimenti.length > 0 && (
                       <>
                         <br />
@@ -116,7 +147,9 @@ function Ultimidossierage() {
             Page {currentPage} of {totalPages}
           </span>
           <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
             disabled={currentPage === totalPages}
             className="px-4 py-2 border rounded disabled:opacity-50"
           >
