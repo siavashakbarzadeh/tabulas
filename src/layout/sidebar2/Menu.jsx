@@ -18,7 +18,7 @@ import ArraowDownIcon from "../../icons/ArraowDown";
 
 const Menu = [
   { id: 1, title: "Services", icon: <ServicesIcon className="w-6 h-6" />, link: "/services" },
-  { id: 2, title: "Guid e manuali", icon: <GuideManualsIcon className="w-6 h-6" />, link: "/guidemanuali" },
+  { id: 2, title: "Guide e manuali", icon: <GuideManualsIcon className="w-6 h-6" />, link: "/guidemanuali" },
   { id: 3, title: "Ebook", icon: <EbookIcon className="w-6 h-6" />, link: "/ebook" },
   { id: 4, title: "Commissioni", icon: <UsersIcon className="w-6 h-6" />, link: "/commissioni" },
   { id: 5, title: "Ultimi atti", icon: <LatestActsIcon className="w-6 h-6" />, link: "/ultimiatti" },
