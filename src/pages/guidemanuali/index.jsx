@@ -58,7 +58,7 @@ function GuidemanualiPage() {
       </form>
 
       {/* Centered card container for the guide items */}
-      <div className="flex-1 bg-white mx-auto w-full shadow-lg p-6">
+      <div className="flex-1 bg-white mx-auto w-full ">
         {loading || data === null ? (
           <Loading />
         ) : (
