@@ -156,7 +156,7 @@ function Menu2() {
                 setActiveMain(item.id);
                 setActiveSub(null);
               }}
-              className={`w-full h-10 flex items-center space-x-2 px-2 text-sm text-white cursor-pointer ${activeMain === item.id ? "bg-gray-700" : ""
+              className={`w-full h-10 flex items-center space-x-2 px-2 text-sm text-white cursor-pointer ${activeMain === item.id ? "bg-white text-red-700 rounded-md" : "text-white"
                 }`}
             >
               {item.icon}
