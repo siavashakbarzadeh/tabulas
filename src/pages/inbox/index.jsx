@@ -73,11 +73,11 @@ function InboxPage() {
                         </label>
                     </form>
                     {/* Inbox Table */}
-                    <div className="bg-white rounded-xl shadow-md p-4">
-                        <h2 className="text-xl font-semibold mb-4">Inbox</h2>
+                    <div className="bg-white">
+                        <h2 className="font-semibold mb-4 p-4 bg-red-800 w-full text-white">Inbox</h2>
                         {filteredApplications.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-64">
-                                <i className="fas fa-envelope-open text-6xl text-gray-300 mb-4"></i>
+                                <i className="fa-duotone fa-envelope-open text-6xl text-red-800 mb-4"></i>
                                 <p className="text-gray-500">Nessuna applicazione trovata.</p>
                             </div>
                         ) : (
