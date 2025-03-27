@@ -17,27 +17,25 @@ import PaperIcon from "../../icons/Paper";
 import ArraowDownIcon from "../../icons/ArraowDown";
 
 const Menu = [
-  {
-    id: 1,
-    title: "Assemblea",
-    icon: <PaperIcon className="w-6 h-6" />,
-    subMenu: [
-      { id: 1, title: "Services", icon: <ServicesIcon className="w-6 h-6" />, link: "/services" },
-      { id: 2, title: "Guidemanuali", icon: <GuideManualsIcon className="w-6 h-6" />, link: "/guidemanuali" },
-      { id: 3, title: "Ebook", icon: <EbookIcon className="w-6 h-6" />, link: "/ebook" },
-      { id: 4, title: "Commissioni", icon: <UsersIcon className="w-6 h-6" />, link: "/commissioni" },
-      { id: 5, title: "Ultimi atti", icon: <LatestActsIcon className="w-6 h-6" />, link: "/ultimiatti" },
-      { id: 6, title: "Ultimi dossier", icon: <LatestDossiersIcon className="w-6 h-6" />, link: "/ultimdossier" },
-    ],
-  },
-  { id: 2, title: "Commissioni permanenti", icon: <User className="w-6 h-6" />, link: "/commissioni-permanenti" },
-  { id: 3, title: "Giunte e altre comissioni", icon: <ChatIcon className="w-6 h-6" />, link: "/giunte-e-altre-comissioni" },
-  { id: 4, title: "Bicamerali e delegazioni", icon: <UsersIcon className="w-6 h-6" />, link: "/giunte-e-altre-comissioni" },
+  { id: 1, title: "Services", icon: <ServicesIcon className="w-6 h-6" />, link: "/services" },
+  { id: 2, title: "Guid e manuali", icon: <GuideManualsIcon className="w-6 h-6" />, link: "/guidemanuali" },
+  { id: 3, title: "Ebook", icon: <EbookIcon className="w-6 h-6" />, link: "/ebook" },
+  { id: 4, title: "Commissioni", icon: <UsersIcon className="w-6 h-6" />, link: "/commissioni" },
+  { id: 5, title: "Ultimi atti", icon: <LatestActsIcon className="w-6 h-6" />, link: "/ultimiatti" },
+  { id: 6, title: "Ultimi dossier", icon: <LatestDossiersIcon className="w-6 h-6" />, link: "/ultimdossier" },
 
-  { id: 5, title: "Diretta Senato", icon: <Play2Icon className="w-6 h-6" />, link: "/" },
-  { id: 6, title: "INFORMAZIONE", icon: <NoticeIcon className="w-6 h-6" />, link: "/" },
+  // Other top-level items
+  { id: 7, title: "Commissioni permanenti", icon: <User className="w-6 h-6" />, link: "/commissioni-permanenti" },
+  { id: 8, title: "Giunte e altre comissioni", icon: <ChatIcon className="w-6 h-6" />, link: "/giunte-e-altre-comissioni" },
+  { id: 9, title: "Bicamerali e delegazioni", icon: <UsersIcon className="w-6 h-6" />, link: "/giunte-e-altre-comissioni" },
+  { id: 10, title: "Diretta Senato", icon: <Play2Icon className="w-6 h-6" />, link: "/" },
+  { id: 11, title: "INFORMAZIONE", icon: <NoticeIcon className="w-6 h-6" />, link: "/" },
+
+  // Nested submenus remain intact
   {
-    id: 7, title: "Le Firme", icon: <PaperIcon className="w-6 h-6" />,
+    id: 12,
+    title: "Le Firme",
+    icon: <PaperIcon className="w-6 h-6" />,
     subMenu: [
       { id: 1, title: "Nuova", icon: '', link: "/form" },
       { id: 2, title: "Inbox", icon: '', link: "/inbox" },
@@ -45,7 +43,9 @@ const Menu = [
     ]
   },
   {
-    id: 8, title: "Push notification", icon: <NotificationIcon className="w-6 h-6" />,
+    id: 13,
+    title: "Push notification",
+    icon: <NotificationIcon className="w-6 h-6" />,
     subMenu: [
       { id: 1, title: "Nuova", icon: '', link: "/notification" },
       { id: 2, title: "Messages", icon: '', link: "/pushed" },
