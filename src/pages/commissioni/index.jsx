@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
-import "../../assets/css/custom/rich-text-content.css"; 
+import "../../assets/css/custom/rich-text-content.css";
 
 function CommissioniPage() {
   const [loading, setLoading] = useState(true);
@@ -208,7 +208,7 @@ function CommissioniPage() {
                                   }
                                 >
                                   <i
-                                    className="fas fa-calendar-alt text-xl"
+                                    className="fa-duotone fa-calendar-alt text-xl text-red-800"
                                     title="Apri Convocazioni"
                                   ></i>
                                 </span>
@@ -232,7 +232,7 @@ function CommissioniPage() {
                                   onClick={() => handleOpenUltimaSeduta(ultimaNode)}
                                 >
                                   <i
-                                    className="fas fa-file-alt text-xl"
+                                    className="fa-duotone fa-file-alt text-xl text-red-800"
                                     title="Ultima Seduta"
                                   />
                                 </span>
@@ -284,33 +284,33 @@ function CommissioniPage() {
       {/* Single Modal – used now for “Ultima Seduta” only */}
       {showModal && (
         <div
-        className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
-        onClick={handleCloseModal}
-      >
-        <div
-          className="bg-white rounded-lg p-6 w-3/4 max-w-4xl"
-          onClick={(e) => e.stopPropagation()}
+          className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
+          onClick={handleCloseModal}
         >
-          
-          {/* 
+          <div
+            className="bg-white rounded-lg p-6 w-3/4 max-w-4xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+
+            {/* 
             Add maxHeight and scrolling here
             - overflow-y-auto (Tailwind) ensures a scrollbar if content overflows
             - maxHeight: "70vh" limits the container’s vertical size to 70% of the viewport
           */}
-          <div
-            className="rich-text-content p-4 bg-gray-100 rounded overflow-y-auto"
-            style={{ maxHeight: "70vh" }}
-            dangerouslySetInnerHTML={{ __html: modalContent }}
-          />
-      
-          <button
-            onClick={handleCloseModal}
-            className="mt-4 px-4 py-2 bg-red-600 text-white rounded"
-          >
-            Chiudi
-          </button>
+            <div
+              className="rich-text-content p-4 bg-gray-100 rounded overflow-y-auto"
+              style={{ maxHeight: "70vh" }}
+              dangerouslySetInnerHTML={{ __html: modalContent }}
+            />
+
+            <button
+              onClick={handleCloseModal}
+              className="mt-4 px-4 py-2 bg-red-600 text-white rounded"
+            >
+              Chiudi
+            </button>
+          </div>
         </div>
-      </div>
       )}
     </>
   );
