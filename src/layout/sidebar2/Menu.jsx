@@ -175,7 +175,7 @@ function Menu2() {
                       setActiveMain(item.id);
                       setActiveSub(subItem.id);
                     }}
-                    className={`w-full h-10 flex items-center px-2 space-x-2 text-white bg-white/5 cursor-pointer ${activeSub === subItem.id ? "bg-red-700" : ""
+                    className={`w-full h-10 flex items-center px-6 space-x-2 text-white bg-white/5 cursor-pointer ${activeSub === subItem.id ? "bg-red-700" : ""
                       }`}
                   >
                     {subItem.icon && <span>{subItem.icon}</span>}
