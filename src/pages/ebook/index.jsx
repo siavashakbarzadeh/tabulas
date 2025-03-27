@@ -1,18 +1,22 @@
 import { useEffect, useState } from "react";
-import axios from "../../configs/axiosConfig"; // adjust path if needed
+import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
 import SearchIcon from "../../assets/svg/search.svg";
+
+const ITEMS_PER_PAGE = 10; // Adjust as needed
 
 function EbookPage() {
   const [loading, setLoading] = useState(true);
   const [ebookHtml, setEbookHtml] = useState("");
   const [ebooks, setEbooks] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  // When ebookHtml is set, parse it into ebook items
+  // When ebookHtml is loaded, parse it into ebook items
   useEffect(() => {
     if (ebookHtml) {
       parseEbookHtml(ebookHtml);
@@ -22,10 +26,10 @@ function EbookPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // Fetch the JSON from your backend (it contains docContentStreamContent)
+      // Fetch your ebook JSON from the backend
       const res = await axios.get("tabulas/mobile/ebook");
-      // Assume res.data has the structure and docContentStreamContent is our HTML string.
-      setEbookHtml(res.data.docContentStreamContent);
+      // Assume the JSON structure contains docContentStreamContent
+      setEbookHtml(res.data.docContentStreamContent || "");
       setLoading(false);
     } catch (error) {
       console.error("Error fetching ebook data:", error);
@@ -34,14 +38,16 @@ function EbookPage() {
   };
 
   const parseEbookHtml = (htmlString) => {
-    // Use DOMParser to parse the HTML string.
+    // Use DOMParser to parse the HTML string
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, "text/html");
-    // Get all paragraph elements
+    // Select all <p> elements (assuming each ebook entry is in a <p>)
     const paragraphs = Array.from(doc.querySelectorAll("p"));
-    // We assume ebook entries have an <img> and an <a> inside.
-    const ebookEntries = paragraphs.filter((p) => p.querySelector("a") && p.querySelector("img"));
-    const parsedEbooks = ebookEntries.map((p) => {
+    // Filter paragraphs that contain both an <img> and an <a>
+    const ebookEntries = paragraphs.filter(
+      (p) => p.querySelector("a") && p.querySelector("img")
+    );
+    const parsed = ebookEntries.map((p) => {
       const linkEl = p.querySelector("a");
       const imgEl = p.querySelector("img");
       return {
@@ -50,56 +56,94 @@ function EbookPage() {
         icon: imgEl ? imgEl.getAttribute("src") : "",
       };
     });
-    setEbooks(parsedEbooks);
+    setEbooks(parsed);
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-white w-full">
-        <Loading />
-      </div>
-    );
-  }
+  // Filter ebooks if a search query is provided
+  const filteredEbooks = query
+    ? ebooks.filter((ebook) =>
+      ebook.name.toLowerCase().includes(query.toLowerCase())
+    )
+    : ebooks;
+
+  // Pagination logic: slice filtered results
+  const totalPages = Math.ceil(filteredEbooks.length / ITEMS_PER_PAGE);
+  const displayedEbooks = filteredEbooks.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8 w-full flex flex-col items-center">
+    <div className="flex flex-col min-h-screen w-full p-4 md:p-8">
       {/* Full-width Search Bar */}
-      <form className="w-full max-w-3xl mb-6">
+      <form className="w-full mb-6">
         <label className="relative w-full flex items-center bg-gray-100 border border-gray-200 rounded-xl px-4">
           <img src={SearchIcon} alt="Search" className="w-6 h-6 mr-2" />
           <input
             type="text"
-            placeholder="Cerca..."
+            placeholder="Cerca ebook..."
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setCurrentPage(1);
+            }}
             className="w-full h-12 bg-gray-100 text-gray-800 text-sm border-none focus:outline-none focus:ring-2 focus:ring-gray-400 rounded-xl"
           />
         </label>
       </form>
 
-      {/* Centered container for ebook list */}
-      <div className="w-full max-w-3xl bg-white rounded-2xl shadow-lg p-6">
-        <table className="w-full">
-          <tbody>
-            {ebooks.map((ebook, index) => (
-              <tr key={index} className="border-b">
-                <td className="py-3 px-4 font-medium">{ebook.name}</td>
-                <td className="py-3 px-4 text-right">
-                  <a
-                    href={ebook.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    // If you prefer a popup, you can use onClick with window.open instead
-                    onClick={(e) => {
-                      // e.preventDefault();
-                      // window.open(ebook.href, 'popup', 'width=800,height=600');
-                    }}
-                  >
-                    <img src={ebook.icon} alt={ebook.name} className="w-10 h-10" />
-                  </a>
-                </td>
+      <div className="flex-1 bg-white rounded-2xl shadow-lg p-6 mx-auto w-full max-w-3xl">
+        {loading ? (
+          <Loading />
+        ) : ebooks.length === 0 ? (
+          <p className="text-center text-gray-600">No ebooks found.</p>
+        ) : (
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-red-800 text-white">
+                <th className="py-3 px-4 text-left">Ebook Name</th>
+                <th className="py-3 px-4 text-left">Icon</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {displayedEbooks.map((ebook, index) => (
+                <tr key={index} className="border-b">
+                  <td className="py-3 px-4">{ebook.name || "-"}</td>
+                  <td className="py-3 px-4">
+                    {ebook.icon ? (
+                      <a
+                        href={ebook.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      // Optionally, use window.open in an onClick handler to pop up a new tab
+                      >
+                        <img
+                          src={ebook.icon}
+                          alt={ebook.name}
+                          className="w-10 h-10"
+                        />
+                      </a>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {/* Pagination: Show "Load More" button if there are more ebooks */}
+        {currentPage < totalPages && (
+          <div className="flex justify-center mt-6">
+            <button
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              Load More
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
