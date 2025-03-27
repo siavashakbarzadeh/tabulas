@@ -99,7 +99,7 @@ function Ultimidossierage() {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <i className="fa-duotone fa-globe text-xl text-white"></i>
+                        <i className="fa-duotone fa-globe text-xl text-red-800"></i>
                       </a>
                       <a
                         href={extractHref(record.pdf)}
