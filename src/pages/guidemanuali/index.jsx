@@ -1,94 +1,117 @@
-import React, { useEffect, useState } from "react";
-import SearchIcon from "../../assets/svg/search.svg";
+import { useEffect, useState } from "react";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
+import SearchIcon from "../../assets/svg/search.svg";
+
+const ITEMS_PER_PAGE = 10; // Number of items to show initially and per "Load More"
 
 function GuidemanualiPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    setLoading(false);
-  }, [data]);
-
-  const fetchData = () => {
+  const fetchData = async () => {
     setLoading(true);
-    axios
-      .get("tabulas/mobile/guidemanuali")
-      .then((res) => {
-        setData(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    try {
+      const res = await axios.get("tabulas/mobile/guidemanuali");
+      setData(res.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching guide data:", error);
+      setLoading(false);
+    }
   };
 
+  // Filter docNodes if a search query is provided
+  const filteredDocNodes =
+    data && data.docNodes
+      ? data.docNodes.filter((item) =>
+        item.name.toLowerCase().includes(query.toLowerCase())
+      )
+      : [];
+
+  const totalPages = Math.ceil(filteredDocNodes.length / ITEMS_PER_PAGE);
+  const displayedItems = filteredDocNodes.slice(0, currentPage * ITEMS_PER_PAGE);
+
   return (
-    <>
-      <div className="w-full bg-white rounded-tl-none lg:rounded-tl-2xl rounded-tr-none lg:rounded-tr-2xl rounded-bl-2xl rounded-br-2xl relative px-4 pt-4 pb-13">
-        <form className="w-full">
-          <label className="w-full block relative before:w-px before:h-2/3 before:bg-neutral-300 before:absolute before:left-14 before:top-1/2 before:-translate-y-1/2">
-            <input
-              type="text"
-              placeholder="Cerca..."
-              className="w-full h-11 bg-neutral-200 text-sm rounded-xl border-none pl-18 ring-0 focus:ring-0 focus:border-none"
-            />
-            <img
-              src={SearchIcon}
-              alt="Search"
-              className="w-6 h-6 select-none absolute left-4 top-1/2 -translate-y-1/2"
-            />
-          </label>
-        </form>
-        <div className="w-full flex mt-4">
-          {loading || data === null ? (
-            <div className="w-full flex justify-center">
-              <Loading />
+    <div className="min-h-screen bg-gray-100 p-4 md:p-8 w-full">
+      {/* Full-width search bar */}
+      <form className="w-full max-w-3xl mx-auto mb-6">
+        <label className="relative w-full flex items-center bg-gray-100 border border-gray-200 rounded-xl px-4">
+          <img src={SearchIcon} alt="Search" className="w-6 h-6 mr-2" />
+          <input
+            type="text"
+            placeholder="Cerca..."
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="w-full h-12 bg-gray-100 text-gray-800 text-sm border-none focus:outline-none focus:ring-2 focus:ring-gray-400 rounded-xl"
+          />
+        </label>
+      </form>
+
+      {/* Centered card container for the guide items */}
+      <div className="flex-1 bg-white mx-auto w-full max-w-3xl rounded-2xl shadow-lg p-6">
+        {loading || data === null ? (
+          <Loading />
+        ) : (
+          <>
+            {/* Header title */}
+            <div className="text-center font-medium text-lg mb-4">
+              {data.name}
             </div>
-          ) : (
-            <div className="w-full">
-              <div className="w-full font-medium">{data.name}</div>
-              <div className="w-full space-y-3 mt-2">
-                {data.docNodes.map((item, key) => (
-                  <div
-                    key={key}
-                    className="w-full border border-gray-200 rounded-xl p-4"
-                  >
-                    <div className="text-sm">{item.name}</div>
-                    <a
-                      href={item.docContentUrl}
-                      download
-                      className="inline-block px-4 rounded-md mt-4 text-white bg-primary-950 leading-8"
-                    >
-                      Downlaod pdf
-                    </a>
-                  </div>
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-red-800 text-white">
+                  <th className="py-3 px-4 text-left">Guide e Manuali</th>
+                  <th className="py-3 px-4 text-left"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {displayedItems.map((item, index) => (
+                  <tr key={index} className="border-b">
+                    <td className="py-3 px-4">{item.name || "-"}</td>
+                    <td className="py-3 px-4">
+                      {item.docContentUrl ? (
+                        <a
+                          href={item.docContentUrl}
+                          download
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <i className="fa-duotone fa-file-pdf text-xl text-red-800"></i>
+                        </a>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                  </tr>
                 ))}
+              </tbody>
+            </table>
+
+            {/* Load More Button */}
+            {currentPage < totalPages && (
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={() => setCurrentPage((prev) => prev + 1)}
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                >
+                  Load More
+                </button>
               </div>
-            </div>
-          )}
-        </div>
-        <div className="absolute inset-x-0 bottom-0 text-white bg-zinc-800 px-2 line-clamp-1 leading-9 h-9 overflow-hidden rounded-bl-2xl rounded-br-2xl">
-          16.25 Scuola: Gilda, ministeri trovino soluzione per stipendi precari
-          (z ANSA Politica) ~ 16.25 Confartigianato, 'no alla patente a crediti
-          nell'edilizia' (z ANSA Economia e Finanza) ~ 16.25 Agricoltori:
-          Fidanza (Fdi), richieste in linea nostre battaglie = (AGI) ~ 16.25 ++
-          'Biden al confine col Messico lo stesso giorno di Trump' ++ (z ANSA
-          Politica) ~ 16.26 Scontri Pisa: Conti, 'è pagina buia, polizia si può
-          criticare' (z ANSA Cronaca) ~ 16.26 Giustizia: sabato riunione Anm su
-          reclutamento straordinario = (AGI) ~ 16.28 Schlein, vita di Don
-          Nicolini dedicata agli ultimi, mancherà (z ANSA Politica) ~ 16.28
-          Hezbollah, 60 razzi contro base militare israeliana (2) (z ANSA
-          Politica) ~ 16.30 Legale due poliziotti uccisi, 'dissento da
-          Mattarella' (z ANSA Cronaca) ~ 16.30 Al via il Consiglio dei ministri
-          (z ANSA Polit
-        </div>
+            )}
+          </>
+        )}
       </div>
-    </>
+    </div>
   );
 }
 

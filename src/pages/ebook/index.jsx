@@ -101,7 +101,7 @@ function EbookPage() {
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-red-800 text-white">
-                <th className="py-3 px-4 text-left">Ebook Name</th>
+                <th className="py-3 px-4 text-left">Ebook Disponibili</th>
                 <th className="py-3 px-4 text-left"></th>
               </tr>
             </thead>
