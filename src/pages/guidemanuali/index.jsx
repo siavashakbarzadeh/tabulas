@@ -39,9 +39,9 @@ function GuidemanualiPage() {
   const displayedItems = filteredDocNodes.slice(0, currentPage * ITEMS_PER_PAGE);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8 w-full">
+    <div className="min-h-screen bg-white p-4 md:p-8 w-full">
       {/* Full-width search bar */}
-      <form className="w-full max-w-3xl mx-auto mb-6">
+      <form className="w-full mx-auto mb-6">
         <label className="relative w-full flex items-center bg-gray-100 border border-gray-200 rounded-xl px-4">
           <img src={SearchIcon} alt="Search" className="w-6 h-6 mr-2" />
           <input
@@ -58,15 +58,12 @@ function GuidemanualiPage() {
       </form>
 
       {/* Centered card container for the guide items */}
-      <div className="flex-1 bg-white mx-auto w-full max-w-3xl rounded-2xl shadow-lg p-6">
+      <div className="flex-1 bg-white mx-auto w-full shadow-lg p-6">
         {loading || data === null ? (
           <Loading />
         ) : (
           <>
             {/* Header title */}
-            <div className="text-center font-medium text-lg mb-4">
-              {data.name}
-            </div>
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-red-800 text-white">
