@@ -108,7 +108,7 @@ function EbookPage() {
             <tbody>
               {displayedEbooks.map((ebook, index) => (
                 <tr key={index} className="border-b">
-                  <td className="py-3 px-4">{ebook.name || "-"}</td>
+                  <td className="py-3 px-4">{ebook.name || "Scriba"}</td>
                   <td className="py-3 px-4">
                     {ebook.icon ? (
                       <a
@@ -117,14 +117,11 @@ function EbookPage() {
                         rel="noopener noreferrer"
                       // Optionally, use window.open in an onClick handler to pop up a new tab
                       >
-                        <img
-                          src={ebook.icon}
-                          alt={ebook.name}
-                          className="w-10 h-10"
-                        />
+                        <i className="fa-duotone fa-book-section text-xl text-red-800"></i>
+
                       </a>
                     ) : (
-                      "-"
+                      "Scriba"
                     )}
                   </td>
                 </tr>
