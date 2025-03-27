@@ -5,7 +5,7 @@ import ArraowDownIcon from "../../icons/ArraowDown";
 const Menu = [
   {
     id: 1,
-    title: "Services",
+    title: "Servizi",
     icon: <i className="fa-duotone text-xl  fa-screwdriver-wrench w-6 h-6" />,
     link: "/services"
   },
