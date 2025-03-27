@@ -1,56 +1,42 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import User from "../../icons/User";
-import NotificationIcon from "../../icons/Notification";
-import EbookIcon from "../../icons/Ebook";
-import LatestDossiersIcon from "../../icons/LatestDossiers";
-import ServicesIcon from "../../icons/ServicesIcon";
-import EmailIcon from "../../icons/EmailIcon";
-import FormIcon from "../../icons/FormIcon";
-import LatestActsIcon from "../../icons/LatestActs";
-import GuideManualsIcon from "../../icons/GuideManuals";
-import UsersIcon from "../../icons/Users";
-import ChatIcon from "../../icons/Chat";
-import Play2Icon from "../../icons/Play2";
-import NoticeIcon from "../../icons/Notice";
-import PaperIcon from "../../icons/Paper";
 import ArraowDownIcon from "../../icons/ArraowDown";
 
 const Menu = [
   {
     id: 1,
     title: "Services",
-    icon: <i className="fa-duotone fa-screwdriver-wrench w-6 h-6" />,
+    icon: <i className="fa-duotone text-xl  fa-screwdriver-wrench w-6 h-6" />,
     link: "/services"
   },
   {
     id: 2,
     title: "Guide e manuali",
-    icon: <i className="fa-duotone fa-book-open-cover w-6 h-6" />,
+    icon: <i className="fa-duotone text-xl  fa-book-open-cover w-6 h-6" />,
     link: "/guidemanuali"
   },
   {
     id: 3,
     title: "Ebook",
-    icon: <i className="fa-duotone fa-book w-6 h-6" />,
+    icon: <i className="fa-duotone text-xl  fa-book w-6 h-6" />,
     link: "/ebook"
   },
   {
     id: 4,
     title: "Commissioni",
-    icon: <i className="fa-duotone fa-users w-6 h-6" />,
+    icon: <i className="fa-duotone text-xl  fa-users w-6 h-6" />,
     link: "/commissioni"
   },
   {
     id: 5,
     title: "Ultimi atti",
-    icon: <i className="fa-duotone fa-clock-rotate-left w-6 h-6" />,
+    icon: <i className="fa-duotone text-xl  fa-clock-rotate-left w-6 h-6" />,
     link: "/ultimiatti"
   },
   {
     id: 6,
     title: "Ultimi dossier",
-    icon: <i className="fa-duotone fa-file-circle-exclamation w-6 h-6" />,
+    icon: <i className="fa-duotone text-xl  fa-file-circle-exclamation w-6 h-6" />,
     link: "/ultimdossier"
   },
 
@@ -58,31 +44,31 @@ const Menu = [
   {
     id: 7,
     title: "Commissioni permanenti",
-    icon: <i className="fa-duotone fa-user-group w-6 h-6" />,
+    icon: <i className="fa-duotone text-xl  fa-user-group w-6 h-6" />,
     link: "/commissioni-permanenti"
   },
   {
     id: 8,
     title: "Giunte e altre comissioni",
-    icon: <i className="fa-duotone fa-comments w-6 h-6" />,
+    icon: <i className="fa-duotone text-xl  fa-comments w-6 h-6" />,
     link: "/giunte-e-altre-comissioni"
   },
   {
     id: 9,
     title: "Bicamerali e delegazioni",
-    icon: <i className="fa-duotone fa-user-group w-6 h-6" />,
+    icon: <i className="fa-duotone text-xl  fa-user-group w-6 h-6" />,
     link: "/giunte-e-altre-comissioni"
   },
   {
     id: 10,
     title: "Diretta Senato",
-    icon: <i className="fa-duotone fa-play w-6 h-6" />,
+    icon: <i className="fa-duotone text-xl  fa-play w-6 h-6" />,
     link: "/"
   },
   {
     id: 11,
     title: "INFORMAZIONE",
-    icon: <i className="fa-duotone fa-newspaper w-6 h-6" />,
+    icon: <i className="fa-duotone text-xl  fa-newspaper w-6 h-6" />,
     link: "/"
   },
 
@@ -90,7 +76,7 @@ const Menu = [
   {
     id: 12,
     title: "Le Firme",
-    icon: <i className="fa-duotone fa-pen-to-square w-6 h-6"></i>,
+    icon: <i className="fa-duotone text-xl  fa-pen-to-square w-6 h-6"></i>,
     subMenu: [
       {
         id: 1,
@@ -115,7 +101,7 @@ const Menu = [
   {
     id: 13,
     title: "Push notification",
-    icon: <i className="fa-duotone fa-bell w-6 h-6"></i>,
+    icon: <i className="fa-duotone text-xl  fa-bell w-6 h-6"></i>,
     subMenu: [
       {
         id: 1,
