@@ -203,6 +203,15 @@ function MainPage() {
                       </span>
                     </div>
                   </Link>
+                  {/* Our custom Mute/Unmute button */}
+                  <div className="flex justify-center mt-4">
+                    <button
+                      onClick={handleToggleMute}
+                      className="bg-zinc-800 text-white px-4 py-2 rounded hover:bg-zinc-900"
+                    >
+                      {isMuted ? "Unmute" : "Mute"}
+                    </button>
+                  </div>
 
                   <div className="w-full mt-8 bg-zinc-200 p-4 rounded-2xl">
                   <div className="flex items-center space-x-2">
