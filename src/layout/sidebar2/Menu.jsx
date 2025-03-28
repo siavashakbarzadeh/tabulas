@@ -11,76 +11,42 @@ const Menu = [
   },
   {
     id: 2,
-    title: "Servizi",
-    icon: <i className="fa-duotone text-xl  fa-screwdriver-wrench w-6 h-6" />,
-    link: "/services"
-  },
-  {
-    id: 3,
-    title: "Guide e manuali",
-    icon: <i className="fa-duotone text-xl  fa-book-open-cover w-6 h-6" />,
-    link: "/guidemanuali"
-  },
-  {
-    id: 4,
-    title: "Ebook",
-    icon: <i className="fa-duotone text-xl  fa-book w-6 h-6" />,
-    link: "/ebook"
-  },
-  {
-    id: 5,
     title: "Commissioni",
     icon: <i className="fa-duotone text-xl  fa-users w-6 h-6" />,
     link: "/commissioni"
   },
   {
-    id: 6,
+    id: 3,
     title: "Ultimi atti",
     icon: <i className="fa-duotone text-xl  fa-clock-rotate-left w-6 h-6" />,
     link: "/ultimiatti"
   },
   {
-    id: 7,
+    id: 4,
     title: "Ultimi dossier",
     icon: <i className="fa-duotone text-xl  fa-file-circle-exclamation w-6 h-6" />,
     link: "/ultimdossier"
   },
-
-  // Other top-level items
   {
-    id: 8,
-    title: "Commissioni permanenti",
-    icon: <i className="fa-duotone text-xl  fa-user-group w-6 h-6" />,
-    link: "/commissioni-permanenti"
+    id: 5,
+    title: "Ebook",
+    icon: <i className="fa-duotone text-xl  fa-book w-6 h-6" />,
+    link: "/ebook"
   },
   {
-    id: 9,
-    title: "Giunte e altre comissioni",
-    icon: <i className="fa-duotone text-xl  fa-comments w-6 h-6" />,
-    link: "/giunte-e-altre-comissioni"
+    id: 6,
+    title: "Guide e manuali",
+    icon: <i className="fa-duotone text-xl  fa-book-open-cover w-6 h-6" />,
+    link: "/guidemanuali"
   },
   {
-    id: 10,
-    title: "Bicamerali e delegazioni",
-    icon: <i className="fa-duotone text-xl  fa-user-group w-6 h-6" />,
-    link: "/giunte-e-altre-comissioni"
-  },
-  {
-    id: 11,
+    id: 7,
     title: "Diretta Senato",
     icon: <i className="fa-duotone text-xl  fa-play w-6 h-6" />,
     link: "/diretta"
   },
   {
-    id: 12,
-    title: "INFORMAZIONE",
-    icon: <i className="fa-duotone text-xl  fa-square-exclamation w-6 h-6" />,
-    link: "/"
-  },
-
-  // Nested submenus remain intact
-  {
-    id: 13,
+    id: 8,
     title: "Le Firme",
     icon: <i className="fa-duotone text-xl  fa-pen-to-square w-6 h-6"></i>,
     subMenu: [
@@ -105,7 +71,7 @@ const Menu = [
     ],
   },
   {
-    id: 14,
+    id: 9,
     title: "Push notification",
     icon: <i className="fa-duotone text-xl  fa-bell w-6 h-6"></i>,
     subMenu: [
@@ -123,6 +89,37 @@ const Menu = [
       },
     ],
   },
+  {
+    id: 10,
+    title: "Servizi",
+    icon: <i className="fa-duotone text-xl  fa-screwdriver-wrench w-6 h-6" />,
+    link: "/services"
+  },
+  {
+    id: 11,
+    title: "Commissioni permanenti",
+    icon: <i className="fa-duotone text-xl  fa-user-group w-6 h-6" />,
+    link: "/commissioni-permanenti"
+  },
+  {
+    id: 12,
+    title: "Giunte e altre comissioni",
+    icon: <i className="fa-duotone text-xl  fa-comments w-6 h-6" />,
+    link: "/giunte-e-altre-comissioni"
+  },
+  {
+    id: 13,
+    title: "Bicamerali e delegazioni",
+    icon: <i className="fa-duotone text-xl  fa-user-group w-6 h-6" />,
+    link: "/giunte-e-altre-comissioni"
+  },
+  {
+    id: 14,
+    title: "INFORMAZIONE",
+    icon: <i className="fa-duotone text-xl  fa-square-exclamation w-6 h-6" />,
+    link: "/"
+  },
+
 ];
 
 function Menu2() {
