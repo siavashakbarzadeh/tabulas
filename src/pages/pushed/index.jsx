@@ -3,9 +3,12 @@ import axios from "../../configs/axiosConfig"; // Adjust path if needed
 import Loading from "../../layout/components/Loading.jsx";
 import SearchIcon from "../../assets/svg/search.svg";
 
-// Helper to format date/time
+// Updated date formatting function
 function formatDate(dateString) {
-    return new Date(dateString).toLocaleString();
+    const d = new Date(dateString);
+    const datePart = d.toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
+    const timePart = d.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit", hour12: false });
+    return `${datePart} ${timePart}`;
 }
 
 const ITEMS_PER_PAGE = 10;
@@ -63,47 +66,45 @@ export default function PushedMessagesPage() {
             {/* Main Content Container */}
             <div className="bg-white mx-auto w-full">
                 {/* Header */}
-
-
-                {loading ? (
-                    <div className="flex justify-center items-center h-64">
-                        <Loading />
-                    </div>
-                ) : filteredMessages.length === 0 ? (
-                    <div className="flex justify-center items-center h-64">
-                        <p className="text-gray-600">No messages found.</p>
-                    </div>
-                ) : (
-                    <table className="w-full ">
-                        <thead>
-                            <tr className="bg-red-800 text-white">
-                                <th colSpan="4" className="py-3 px-4 text-left">Notifiche inviati</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {displayedMessages.map((msg, index) => (
-                                <tr key={index} className="border-b hover:bg-gray-100">
-
-                                    {/* Title Column */}
-                                    <td className="py-3 px-4">
-                                        <p className="font-semibold">
-                                            <img
-                                                src={msg.icon}
-                                                alt="icon"
-                                                className="w-8 h-8"
-                                            />
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-red-800 text-white">
+                            <th colSpan="4" className="py-3 px-4 text-left">
+                                Notifiche inviati
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {displayedMessages.map((msg, index) => (
+                            <tr key={index} className="border-b hover:bg-gray-100">
+                                {/* Title Column: Icon and Title in a flex row */}
+                                <td className="py-3 px-4">
+                                    <div className="flex items-center space-x-2">
+                                        <img
+                                            src={msg.icon}
+                                            alt="icon"
+                                            className="w-8 h-8"
+                                        />
+                                        <span className="font-semibold">
                                             {msg.title || "Senza Titolo"}
-                                        </p>
-                                    </td>
-                                    <td>{msg.body}</td>
-                                    <td><a href={msg.url}><i class name="fa-duotone fa-external-link text-red-800"></i></a></td>
-                                    {/* Date Column */}
-                                    <td className="py-3 px-4">{formatDate(msg.created_at)}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td className="py-3 px-4">{msg.body}</td>
+                                {/* External link column with duotone icon */}
+                                <td className="py-3 px-4">
+                                    <a href={msg.url} target="_blank" rel="noopener noreferrer">
+                                        <i className="fa-duotone fa-external-link text-red-800 text-xl"></i>
+                                    </a>
+                                </td>
+                                {/* Date Column */}
+                                <td className="py-3 px-4">
+                                    {formatDate(msg.created_at)}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
 
                 {/* Load More Button */}
                 {visibleCount < filteredMessages.length && (
