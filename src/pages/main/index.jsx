@@ -182,18 +182,19 @@ function MainPage() {
               <div className="w-full flex items-center space-x-2 p-3 bg-zinc-200 rounded-bl-2xl rounded-br-2xl">
                 <PlayIcon className="w-6 h-6" />
                 <span className="text-primary-900 font-medium text-lg">In diretta</span>
+                {/* Our custom Mute/Unmute button */}
+                <div className="flex justify-end">
+                  <button
+                    onClick={handleToggleMute}
+                    className="bg-zinc-800 text-white px-4 py-2 rounded hover:bg-zinc-900"
+                  >
+                    {isMuted ? `<i class="fa-duotone fa-solid fa-volume-xmark"></i>` : `<i class="fa-duotone fa-solid fa-volume"></i>`}
+                  </button>
+                </div>
               </div>
             </Link>
 
-            {/* Our custom Mute/Unmute button */}
-            <div className="flex justify-center mt-4">
-              <button
-                onClick={handleToggleMute}
-                className="bg-zinc-800 text-white px-4 py-2 rounded hover:bg-zinc-900"
-              >
-                {isMuted ? "Unmute" : "Mute"}
-              </button>
-            </div>
+
 
             <div className="w-full mt-8 bg-zinc-200 p-4 rounded-2xl">
               <div className="flex items-center space-x-2">
