@@ -74,7 +74,7 @@ const Menu = [
   {
     id: 12,
     title: "INFORMAZIONE",
-    icon: <i className="fa-duotone text-xl  fa-newspaper w-6 h-6" />,
+    icon: <i className="fa-duotone text-xl  fa-square-exclamation w-6 h-6" />,
     link: "/"
   },
 
