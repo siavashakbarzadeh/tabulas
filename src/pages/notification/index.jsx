@@ -75,15 +75,6 @@ function NotificationPage() {
         registerPushNotifications();
     }, []);
 
-    // When the user object becomes available, update the notification "title" field (using email or name)
-    useEffect(() => {
-        if (user) {
-            setNotification((prev) => ({
-                ...prev,
-                title: user.email || user.name,
-            }));
-        }
-    }, [user]);
 
     const handleUpdateFormData = (fieldName, value) => {
         setNotification((prev) => ({ ...prev, [fieldName]: value }));
@@ -129,14 +120,13 @@ function NotificationPage() {
                     {/* Main Notification Form Container */}
                     <div className="flex w-full">
                         <div className="p-4 flex-1 flex justify-center items-start">
-                            <div className="gap-4 w-10/12 lg:w-10/12 p-4 bg-gray-100 rounded-xl drop-shadow-lg absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <div className="gap-4 w-9/12 lg:w-9/12 p-4 bg-gray-100 rounded-xl drop-shadow-lg absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                 <h2 className="text-lg font-semibold mb-4">Send Notification</h2>
                                 <form onSubmit={handleSubmit} className="space-y-3">
                                     <input
                                         type="text"
                                         name="title"
                                         placeholder="Title"
-                                        value={notification.title}
                                         onChange={(e) => handleUpdateFormData("title", e.target.value)}
                                         className="w-full p-2 border rounded"
                                     />
@@ -148,7 +138,7 @@ function NotificationPage() {
                                         className="w-full p-2 border rounded"
                                     ></textarea>
                                     <input
-                                        type="text"
+                                        type="hidden"
                                         name="icon"
                                         placeholder="Icon URL"
                                         value={notification.icon}
