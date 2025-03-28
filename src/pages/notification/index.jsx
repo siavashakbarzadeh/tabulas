@@ -120,7 +120,7 @@ function NotificationPage() {
                     {/* Main Notification Form Container */}
                     <div className="flex w-full">
                         <div className="p-4 flex-1 flex justify-center items-start">
-                            <div className="gap-4 w-9/12 lg:w-9/12 p-4 bg-gray-100 rounded-xl drop-shadow-lg absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <div className="gap-4 w-8/12 lg:w-8/12 p-4 bg-gray-100 rounded-xl drop-shadow-lg absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                 <h2 className="text-lg font-semibold mb-4">Send Notification</h2>
                                 <form onSubmit={handleSubmit} className="space-y-3">
                                     <input
