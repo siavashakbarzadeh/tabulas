@@ -125,7 +125,6 @@ function OutboxPage() {
                                                     onClick={() => handleView(app.id)}
                                                 >
                                                     <i className="fa-duotone fa-eye"></i>
-                                                    <span>Apri PDF</span>
                                                 </button>
                                             </td>
                                         </tr>
