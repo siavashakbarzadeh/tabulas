@@ -185,23 +185,6 @@ function OutboxPage() {
                             </div>
                         )}
 
-                        <div className="flex space-x-4">
-                            <button
-                                onClick={() => {
-                                    toast.success("Confirmed!");
-                                    closeModal();
-                                }}
-                                className="bg-red-700 text-white px-4 py-2 rounded"
-                            >
-                                Conferma
-                            </button>
-                            <button
-                                onClick={closeModal}
-                                className="bg-neutral-200 text-dark px-4 py-2 rounded"
-                            >
-                                No Grazie
-                            </button>
-                        </div>
                     </div>
                 </div>
             )}
