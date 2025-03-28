@@ -32,37 +32,37 @@ function MainPage() {
 
     // The YouTube API will call window.onYouTubeIframeAPIReady when ready.
     // We'll define that callback so we can create the player.
-    (window as any).onYouTubeIframeAPIReady = () => {
+    window.onYouTubeIframeAPIReady = () => {
       if (iframeRef.current) {
-        // Create the player
-        playerRef.current = new (window as any).YT.Player(iframeRef.current, {
-          // The iframe 'id' must match what's in <iframe id="yourIframeId" />
-          // We'll do that below. Then, this "playerVars" config ensures:
-          // - autoplay: starts playing automatically
-          // - controls: 0 => hides native YT controls
-          // - disablekb: disables keyboard events (can't pause with space)
-          // - mute: start muted
-          // - modestbranding, rel, showinfo => reduce branding
-          // - fs => hide fullscreen button
-          videoId: "sPbVV3E737E", // or we parse from the URL
-          playerVars: {
-            autoplay: 1,
-            controls: 0,
-            disablekb: 1,
-            mute: 1,
-            modestbranding: 1,
-            rel: 0,
-            showinfo: 0,
-            fs: 0,
-          },
-          events: {
-            onReady: (event: any) => {
-              // Ensure we start muted and playing
-              event.target.mute();
-              event.target.playVideo();
-            },
-          },
-        });
+      // Create the player
+      playerRef.current = new window.YT.Player(iframeRef.current, {
+        // The iframe 'id' must match what's in <iframe id="yourIframeId" />
+        // We'll do that below. Then, this "playerVars" config ensures:
+        // - autoplay: starts playing automatically
+        // - controls: 0 => hides native YT controls
+        // - disablekb: disables keyboard events (can't pause with space)
+        // - mute: start muted
+        // - modestbranding, rel, showinfo => reduce branding
+        // - fs => hide fullscreen button
+        videoId: "sPbVV3E737E", // or we parse from the URL
+        playerVars: {
+        autoplay: 1,
+        controls: 0,
+        disablekb: 1,
+        mute: 1,
+        modestbranding: 1,
+        rel: 0,
+        showinfo: 0,
+        fs: 0,
+        },
+        events: {
+        onReady: (event) => {
+          // Ensure we start muted and playing
+          event.target.mute();
+          event.target.playVideo();
+        },
+        },
+      });
       }
     };
 
