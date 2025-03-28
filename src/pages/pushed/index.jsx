@@ -77,37 +77,26 @@ export default function PushedMessagesPage() {
                     <table className="w-full ">
                         <thead>
                             <tr className="bg-red-800 text-white">
-                                <th className="py-3 px-4 text-left">Notifiche inviati</th>
+                                <th colSpan="4" className="py-3 px-4 text-left">Notifiche inviati</th>
                             </tr>
                         </thead>
                         <tbody>
                             {displayedMessages.map((msg, index) => (
                                 <tr key={index} className="border-b hover:bg-gray-100">
-                                    {/* Icon Column */}
-                                    <td className="py-3 px-4">
-                                        {msg.icon && msg.icon !== "-" ? (
-                                            <a
-                                                href={msg.url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                <img
-                                                    src={msg.icon}
-                                                    alt="icon"
-                                                    className="absolute w-6 h-6 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                                                />
-                                            </a>
-                                        ) : (
-                                            "-"
-                                        )}
-                                    </td>
+
                                     {/* Title Column */}
                                     <td className="py-3 px-4">
                                         <p className="font-semibold">
-                                            {msg.title || "No Title"}
+                                            <img
+                                                src={msg.icon}
+                                                alt="icon"
+                                                className="w-8 h-8"
+                                            />
+                                            {msg.title || "Senza Titolo"}
                                         </p>
                                     </td>
                                     <td>{msg.body}</td>
+                                    <td><a href={msg.url}><i class name="fa-duotone fa-external-link text-red-800"></i></a></td>
                                     {/* Date Column */}
                                     <td className="py-3 px-4">{formatDate(msg.created_at)}</td>
                                 </tr>
