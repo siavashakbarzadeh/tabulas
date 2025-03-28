@@ -125,6 +125,7 @@ import InboxPage from "../pages/inbox";
 import OutboxPage from "../pages/outbox";
 import NotificationPage from "../pages/notification/index.jsx";
 import PushedMessagesPage from "../pages/pushed/index.jsx";
+import DirettaPage from "../pages/diretta/index.jsx"; 
 
 const ScrollToTop = (props) => {
   const location = useLocation();
@@ -160,6 +161,7 @@ function Router() {
                 <Route path="pushed" element={<PushedMessagesPage />} />
                 <Route path="inbox" element={<InboxPage />} />
                 <Route path="outbox" element={<OutboxPage />} />
+                <Route path="diretta" element={<DirettaPage />} />
 
               </Route>
             </Route>

@@ -5,36 +5,42 @@ import ArraowDownIcon from "../../icons/ArraowDown";
 const Menu = [
   {
     id: 1,
+    title: "Assemblea",
+    icon: <i className="fa-duotone text-xl  fa-poll-people w-6 h-6" />,
+    link: "/"
+  },
+  {
+    id: 2,
     title: "Servizi",
     icon: <i className="fa-duotone text-xl  fa-screwdriver-wrench w-6 h-6" />,
     link: "/services"
   },
   {
-    id: 2,
+    id: 3,
     title: "Guide e manuali",
     icon: <i className="fa-duotone text-xl  fa-book-open-cover w-6 h-6" />,
     link: "/guidemanuali"
   },
   {
-    id: 3,
+    id: 4,
     title: "Ebook",
     icon: <i className="fa-duotone text-xl  fa-book w-6 h-6" />,
     link: "/ebook"
   },
   {
-    id: 4,
+    id: 5,
     title: "Commissioni",
     icon: <i className="fa-duotone text-xl  fa-users w-6 h-6" />,
     link: "/commissioni"
   },
   {
-    id: 5,
+    id: 6,
     title: "Ultimi atti",
     icon: <i className="fa-duotone text-xl  fa-clock-rotate-left w-6 h-6" />,
     link: "/ultimiatti"
   },
   {
-    id: 6,
+    id: 7,
     title: "Ultimi dossier",
     icon: <i className="fa-duotone text-xl  fa-file-circle-exclamation w-6 h-6" />,
     link: "/ultimdossier"
@@ -42,31 +48,31 @@ const Menu = [
 
   // Other top-level items
   {
-    id: 7,
+    id: 8,
     title: "Commissioni permanenti",
     icon: <i className="fa-duotone text-xl  fa-user-group w-6 h-6" />,
     link: "/commissioni-permanenti"
   },
   {
-    id: 8,
+    id: 9,
     title: "Giunte e altre comissioni",
     icon: <i className="fa-duotone text-xl  fa-comments w-6 h-6" />,
     link: "/giunte-e-altre-comissioni"
   },
   {
-    id: 9,
+    id: 10,
     title: "Bicamerali e delegazioni",
     icon: <i className="fa-duotone text-xl  fa-user-group w-6 h-6" />,
     link: "/giunte-e-altre-comissioni"
   },
   {
-    id: 10,
+    id: 11,
     title: "Diretta Senato",
     icon: <i className="fa-duotone text-xl  fa-play w-6 h-6" />,
-    link: "/"
+    link: "/diretta"
   },
   {
-    id: 11,
+    id: 12,
     title: "INFORMAZIONE",
     icon: <i className="fa-duotone text-xl  fa-newspaper w-6 h-6" />,
     link: "/"
@@ -74,7 +80,7 @@ const Menu = [
 
   // Nested submenus remain intact
   {
-    id: 12,
+    id: 13,
     title: "Le Firme",
     icon: <i className="fa-duotone text-xl  fa-pen-to-square w-6 h-6"></i>,
     subMenu: [
@@ -99,7 +105,7 @@ const Menu = [
     ],
   },
   {
-    id: 13,
+    id: 14,
     title: "Push notification",
     icon: <i className="fa-duotone text-xl  fa-bell w-6 h-6"></i>,
     subMenu: [
