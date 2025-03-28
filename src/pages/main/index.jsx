@@ -6,7 +6,75 @@ import NotificationIcon from "../../icons/Notification";
 import { Link } from "react-router-dom";
 
 function MainPage() {
+  const playerRef = useRef(null);        // Will store the YT Player object
+  const iframeRef = useRef(null);        // Ref to the <iframe> element
+  const [isMuted, setIsMuted] = useState(true); // Tracks current mute state
+
+  // Example function to toggle audio
+  const handleToggleMute = () => {
+    if (!playerRef.current) return;
+    if (isMuted) {
+      playerRef.current.unMute();
+      setIsMuted(false);
+    } else {
+      playerRef.current.mute();
+      setIsMuted(true);
+    }
+  };
+
   useEffect(() => {
+
+
+    // Dynamically load the YouTube IFrame API script
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+
+    // The YouTube API will call window.onYouTubeIframeAPIReady when ready.
+    // We'll define that callback so we can create the player.
+    (window as any).onYouTubeIframeAPIReady = () => {
+      if (iframeRef.current) {
+        // Create the player
+        playerRef.current = new (window as any).YT.Player(iframeRef.current, {
+          // The iframe 'id' must match what's in <iframe id="yourIframeId" />
+          // We'll do that below. Then, this "playerVars" config ensures:
+          // - autoplay: starts playing automatically
+          // - controls: 0 => hides native YT controls
+          // - disablekb: disables keyboard events (can't pause with space)
+          // - mute: start muted
+          // - modestbranding, rel, showinfo => reduce branding
+          // - fs => hide fullscreen button
+          videoId: "sPbVV3E737E", // or we parse from the URL
+          playerVars: {
+            autoplay: 1,
+            controls: 0,
+            disablekb: 1,
+            mute: 1,
+            modestbranding: 1,
+            rel: 0,
+            showinfo: 0,
+            fs: 0,
+          },
+          events: {
+            onReady: (event: any) => {
+              // Ensure we start muted and playing
+              event.target.mute();
+              event.target.playVideo();
+            },
+          },
+        });
+      }
+    };
+
+
+
+
+
+
+
+
+
+
     async function registerPushNotifications() {
       if ("serviceWorker" in navigator && "PushManager" in window) {
         try {
@@ -112,8 +180,14 @@ function MainPage() {
           <div className="w-full md:w-2/6">
                   <Link className="w-full block">
                     <div className="w-full aspect-video relative">
+                      {/* We'll place our custom YT iframe here. 
+                    Notice "id" must match the YT.Player config in onYouTubeIframeAPIReady */}
                       <iframe
-                        src="https://www.youtube.com/embed/sPbVV3E737E"
+                        id="yt-iframe-embed"
+                        // The src is minimal, just enablejsapi=1
+                        // We'll override autoplay & controls via the YT.Player config
+                        src="https://www.youtube.com/embed/sPbVV3E737E?enablejsapi=1"
+                        ref={iframeRef}
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         className="w-full h-full object-contain"
@@ -124,7 +198,9 @@ function MainPage() {
                     </div>
                     <div className="w-full flex items-center space-x-2 p-3 bg-zinc-200 rounded-bl-2xl rounded-br-2xl">
                       <PlayIcon className="w-6 h-6" />
-                      <span className="text-primary-900 font-medium text-lg">In diretta</span>
+                      <span className="text-primary-900 font-medium text-lg">
+                        In diretta
+                      </span>
                     </div>
                   </Link>
 
