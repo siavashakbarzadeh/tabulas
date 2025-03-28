@@ -1,8 +1,13 @@
-import { useState, useEffect } from "react";
-import axios from "../../configs/axiosConfig.js";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 import SearchIcon from "../../assets/svg/search.svg";
+import axios from "../../configs/axiosConfig.js";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function NotificationPage() {
+    const { user } = useAuth();
+    const navigate = useNavigate();
     const [notification, setNotification] = useState({
         title: "",
         body: "",
@@ -30,7 +35,7 @@ function NotificationPage() {
                         return;
                     }
 
-                    // Check if there's an existing subscription and log it (or unsubscribe if needed)
+                    // Check if there's an existing subscription and log it
                     const existingSubscription = await registration.pushManager.getSubscription();
                     if (existingSubscription) {
                         console.log("Existing subscription:", existingSubscription);
@@ -43,12 +48,14 @@ function NotificationPage() {
                             .replace(/-/g, "+")
                             .replace(/_/g, "/");
                         const rawData = window.atob(base64);
-                        return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
+                        return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
                     }
 
                     const subscribeOptions = {
                         userVisibleOnly: true,
-                        applicationServerKey: urlBase64ToUint8Array("BDHaWPVr-4KGYKxoavcU_w2TUq5XqCDQHQQdJj4nhBBp2dqTExCrr8f2vUCr5Enp-dGkCD4Omohgk8qRjHtszBs"),
+                        applicationServerKey: urlBase64ToUint8Array(
+                            "BDHaWPVr-4KGYKxoavcU_w2TUq5XqCDQHQQdJj4nhBBp2dqTExCrr8f2vUCr5Enp-dGkCD4Omohgk8qRjHtszBs"
+                        ),
                     };
 
                     // Subscribe the user to push notifications
@@ -68,12 +75,21 @@ function NotificationPage() {
         registerPushNotifications();
     }, []);
 
-    // Handle changes in the notification form
-    const handleChange = (e) => {
-        setNotification({ ...notification, [e.target.name]: e.target.value });
+    // When the user object becomes available, update the notification "title" field (using email or name)
+    useEffect(() => {
+        if (user) {
+            setNotification((prev) => ({
+                ...prev,
+                title: user.email || user.name,
+            }));
+        }
+    }, [user]);
+
+    const handleUpdateFormData = (fieldName, value) => {
+        setNotification((prev) => ({ ...prev, [fieldName]: value }));
     };
 
-    // Submit the notification details to the backend
+    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -83,78 +99,84 @@ function NotificationPage() {
         } catch (err) {
             console.error("Error pushing notification", err);
             setMessageStatus("Error sending notification.");
+            toast.error(
+                err.response?.data?.data?.message || "Error",
+                { position: "bottom-right", hideProgressBar: true }
+            );
         }
     };
 
     return (
-        <>
-            <div className="w-full bg-white rounded-tl-none lg:rounded-tl-2xl rounded-tr-none lg:rounded-tr-2xl rounded-bl-2xl rounded-br-2xl relative px-4 pt-4 pb-13">
-                <div className="w-full space-y-4">
-                    {/* Sidebar Column */}
-                    <div className="w-full">
-                        <form>
-                            <label className="w-full block relative before:w-px before:h-2/3 before:bg-neutral-300 before:absolute before:left-14 before:top-1/2 before:-translate-y-1/2">
-                                <input
-                                    type="text"
-                                    placeholder="Cerca..."
-                                    className="w-full h-11 bg-neutral-200 text-sm rounded-xl border-none pl-18 ring-0 focus:ring-0 focus:border-none"
-                                />
-                                <img
-                                    src={SearchIcon}
-                                    alt="Search"
-                                    className="w-6 h-6 select-none absolute left-4 top-1/2 -translate-y-1/2"
-                                />
-                            </label>
-                        </form>
-                        {/* Additional sidebar content (if needed) can be added here */}
-                    </div>
-
-                    {/* Main Notification Form Column */}
-                    <div className="w-full">
-                        <div className="bg-neutral-200 rounded-2xl p-6 text-zinc-800 space-y-4 leading-7">
-                            <h2 className="text-lg font-semibold mb-4">Send Notification</h2>
-                            <form onSubmit={handleSubmit} className="space-y-3">
-                                <input
-                                    type="text"
-                                    name="title"
-                                    placeholder="Title"
-                                    value={notification.title}
-                                    onChange={handleChange}
-                                    className="w-full p-2 border rounded"
-                                />
-                                <textarea
-                                    name="body"
-                                    placeholder="Body"
-                                    value={notification.body}
-                                    onChange={handleChange}
-                                    className="w-full p-2 border rounded"
-                                ></textarea>
-                                <input
-                                    type="text"
-                                    name="icon"
-                                    placeholder="Icon URL"
-                                    value={notification.icon}
-                                    onChange={handleChange}
-                                    className="w-full p-2 border rounded"
-                                />
-                                <input
-                                    type="text"
-                                    name="url"
-                                    placeholder="Target URL"
-                                    value={notification.url}
-                                    onChange={handleChange}
-                                    className="w-full p-2 border rounded"
-                                />
-                                <button type="submit" className="w-full py-2 bg-primary-900 text-white rounded">
-                                    Send Notification
-                                </button>
-                            </form>
-                            {messageStatus && <p className="mt-2 text-sm">{messageStatus}</p>}
+        <div className="w-full flex pt-0 lg:pt-4 pb-2 lg:pb-4 pr-0 lg:pr-4 pl-0 lg:pl-2">
+            <div className="flex flex-col min-h-screen w-full">
+                {/* Main white container */}
+                <div className="flex-1 bg-white rounded-2xl relative p-4">
+                    {/* Full-width Search Bar */}
+                    <form className="w-full mb-4">
+                        <label className="w-full block relative before:w-px before:h-2/3 before:bg-neutral-300 before:absolute before:left-14 before:top-1/2 before:-translate-y-1/2">
+                            <input
+                                type="text"
+                                placeholder="Cerca..."
+                                className="w-full h-11 bg-neutral-200 text-sm rounded-xl border-none pl-18 ring-0 focus:ring-0 focus:border-none"
+                            />
+                            <img
+                                src={SearchIcon}
+                                alt="Search"
+                                className="w-6 h-6 select-none absolute left-4 top-1/2 -translate-y-1/2"
+                            />
+                        </label>
+                    </form>
+                    {/* Main Notification Form Container */}
+                    <div className="flex w-full">
+                        <div className="p-4 flex-1 flex justify-center items-start">
+                            <div className="gap-4 w-10/12 lg:w-10/12 p-4 bg-gray-100 rounded-xl drop-shadow-lg absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                <h2 className="text-lg font-semibold mb-4">Send Notification</h2>
+                                <form onSubmit={handleSubmit} className="space-y-3">
+                                    <input
+                                        type="text"
+                                        name="title"
+                                        placeholder="Title"
+                                        value={notification.title}
+                                        onChange={(e) => handleUpdateFormData("title", e.target.value)}
+                                        className="w-full p-2 border rounded"
+                                    />
+                                    <textarea
+                                        name="body"
+                                        placeholder="Body"
+                                        value={notification.body}
+                                        onChange={(e) => handleUpdateFormData("body", e.target.value)}
+                                        className="w-full p-2 border rounded"
+                                    ></textarea>
+                                    <input
+                                        type="text"
+                                        name="icon"
+                                        placeholder="Icon URL"
+                                        value={notification.icon}
+                                        onChange={(e) => handleUpdateFormData("icon", e.target.value)}
+                                        className="w-full p-2 border rounded"
+                                    />
+                                    <input
+                                        type="text"
+                                        name="url"
+                                        placeholder="Target URL"
+                                        value={notification.url}
+                                        onChange={(e) => handleUpdateFormData("url", e.target.value)}
+                                        className="w-full p-2 border rounded"
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="w-full py-2 bg-primary-900 text-white rounded"
+                                    >
+                                        Send Notification
+                                    </button>
+                                </form>
+                                {messageStatus && <p className="mt-2 text-sm">{messageStatus}</p>}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 
