@@ -125,7 +125,7 @@ import InboxPage from "../pages/inbox";
 import OutboxPage from "../pages/outbox";
 import NotificationPage from "../pages/notification/index.jsx";
 import PushedMessagesPage from "../pages/pushed/index.jsx";
-import DirettaPage from "../pages/diretta/index.jsx"; 
+import DirettaPage from "../pages/diretta/index.jsx";
 
 const ScrollToTop = (props) => {
   const location = useLocation();
@@ -219,7 +219,7 @@ function Router() {
             </Route>
             <Route element={<Layout />}>
               <Route path="index2" element={<EcommerceHomepage />} />
-              <Route path="home" element={<EcommerceHomepage />} />
+              <Route path="home" element={<MainPage />} />
               <Route path="copywriter" element={<CopywriterHomepage />} />
               <Route path="sales" element={<SalesHomepage />} />
               <Route path="crypto" element={<CryptoHomepage />} />
