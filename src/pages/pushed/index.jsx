@@ -42,9 +42,9 @@ export default function PushedMessagesPage() {
     const displayedMessages = filteredMessages.slice(0, visibleCount);
 
     return (
-        <div className="min-h-screen bg-gray-100 p-4 md:p-8 w-full">
+        <div className="min-h-screen bg-white p-4 w-full">
             {/* Full-width Search Bar */}
-            <form className="w-full max-w-3xl mx-auto mb-6">
+            <form className="w-full mx-auto mb-6">
                 <label className="relative w-full flex items-center bg-gray-100 border border-gray-200 rounded-xl px-4">
                     <img src={SearchIcon} alt="Search" className="w-6 h-6 mr-2" />
                     <input
@@ -61,11 +61,9 @@ export default function PushedMessagesPage() {
             </form>
 
             {/* Main Content Container */}
-            <div className="bg-white mx-auto w-full max-w-3xl rounded-2xl shadow-lg p-4">
+            <div className="bg-white mx-auto w-full">
                 {/* Header */}
-                <div className="bg-red-800 text-white p-4 rounded-t-xl font-semibold text-center">
-                    Pushed Messages
-                </div>
+
 
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
@@ -78,13 +76,8 @@ export default function PushedMessagesPage() {
                 ) : (
                     <table className="w-full border-collapse border border-gray-300">
                         <thead>
-                            <tr
-                                style={{ position: "sticky", top: 0, zIndex: 10 }}
-                                className="bg-red-800 text-white"
-                            >
-                                <th className="py-3 px-4 text-left">Icona</th>
-                                <th className="py-3 px-4 text-left">Titolo</th>
-                                <th className="py-3 px-4 text-left">Data</th>
+                            <tr className="bg-red-800 text-white">
+                                <th className="py-3 px-4 text-left">Notifiche inviati</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -98,7 +91,11 @@ export default function PushedMessagesPage() {
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                             >
-                                                <i className="fa-duotone fa-bell text-xl text-red-800"></i>
+                                                <img
+                                                    src={msg.icon}
+                                                    alt="icon"
+                                                    className="absolute w-6 h-6 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                                                />
                                             </a>
                                         ) : (
                                             "-"
@@ -106,15 +103,11 @@ export default function PushedMessagesPage() {
                                     </td>
                                     {/* Title Column */}
                                     <td className="py-3 px-4">
-                                        <a
-                                            href={msg.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-600 hover:underline"
-                                        >
+                                        <p className="font-semibold">
                                             {msg.title || "No Title"}
-                                        </a>
+                                        </p>
                                     </td>
+                                    <td>{msg.body}</td>
                                     {/* Date Column */}
                                     <td className="py-3 px-4">{formatDate(msg.created_at)}</td>
                                 </tr>
