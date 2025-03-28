@@ -74,7 +74,7 @@ export default function PushedMessagesPage() {
                         <p className="text-gray-600">No messages found.</p>
                     </div>
                 ) : (
-                    <table className="w-full border-collapse border border-gray-300">
+                    <table className="w-full ">
                         <thead>
                             <tr className="bg-red-800 text-white">
                                 <th className="py-3 px-4 text-left">Notifiche inviati</th>
