@@ -70,7 +70,7 @@ export default function PushedMessagesPage() {
                     <thead>
                         <tr className="bg-red-800 text-white">
                             <th colSpan="4" className="py-3 px-4 text-left">
-                                Notifiche inviati
+                                Messaggi inviati
                             </th>
                         </tr>
                     </thead>

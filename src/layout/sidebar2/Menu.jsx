@@ -84,7 +84,7 @@ const Menu = [
       },
       {
         id: 2,
-        title: "Messages",
+        title: "Messaggi inviati",
         icon: <i className="fa-duotone text-sm fa-envelope-open-text w-6 h-6"></i>,
         link: "/pushed"
       },
@@ -182,8 +182,8 @@ function Menu2() {
               <div
                 onClick={toggleMenuHandler(item.id)}
                 className={`w-full h-10 flex items-center space-x-2 px-2 text-md cursor-pointer ${isMainOpen
-                    ? "bg-white text-red-700 rounded-md hover:text-red-600"
-                    : "text-white hover:text-white/80"
+                  ? "bg-white text-red-700 rounded-md hover:text-red-600"
+                  : "text-white hover:text-white/80"
                   }`}
               >
                 {item.icon}
@@ -201,8 +201,8 @@ function Menu2() {
                   setActiveSub(null);
                 }}
                 className={`w-full h-10 flex items-center space-x-2 px-2 text-sm cursor-pointer ${activeMain === item.id
-                    ? "bg-white text-red-700 rounded-md hover:text-red-600"
-                    : "text-white hover:text-white/80"
+                  ? "bg-white text-red-700 rounded-md hover:text-red-600"
+                  : "text-white hover:text-white/80"
                   }`}
               >
                 {item.icon}
