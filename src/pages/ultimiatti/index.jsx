@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import SearchIcon from "../../assets/svg/search.svg";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
-import Sidebar from "../../layout/sidebar2/Menu.jsx"; // Global sidebar (if needed)
 import InnerSidebar from "../../layout/sidebar2/InnerSidebar.jsx"; // Inner sidebar with pagination
 
 const ITEMS_PER_PAGE = 20;
@@ -22,6 +21,8 @@ function UltimiattiPage() {
     if (data) {
       setLoading(false);
       modifyPdfLinks();
+      // If there's at least one docNode and we don't have an active node yet,
+      // set the first docNode as active
       if (data.docNodes && data.docNodes.length > 0 && !activeNode) {
         setActiveNode(data.docNodes[0].name);
       }
@@ -40,6 +41,7 @@ function UltimiattiPage() {
       });
   };
 
+  // Hide the small PDF image and prepend a Font Awesome duotone PDF icon
   const modifyPdfLinks = () => {
     setTimeout(() => {
       document.querySelectorAll('a[href$=".pdf"]').forEach((link) => {
@@ -49,8 +51,8 @@ function UltimiattiPage() {
         }
         if (!link.querySelector(".custom-pdf-icon")) {
           const icon = document.createElement("i");
-          icon.className = "fas fa-file-pdf mr-2 custom-pdf-icon";
-          icon.style.color = "rgb(151, 0, 45)";
+          // Use duotone class + text color from Tailwind
+          icon.className = "fa-duotone fa-file-pdf mr-2 text-red-800 custom-pdf-icon";
           link.prepend(icon);
         }
       });
@@ -67,24 +69,27 @@ function UltimiattiPage() {
 
   // Find the active document node from the fetched data
   const activeDocNode = data.docNodes.find((node) => node.name === activeNode);
+  // Calculate pagination
   const totalItems = activeDocNode?.docContentStreamContent
     ? activeDocNode.docContentStreamContent.split('<HR class="defrss">').length
     : 0;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+  // Paginated content
   const paginatedContent = activeDocNode?.docContentStreamContent
     ?.split('<HR class="defrss">')
     .slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
     .map((item, index) => {
       const tempElement = document.createElement("div");
       tempElement.innerHTML = item;
+
+      // Convert each child element into a <td>
       const rows = Array.from(tempElement.children).map((child, idx) => (
         <td key={idx} className="py-3 px-4 text-left">
           {child.tagName === "A" ? (
             <a href={child.href} target="_blank" rel="noopener noreferrer">
-              <i
-                className="fas fa-file-pdf mr-2 custom-pdf-icon"
-                style={{ color: "rgb(151, 0, 45)" }}
-              ></i>
+              {/* The PDF icon is also added in modifyPdfLinks, 
+                  but we can show a fallback or text here if needed */}
               {child.textContent}
             </a>
           ) : (
@@ -92,12 +97,16 @@ function UltimiattiPage() {
           )}
         </td>
       ));
-      return <tr key={index} className="border-b">{rows}</tr>;
+
+      return (
+        <tr key={index} className="border-b">
+          {rows}
+        </tr>
+      );
     });
 
   return (
     <div className="flex flex-col min-h-screen w-full">
-      {/* Main Content Area */}
       <div className="flex-1 bg-white rounded-2xl relative p-4">
         {/* Search Bar */}
         <form className="w-full mb-4">
@@ -114,7 +123,7 @@ function UltimiattiPage() {
             />
           </label>
         </form>
-        {/* Inner Content Layout */}
+
         <div className="flex w-full">
           {/* Inner Sidebar */}
           <InnerSidebar
@@ -125,29 +134,38 @@ function UltimiattiPage() {
               setCurrentPage(1);
             }}
           />
+
           {/* Main Table Content */}
           <div className="flex-1 ml-4 overflow-x-auto">
             <table className="w-full border-collapse border border-gray-300">
               <tbody>{paginatedContent}</tbody>
             </table>
+
+            {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="flex justify-center mt-4 space-x-2">
                 <button
                   onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1}
-                  className={`px-3 py-1 border rounded ${
-                    currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-200"
-                  }`}
+                  className={`px-3 py-1 border rounded ${currentPage === 1
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:bg-gray-200"
+                    }`}
                 >
                   Prev
                 </button>
-                <span className="text-sm px-3 py-1">{`Page ${currentPage} of ${totalPages}`}</span>
+                <span className="text-sm px-3 py-1">
+                  {`Page ${currentPage} of ${totalPages}`}
+                </span>
                 <button
-                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
                   disabled={currentPage === totalPages}
-                  className={`px-3 py-1 border rounded ${
-                    currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-200"
-                  }`}
+                  className={`px-3 py-1 border rounded ${currentPage === totalPages
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:bg-gray-200"
+                    }`}
                 >
                   Next
                 </button>
