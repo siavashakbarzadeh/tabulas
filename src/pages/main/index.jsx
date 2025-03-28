@@ -206,7 +206,7 @@ function MainPage() {
                 <span className="text-primary-900 font-medium text-lg">Altre notizie</span>
               </div>
               <div className="w-full mt-4 text-zinc-800 space-y-2">
-                <p>eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.</p>
+            <p>eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.</p>                <p>eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.</p>                <p>eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.</p>                <p>eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.</p>                <p>eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.</p>                <p>eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.</p>
                 {/* ... Other notifications ... */}
               </div>
               <Link className="w-full h-12 flex items-center justify-center bg-zinc-800 text-white rounded-xl mt-4 transition-colors hover:bg-zinc-900">
