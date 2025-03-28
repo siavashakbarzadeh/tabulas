@@ -110,27 +110,28 @@ function MainPage() {
             </div>
           </div>
           <div className="w-full md:w-2/6">
-            <Link className="w-full block">
-              <div className="w-full aspect-video relative">
-                <img
-                  src="images/thumbnail.jpg"
-                  alt=""
-                  className="w-full object-contain"
-                />
-                <span className="bg-primary-900 text-white leading-6 px-2 absolute left-2 top-2">
-                  Live
-                </span>
-              </div>
-              <div className="w-full flex items-center space-x-2 p-3 bg-zinc-200 rounded-bl-2xl rounded-br-2xl">
-                <PlayIcon className="w-6 h-6" />
-                <span className="text-primary-900 font-medium text-lg">
-                  In diretta
-                </span>
-              </div>
-            </Link>
-            <div className="w-full mt-8 bg-zinc-200 p-4 rounded-2xl">
-              <div className="flex items-center space-x-2">
-                <NotificationIcon className="w-6 h-6" />
+                  <Link className="w-full block">
+                    <div className="w-full aspect-video relative">
+                      <iframe
+                        src="https://www.youtube.com/embed/sPbVV3E737E"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="w-full h-full object-contain"
+                      ></iframe>
+                      <span className="bg-primary-900 text-white leading-6 px-2 absolute left-2 top-2">
+                        Live
+                      </span>
+                    </div>
+                    <div className="w-full flex items-center space-x-2 p-3 bg-zinc-200 rounded-bl-2xl rounded-br-2xl">
+                      <PlayIcon className="w-6 h-6" />
+                      <span className="text-primary-900 font-medium text-lg">In diretta</span>
+                    </div>
+                  </Link>
+
+                  <div className="w-full mt-8 bg-zinc-200 p-4 rounded-2xl">
+                  <div className="flex items-center space-x-2">
+                    <NotificationIcon className="w-6 h-6" />
                 <span className="text-primary-900 font-medium text-lg">
                   Altre notizie
                 </span>
