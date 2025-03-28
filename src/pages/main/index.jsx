@@ -113,10 +113,9 @@ function MainPage() {
                   <Link className="w-full block">
                     <div className="w-full aspect-video relative">
                       <iframe
-                        src="https://www.youtube.com/embed/sPbVV3E737E?autoplay=1&controls=0&disablekb=1&mute=1&loop=1&playlist=sPbVV3E737E"
+                        src="https://www.youtube.com/embed/sPbVV3E737E"
                         frameBorder="0"
-                        allow="autoplay; encrypted-media"
-                        allowFullScreen
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         className="w-full h-full object-contain"
                       ></iframe>
                       <span className="bg-primary-900 text-white leading-6 px-2 absolute left-2 top-2">
@@ -128,7 +127,6 @@ function MainPage() {
                       <span className="text-primary-900 font-medium text-lg">In diretta</span>
                     </div>
                   </Link>
-
 
                   <div className="w-full mt-8 bg-zinc-200 p-4 rounded-2xl">
                   <div className="flex items-center space-x-2">
