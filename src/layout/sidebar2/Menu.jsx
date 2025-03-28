@@ -181,7 +181,7 @@ function Menu2() {
             {hasSubmenu ? (
               <div
                 onClick={toggleMenuHandler(item.id)}
-                className={`w-full h-10 flex items-center space-x-2 px-2 text-md cursor-pointer ${isMainOpen
+                className={`w-full h-10 flex items-center space-x-2 px-2 text-sm cursor-pointer ${isMainOpen
                   ? "bg-white text-red-700 rounded-md hover:text-red-600"
                   : "text-white hover:text-white/80"
                   }`}
