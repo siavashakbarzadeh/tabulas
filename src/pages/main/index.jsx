@@ -169,43 +169,42 @@ function MainPage() {
               <div className="w-full aspect-video relative">
                 <iframe
                   id="yt-iframe-embed"
-                src="https://www.youtube.com/embed/sPbVV3E737E?enablejsapi=1"
-                ref={iframeRef}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                className="w-full h-full object-contain"
-              ></iframe>
+                  src="https://www.youtube.com/embed/sPbVV3E737E?enablejsapi=1"
+                  ref={iframeRef}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  className="w-full h-full object-contain"
+                ></iframe>
                 <span className="bg-primary-900 text-white leading-6 px-2 absolute left-2 top-2">
-                Live
-              </span>
-            </div>
-              <div className="relative w-full flex items-center space-x-2 p-3 bg-zinc-200 rounded-bl-2xl rounded-br-2xl">
-                           <PlayIcon className="w-6 h-6" />
-                <span className="text-primary-900 font-medium text-lg">In diretta</span>
-              {/* Our custom Mute/Unmute button */}
-                < div className="flex absolute right-4">
-              <button
-                    onClick={handleToggleMute}
-                            className="text-dark  rounded "
-            >
-              {isMuted ? (
-                    <i className="fa-duotone fa-solid fa-volume-xmark"></i>
-                ) : (
-                  <i className="fa-duotone fa-solid fa-volume"></i>
-                )}
-              </button>
-            </div>
+                  Live
+                </span>
               </div>
-        </Link>
+              <div className="relative w-full flex items-center space-x-2 p-3 bg-zinc-200 rounded-bl-2xl rounded-br-2xl">
+                <PlayIcon className="w-6 h-6" />
+                <span className="text-primary-900 font-medium text-lg">In diretta</span>
+                {/* Our custom Mute/Unmute button */}
+                <div className="flex absolute right-4">
+                  <button
+                    onClick={handleToggleMute}
+                    className="text-dark  rounded "
+                  >
+                    {isMuted ? (
+                      <i className="fa-duotone fa-solid fa-volume-xmark"></i>
+                    ) : (
+                      <i className="fa-duotone fa-solid fa-volume"></i>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </Link>
 
-      
- 
+
+
             <div className="w-full mt-8 bg-zinc-200 p-4 rounded-2xl">
               <div className="flex items-center space-x-2">
-                <Noti
-ficationIcon className="w-6 h-6" />
-<spa n className="text-primary-900 font-medium text-lg">Altre notizie</span>
-</div> 
+                <NotificationIcon className="w-6 h-6" />
+                <span className="text-primary-900 font-medium text-lg">Altre notizie</span>
+              </div>
               <div className="w-full mt-4 text-zinc-800 space-y-2">
                 <p>eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.</p>
                 {/* ... Other notifications ... */}
@@ -218,12 +217,12 @@ ficationIcon className="w-6 h-6" />
         </div>
 
         <div className="absolute inset-x-0 bottom-0 text-white bg-zinc-800 px-2 line-clamp-1 leading-9 h-9 overflow-hidden rounded-bl-2xl rounded-br-2xl">
-          16.25 Scuola: Gilda, ministeri trovino s oluzione per stipendi precari
-          (z ANSA P olitica) ~ ... ~ 16.30 Al via il Consiglio dei ministri (z ANSA Polit
-        </div > 
-</div>
-    </> 
+          16.25 Scuola: Gilda, ministeri trovino soluzione per stipendi precari
+          (z ANSA Politica) ~ ... ~ 16.30 Al via il Consiglio dei ministri (z ANSA Polit
+        </div>
+      </div>
+    </>
   );
-} 
- 
+}
+
 export default MainPage;
