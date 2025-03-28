@@ -112,8 +112,8 @@ function Ultimidossierage() {
                   </td>
                 </tr>
                 {/* Content row */}
-                <tr className="border-b bg-white description-row">
-                  <td colSpan="4" className="py-3 px-4 text-left">
+                <tr className="border-b bg-white">
+                  <td colSpan="4" className="py-3 px-4 text-left description-row">
                     <strong>Description:</strong>{" "}
                     {record.description || "-"}
                     {record.riferimenti.length > 0 && (
