@@ -154,7 +154,7 @@ function MainPage() {
                   <strong>II. Discussione del disegno di legge:</strong>
                 </p>
                 <p>
-                  Interventi a sostegno della competitività dei capitali ...
+                  Interventi a sostegno della competitività dei capitali e delega al Governo per la riforma organica delle disposizioni in materia di mercati dei capitali recate dal testo unico di cui al decreto legislativo 24 febbraio 1998, n. 58, e delle disposizioni in materia di società di capitali contenute nel codice civile applicabili anche agli emittenti (approvato dal Senato e modificato dalla Camera dei deputati) (collegato alla manovra di finanza pubblica)  (voto finale con la presenza del numero legale) - Relatore ORSOMARSO (Relazione orale) {" "}
                   <span className="inline-block rounded-lg leading-7 text-white bg-primary-900 px-2 mx-1">
                     674-B
                   </span>
@@ -188,7 +188,11 @@ function MainPage() {
                     onClick={handleToggleMute}
                     className="bg-zinc-800 text-white px-4 py-2 rounded hover:bg-zinc-900"
                   >
-                    {isMuted ? `<i class="fa-duotone fa-solid fa-volume-xmark"></i>` : `<i class="fa-duotone fa-solid fa-volume"></i>`}
+                    {isMuted ? (
+                      <i className="fa-duotone fa-solid fa-volume-xmark"></i>
+                    ) : (
+                      <i className="fa-duotone fa-solid fa-volume"></i>
+                    )}
                   </button>
                 </div>
               </div>
