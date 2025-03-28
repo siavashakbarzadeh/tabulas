@@ -73,7 +73,7 @@ const Menu = [
   },
   {
     id: 9,
-    title: "Push notification",
+    title: "Notifiche",
     icon: <i className="fa-duotone text-xl fa-bell w-6 h-6"></i>,
     subMenu: [
       {
