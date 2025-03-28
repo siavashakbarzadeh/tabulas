@@ -94,7 +94,7 @@ function UltimiattiPage() {
                   </td>
                 </tr>
                 {/* Description row */}
-                <tr className="border-b bg-white">
+                <tr className="border-b bg-white description-row">
                   <td colSpan="4" className="py-3 px-4 text-left">
                     <strong>Descrizione:</strong>{" "}
                     {record.description && record.description !== "-"
@@ -132,6 +132,22 @@ function UltimiattiPage() {
           </div>
         )}
       </div>
+      {/* Style block for description row */}
+      <style jsx>{`
+        .description-row {
+          position: relative;
+        }
+        .description-row::before {
+          content: "";
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          position: absolute;
+          top: -6px;
+          transform: rotate(45deg);
+          background: white;
+        }
+      `}</style>
     </div>
   );
 }

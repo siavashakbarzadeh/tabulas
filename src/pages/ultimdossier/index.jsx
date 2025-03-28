@@ -112,7 +112,7 @@ function Ultimidossierage() {
                   </td>
                 </tr>
                 {/* Content row */}
-                <tr className="border-b bg-white">
+                <tr className="border-b bg-white description-row">
                   <td colSpan="4" className="py-3 px-4 text-left">
                     <strong>Description:</strong>{" "}
                     {record.description || "-"}
@@ -157,6 +157,22 @@ function Ultimidossierage() {
           </button>
         </div>
       </div>
+      {/* Style block for description row */}
+      <style jsx>{`
+        .description-row {
+          position: relative;
+        }
+        .description-row::before {
+          content: "";
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          position: absolute;
+          top: -6px;
+          transform: rotate(45deg);
+          background: white;
+        }
+      `}</style>
     </div>
   );
 }
