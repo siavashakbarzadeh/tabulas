@@ -17,11 +17,12 @@ function DashboardLayout({ ...props }) {
   const [highContrast, setHighContrast] = useState(false);
 
   return (
-    <div
-      className={`min-h-screen ${largeText ? "text-xl leading-7" : ""
-        } ${highContrast ? "aa" : ""}`}
-    >
-      <div className="flex w-full bg-primary-900 pb-12 lg:pb-0">
+
+    <div className="flex w-full bg-primary-900 pb-12 lg:pb-0">
+      <div
+        className={`min-h-screen ${largeText ? "text-xl leading-7" : ""
+          } ${highContrast ? "aa" : ""}`}
+      >
         <Sidebar2 isSidebarActive={isSidebarActive} />
         <div className="flex w-full pl-0 lg:pl-68">
           <div className="w-full flex pt-0 lg:pt-4 pb-2 lg:pb-4 pr-0 lg:pr-4 pl-0 lg:pl-2">
@@ -41,13 +42,14 @@ function DashboardLayout({ ...props }) {
         </div>
         {/* Back to Top Button */}
         <BackToTopButton />
-        <AccessibilityWidget
-          largeText={largeText}
-          setLargeText={setLargeText}
-          highContrast={highContrast}
-          setHighContrast={setHighContrast}
-        />
+
       </div>
+      <AccessibilityWidget
+        largeText={largeText}
+        setLargeText={setLargeText}
+        highContrast={highContrast}
+        setHighContrast={setHighContrast}
+      />
     </div>
   );
 }

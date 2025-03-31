@@ -9,7 +9,7 @@ function AccessibilityWidget({
     const toggleHighContrast = () => setHighContrast(!highContrast);
 
     return (
-        <div className="fixed bottom-4 left-4 p-3 bg-white shadow-md border rounded">
+        <div className="fixed bottom-4 left-4 p-3 bg-white shadow-md border rounded z-10">
             <h2 className="font-semibold mb-2">Accessibilità</h2>
             <div className="flex items-center space-x-2 mb-2">
                 <label className="cursor-pointer">Testo Grande</label>
