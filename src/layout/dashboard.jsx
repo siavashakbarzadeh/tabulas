@@ -13,6 +13,8 @@ function DashboardLayout({ ...props }) {
   const toggleSidebarClickHandler = (event) => {
     setIsSidebarActive((prevSatate) => !prevSatate);
   };
+  const [largeText, setLargeText] = useState(false);
+  const [highContrast, setHighContrast] = useState(false);
 
   return (
     <div
