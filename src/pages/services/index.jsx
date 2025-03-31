@@ -48,15 +48,16 @@ function ServicePage() {
    
         <table className="w-full border-collapse border border-gray-300">
   <thead>
-    <tr
-      style={{ position: "sticky", top: 0, zIndex: 10 }}
-      className="bg-red-800 text-white"
-    >
-      <th className="p-4 text-center" colSpan="2">
-        {/* Header content */}
-        Lista dei Servizi
-      </th>
-    </tr>
+  <tr
+              style={{ position: "sticky", top: 0, zIndex: 10 }}
+              className="bg-red-800 text-white"
+            >
+              <th className="py-3 px-4 text-left">
+              Lista dei Servizi
+              </th>
+              
+            </tr>
+
   </thead>
   <tbody>
     <tr>
