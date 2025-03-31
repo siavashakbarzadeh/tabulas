@@ -106,51 +106,44 @@
 
 /* AA "high contrast" + readability class */
 
-.aa {
-  /* Make sure we have a neutral background and highly contrasting text */
+/* global.css */
+
+/* High contrast overriding all children’s color & background */
+.wcag-aa,
+.wcag-aa * {
   background-color: #000 !important;
   color: #fff !important;
+  /* Force no shadows or bright outlines if needed */
+  text-shadow: none !important;
+}
 
-  /* Slightly larger base font size for better readability
-     1.125rem = 18px if base font is 16px */
-  font-size: 1.125rem;
-  line-height: 1.5;
+/* Large text forcing bigger font across entire subtree */
+.wcag-aa-large-text,
+.wcag-aa-large-text * {
+  font-size: 1.125rem !important;
+  /* ~18px */
+  line-height: 1.5 !important;
+}
 
-  /* Force all text to have at least AA-level contrast if possible */
-  /* If you have brand colors, ensure they meet 4.5:1 on #000 background. */
+/* Force icons to be white */
+.wcag-aa i[class^="fa-"],
+.wcag-aa i[class*=" fa-"] {
+  color: #fff !important;
+}
 
-  /* Provide a strong focus outline for all interactive elements */
-  *:focus {
-    outline: 3px solid #fffd00 !important;
-    /* bright yellow for high visibility */
-    outline-offset: 3px;
-  }
+/* a tags bright link color or underline on hover */
+.wcag-aa a {
+  color: #ffd700 !important;
+  /* bright gold on black */
+}
 
-  /* Link styling */
-  a {
-    color: #ffd700 !important;
-    /* "Golden" color or bright to meet 4.5:1 on black */
-    text-decoration: none;
-  }
+.wcag-aa a:hover,
+.wcag-aa a:focus {
+  text-decoration: underline;
+}
 
-  a:hover,
-  a:focus {
-    text-decoration: underline;
-  }
-
-  /* Headings can be extra large for clarity */
-  h1,
-  h2,
-  h3 {
-    font-weight: bold;
-    line-height: 1.3;
-  }
-
-  /* If you want to ensure minimal text shadows or other visual clutter, remove them: */
-  /* text-shadow: none !important; */
-
-  /* If you have special UI elements, you can style them specifically, e.g.:
-     .button { background-color: #fff; color: #000; }
-     .button:hover { background-color: #ddd; }
-  */
+/* Focus outlines  */
+.wcag-aa *:focus {
+  outline: 3px solid #00ffff !important;
+  outline-offset: 3px;
 }

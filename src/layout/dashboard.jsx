@@ -20,8 +20,11 @@ function DashboardLayout({ ...props }) {
 
     <div className="flex w-full bg-primary-900 pb-12 lg:pb-0">
       <div
-        className={`min-h-screen ${largeText ? "text-xl leading-7" : ""
-          } ${highContrast ? "aa" : ""}`}
+        className={`
+    min-h-screen
+    ${highContrast ? "wcag-aa" : ""}
+    ${largeText ? "wcag-aa-large-text" : ""}
+  `}
       >
         <Sidebar2 isSidebarActive={isSidebarActive} />
         <div className="flex w-full pl-0 lg:pl-68">
