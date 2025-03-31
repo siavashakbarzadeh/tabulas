@@ -18,35 +18,33 @@ function DashboardLayout({ ...props }) {
 
   return (
 
-    <div className="flex w-full bg-primary-900 pb-12 lg:pb-0">
-      <div
-        className={`
-    min-h-screen
+
+    <div
+      className={`
+    min-h-screen flex w-full bg-primary-900 pb-12 lg:pb-0
     ${highContrast ? "wcag-aa" : ""}
     ${largeText ? "wcag-aa-large-text" : ""}
   `}
-      >
-        <Sidebar2 isSidebarActive={isSidebarActive} />
-        <div className="flex w-full pl-0 lg:pl-68">
-          <div className="w-full flex pt-0 lg:pt-4 pb-2 lg:pb-4 pr-0 lg:pr-4 pl-0 lg:pl-2">
-            <Outlet />
-          </div>
+    >
+      <Sidebar2 isSidebarActive={isSidebarActive} />
+      <div className="flex w-full pl-0 lg:pl-68">
+        <div className="w-full flex pt-0 lg:pt-4 pb-2 lg:pb-4 pr-0 lg:pr-4 pl-0 lg:pl-2">
+          <Outlet />
         </div>
-        <div className="w-full h-12 flex lg:hidden fixed bottom-0 inset-x-0 bg-primary-900 z-20">
-          <div className="w-1/2 flex items-center justify-center">
-            <User className="w-6 h-6" />
-          </div>
-          <div
-            className="w-1/2 flex items-center justify-center"
-            onClick={toggleSidebarClickHandler}
-          >
-            <AppIcon className="w-6 h-6" />
-          </div>
-        </div>
-        {/* Back to Top Button */}
-        <BackToTopButton />
-
       </div>
+      <div className="w-full h-12 flex lg:hidden fixed bottom-0 inset-x-0 bg-primary-900 z-20">
+        <div className="w-1/2 flex items-center justify-center">
+          <User className="w-6 h-6" />
+        </div>
+        <div
+          className="w-1/2 flex items-center justify-center"
+          onClick={toggleSidebarClickHandler}
+        >
+          <AppIcon className="w-6 h-6" />
+        </div>
+      </div>
+      {/* Back to Top Button */}
+      <BackToTopButton />
       <AccessibilityWidget
         largeText={largeText}
         setLargeText={setLargeText}
@@ -54,6 +52,8 @@ function DashboardLayout({ ...props }) {
         setHighContrast={setHighContrast}
       />
     </div>
+
+
   );
 }
 
