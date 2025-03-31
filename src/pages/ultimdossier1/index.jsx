@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
 import SearchIcon from "../../assets/svg/search.svg";
-import Ultimidossierage1 from './index';
 
 const ITEMS_PER_PAGE = 20;
 
