@@ -128,7 +128,7 @@
 /* Force icons to be white */
 .wcag-aa i[class^="fa-"],
 .wcag-aa i[class*=" fa-"] {
-  color: #fff !important;
+  color: #ffd700 !important;
 }
 
 /* a tags bright link color or underline on hover */
@@ -146,4 +146,12 @@
 .wcag-aa *:focus {
   outline: 3px solid #00ffff !important;
   outline-offset: 3px;
+}
+
+.wcag-aa thead {
+  color: #ffd700 !important;
+}
+
+.wcag-aa .description-row::before {
+  background-color: #000 !important;
 }
