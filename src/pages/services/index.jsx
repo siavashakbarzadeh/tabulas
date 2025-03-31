@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import SearchIcon from "../../assets/svg/search.svg";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLink } from '@fortawesome/free-duotone-svg-icons';
 
 function ServicePage() {
   const [loading, setLoading] = useState(true);
@@ -73,18 +71,6 @@ function ServicePage() {
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b bg-gray-100">
-                <td className="p-4">
-                  {/* H1 content */}
-                  {h1Content}
-                </td>
-                <td className="p-4">
-                  {/* FontAwesome link icon */}
-                  <a href={linkHref} target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faLink} className="text-xl" />
-                  </a>
-                </td>
-              </tr>
               <tr>
                 <td className="p-4" colSpan="2">
                   {/* Loading or Data Display */}
