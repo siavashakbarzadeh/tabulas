@@ -71,24 +71,16 @@ function ServicePage() {
               </tr>
             </thead>
             <tbody>
+ 
               <tr>
-                <td className="p-4" colSpan="2">
+                <td className="p-4">
+                  Servizi Extranet del Senato
                   {/* Loading or Data Display */}
-                  {loading || data === null ? (
-                    <div className="w-full flex justify-center">
-                      <Loading />
-                    </div>
-                  ) : (
-                    <div
-                      className="w-full text-xl text-red-800"
-                      dangerouslySetInnerHTML={{
-                        __html: data.docContentStreamContent.replace(
-                          /<h1[^>]*>.*?<\/h1>/s,
-                          ""
-                        ).replace(/<a[^>]*>.*?<\/a>/s, ""),
-                      }}
-                    ></div>
-                  )}
+                </td>
+                <td className="p-4">
+                  <a href="https://servizi.senato.it">
+                    <i className="fa-duotone fa-globe text-xl text-red-800"></i>
+                  </a>
                 </td>
               </tr>
             </tbody>
