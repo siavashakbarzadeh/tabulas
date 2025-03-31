@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import SearchIcon from "../../assets/svg/search.svg";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLink } from '@fortawesome/free-duotone-svg-icons';
 
 function ServicePage() {
   const [loading, setLoading] = useState(true);
@@ -27,6 +29,20 @@ function ServicePage() {
       });
   };
 
+  // Extract the <h1> and <a> from docContentStreamContent
+  const extractContent = (html) => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const h1 = doc.querySelector("h1");
+    const link = doc.querySelector("a");
+
+    return {
+      h1Content: h1 ? h1.innerHTML : "",
+      linkHref: link ? link.href : "#",
+    };
+  };
+
+  const { h1Content, linkHref } = data ? extractContent(data.docContentStreamContent) : {};
+
   return (
     <>
       <div className="w-full bg-white rounded-tl-none lg:rounded-tl-2xl rounded-tr-none lg:rounded-tr-2xl rounded-bl-2xl rounded-br-2xl relative px-4 pt-4 pb-13">
@@ -45,39 +61,52 @@ function ServicePage() {
           </label>
         </form>
         <div className="w-full flex mt-4">
-   
-        <table className="w-full border-collapse border border-gray-300">
-  <thead>
-
-    <tr
-      style={{ position: "sticky", top: 0, zIndex: 10 }}
-      className="bg-red-800 text-white"
-    >
-      <th className="p-4 text-center" colSpan="2">
-        {/* Header content */}
-        Lista dei Servizi
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-  <tr className="border-b bg-gray-100">
-      <td className="p-4" colSpan="2">
-        {/* Loading or Data Display */}
-        {loading || data === null ? (
-          <div className="w-full flex justify-center">
-            <Loading />
-          </div>
-        ) : (
-          <div
-            className="w-full text-xl text-red-800"
-            dangerouslySetInnerHTML={{ __html: data.docContentStreamContent }}
-          ></div>
-        )}
-      </td>
-    </tr>
-  </tbody>
-</table>
-
+          <table className="w-full border-collapse border border-gray-300">
+            <thead>
+              <tr
+                style={{ position: "sticky", top: 0, zIndex: 10 }}
+                className="bg-red-800 text-white"
+              >
+                <th className="p-4 text-left" colSpan="2">
+                  Lista dei Servizi
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b bg-gray-100">
+                <td className="p-4">
+                  {/* H1 content */}
+                  {h1Content}
+                </td>
+                <td className="p-4">
+                  {/* FontAwesome link icon */}
+                  <a href={linkHref} target="_blank" rel="noopener noreferrer">
+                    <FontAwesomeIcon icon={faLink} className="text-xl" />
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td className="p-4" colSpan="2">
+                  {/* Loading or Data Display */}
+                  {loading || data === null ? (
+                    <div className="w-full flex justify-center">
+                      <Loading />
+                    </div>
+                  ) : (
+                    <div
+                      className="w-full text-xl text-red-800"
+                      dangerouslySetInnerHTML={{
+                        __html: data.docContentStreamContent.replace(
+                          /<h1[^>]*>.*?<\/h1>/s,
+                          ""
+                        ).replace(/<a[^>]*>.*?<\/a>/s, ""),
+                      }}
+                    ></div>
+                  )}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div className="absolute inset-x-0 bottom-0 text-white bg-zinc-800 px-2 line-clamp-1 leading-9 h-9 overflow-hidden rounded-bl-2xl rounded-br-2xl">
           16.25 Scuola: Gilda, ministeri trovino soluzione per stipendi precari
