@@ -69,7 +69,7 @@ function ServicePage() {
           </div>
         ) : (
           <div
-            className="w-full"
+            className="w-full text-xl text-red-800"
             dangerouslySetInnerHTML={{ __html: data.docContentStreamContent }}
           ></div>
         )}
