@@ -47,7 +47,10 @@ function ServicePage() {
         <div className="w-full flex mt-4">
         <table className="w-full border-collapse border border-gray-300">
     <tbody>
-      <tr>
+    <tr
+              style={{ position: "sticky", top: 0, zIndex: 10 }}
+              className="bg-red-800 text-white"
+            >
         <td className="p-4 align-top">
           {loading || data === null ? (
             <div className="w-full flex justify-center">
