@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import Sidebar2 from "./sidebar2";
 import AppIcon from "../icons/App";
 import User from "../icons/User";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BackToTopButton from "./components/BackToTopButton"
 import AccessibilityWidget from "./components/AccessibilityWidget"; // or similar
 ; // Adjust path as needed
