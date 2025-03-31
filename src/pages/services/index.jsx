@@ -45,27 +45,38 @@ function ServicePage() {
           </label>
         </form>
         <div className="w-full flex mt-4">
+   
         <table className="w-full border-collapse border border-gray-300">
-    <tbody>
+  <thead>
     <tr
-              style={{ position: "sticky", top: 0, zIndex: 10 }}
-              className="bg-red-800 text-white"
-            >
-        <td className="p-4 align-top">
-          {loading || data === null ? (
-            <div className="w-full flex justify-center">
-              <Loading />
-            </div>
-          ) : (
-            <div
-              className="w-full"
-              dangerouslySetInnerHTML={{ __html: data.docContentStreamContent }}
-            ></div>
-          )}
-        </td>
-      </tr>
-    </tbody>
-  </table>
+      style={{ position: "sticky", top: 0, zIndex: 10 }}
+      className="bg-red-800 text-white"
+    >
+      <th className="p-4 text-center" colSpan="2">
+        {/* Header content */}
+        Lista dei Servizi
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td className="p-4" colSpan="2">
+        {/* Loading or Data Display */}
+        {loading || data === null ? (
+          <div className="w-full flex justify-center">
+            <Loading />
+          </div>
+        ) : (
+          <div
+            className="w-full"
+            dangerouslySetInnerHTML={{ __html: data.docContentStreamContent }}
+          ></div>
+        )}
+      </td>
+    </tr>
+  </tbody>
+</table>
+
         </div>
         <div className="absolute inset-x-0 bottom-0 text-white bg-zinc-800 px-2 line-clamp-1 leading-9 h-9 overflow-hidden rounded-bl-2xl rounded-br-2xl">
           16.25 Scuola: Gilda, ministeri trovino soluzione per stipendi precari
