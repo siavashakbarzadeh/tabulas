@@ -79,7 +79,7 @@ function ServicePage() {
                 </td>
                 <td className="p-4">
                   <a href="https://servizi.senato.it">
-                    <i className="fa-duotone fa-globe text-xl text-red-800"></i>
+                    Vai alla pagina di accesso <i className="fa-duotone fa-globe text-xl text-red-800"></i>
                   </a>
                 </td>
               </tr>
