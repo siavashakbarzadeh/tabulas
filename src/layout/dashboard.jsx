@@ -16,6 +16,26 @@ function DashboardLayout({ ...props }) {
   const [largeText, setLargeText] = useState(false);
   const [highContrast, setHighContrast] = useState(false);
 
+  // On mount, load stored preferences
+  useEffect(() => {
+    const storedLargeText = localStorage.getItem("access_largeText");
+    const storedHighContrast = localStorage.getItem("access_highContrast");
+    if (storedLargeText === "true") {
+      setLargeText(true);
+    }
+    if (storedHighContrast === "true") {
+      setHighContrast(true);
+    }
+  }, []);
+
+  // Whenever the toggles change, store them
+  useEffect(() => {
+    localStorage.setItem("access_largeText", largeText.toString());
+  }, [largeText]);
+
+  useEffect(() => {
+    localStorage.setItem("access_highContrast", highContrast.toString());
+  }, [highContrast]);
   return (
 
 
