@@ -44,7 +44,24 @@ function ServicePage() {
             />
           </label>
         </form>
-        <div className="w-full flex mt-4">
+        <table className="w-full border-collapse border border-gray-300">
+    <tbody>
+      <tr>
+        <td className="p-4 align-top">
+          {loading || data === null ? (
+            <div className="w-full flex justify-center">
+              <Loading />
+            </div>
+          ) : (
+            <div
+              className="w-full"
+              dangerouslySetInnerHTML={{ __html: data.docContentStreamContent }}
+            ></div>
+          )}
+        </td>
+      </tr>
+    </tbody>
+  </table>
           {loading || data === null ? (
             <div className="w-full flex justify-center">
               <Loading />
