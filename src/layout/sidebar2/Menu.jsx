@@ -25,8 +25,21 @@ const Menu = [
   {
     id: 4,
     title: "Ultimi dossier",
-    icon: <i className="fa-duotone text-xl fa-file-circle-exclamation w-6 h-6" />,
-    link: "/ultimdossier"
+    icon: <i className="fa-duotone text-xl fa-file-circle-exclamation w-6 h-6"></i>,
+    subMenu: [
+      {
+        id: 1,
+        title: "Prima pagina",
+        icon: "",
+        link: "/ultimdossier"
+      },
+      {
+        id: 2,
+        title: "Seconda pagina",
+        icon: "",
+        link: "/ultimdossier1"
+      },
+    ],
   },
   {
     id: 5,
