@@ -15,7 +15,11 @@ function Ultimidossierage1() {
     const [records, setRecords] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const headerRefs = useRef([]);
-
+    useEffect(() => {
+        return () => {
+            headerRefs.current = {};
+        };
+    }, []);
     useEffect(() => {
         axios.get("tabulas/mobile/ultimdossier")
             .then((res) => {
@@ -31,11 +35,11 @@ function Ultimidossierage1() {
     useEffect(() => {
         const handleScroll = () => {
             const stickyHeader = document.getElementById("main-sticky-header");
-            const isOverlapping = headerRefs.current.some((el) => {
-                if (!el) return false;
+            const isOverlapping = Object.values(headerRefs.current).some((el) => {
                 const rect = el.getBoundingClientRect();
                 return rect.top <= 0 && rect.bottom > 0;
             });
+
 
             if (stickyHeader) {
                 stickyHeader.style.visibility = isOverlapping ? "hidden" : "visible";
@@ -98,8 +102,11 @@ function Ultimidossierage1() {
                             <React.Fragment key={index}>
                                 {/* Header row */}
                                 <tr
-                                    ref={(el) => headerRefs.current[index] = el}
-                                    className="bg-gray-100 header-row"
+                                    ref={(el) => {
+                                        if (el) {
+                                            headerRefs.current[record.documentIdentifier] = el;
+                                        }
+                                    }} className="bg-gray-100 header-row"
                                 >
                                     <td className="py-3 px-4 text-left">
                                         {record.documentIdentifier}
