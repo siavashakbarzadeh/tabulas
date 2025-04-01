@@ -5,7 +5,6 @@ import SearchIcon from "../../assets/svg/search.svg";
 
 const ITEMS_PER_PAGE = 20;
 
-// Helper function to extract href attribute from an HTML string
 const extractHref = (htmlString) => {
     const match = htmlString.match(/href="([^"]+)"/);
     return match ? match[1] : "#";
@@ -15,15 +14,10 @@ function Ultimidossierage1() {
     const [loading, setLoading] = useState(true);
     const [records, setRecords] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const headerRefs = useRef([]);
 
     useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = () => {
-        setLoading(true);
-        axios
-            .get("tabulas/mobile/ultimdossier")
+        axios.get("tabulas/mobile/ultimdossier")
             .then((res) => {
                 setRecords(res.data);
                 setLoading(false);
@@ -32,7 +26,25 @@ function Ultimidossierage1() {
                 console.error(err);
                 setLoading(false);
             });
-    };
+    }, []);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const stickyHeader = document.getElementById("main-sticky-header");
+            const isOverlapping = headerRefs.current.some((el) => {
+                if (!el) return false;
+                const rect = el.getBoundingClientRect();
+                return rect.top <= 0 && rect.bottom > 0;
+            });
+
+            if (stickyHeader) {
+                stickyHeader.style.visibility = isOverlapping ? "hidden" : "visible";
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     if (loading) {
         return (
@@ -42,35 +54,11 @@ function Ultimidossierage1() {
         );
     }
 
-    // Pagination logic
     const totalPages = Math.ceil(records.length / ITEMS_PER_PAGE);
     const displayedRecords = records.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
         currentPage * ITEMS_PER_PAGE
     );
-
-
-
-
-    const headerRefs = useRef([]);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            const stickyHeader = document.getElementById("main-sticky-header");
-            const firstIntersecting = headerRefs.current.find(
-                (el) => el && el.getBoundingClientRect().top <= 0
-            );
-
-            if (firstIntersecting) {
-                stickyHeader.style.visibility = "hidden";
-            } else {
-                stickyHeader.style.visibility = "visible";
-            }
-        };
-
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
 
     return (
         <div className="flex flex-col min-h-screen w-full">
