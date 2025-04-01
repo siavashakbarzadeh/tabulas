@@ -111,7 +111,8 @@ function Ultimidossierage1() {
                                     </td>
                                 </tr>
                                 {/* Content row */}
-                                <tr className="border-b border-l border-r bg-white">
+                                <tr className="border-b border-l border-r bg-white" style={{ boxShadow: "5px 5px 6px rgba(0, 0, 0, 0.08)" }}
+                                >
                                     <td colSpan="4" className="py-3 px-4 text-left description-row">
                                         <strong>Description:</strong>{" "}
                                         {record.description || "-"}
@@ -128,7 +129,7 @@ function Ultimidossierage1() {
                                         )}
                                     </td>
                                 </tr>
-                                <tr style={{ height: '50px' }}></tr>
+                                <tr style={{ height: '30px' }}></tr>
                             </React.Fragment>
                         ))}
                     </tbody>
