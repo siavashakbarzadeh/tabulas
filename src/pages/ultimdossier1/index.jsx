@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "../../configs/axiosConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
 import SearchIcon from "../../assets/svg/search.svg";
 
 const ITEMS_PER_PAGE = 20;
 
+// Helper function to extract href attribute from an HTML string
 const extractHref = (htmlString) => {
     const match = htmlString.match(/href="([^"]+)"/);
     return match ? match[1] : "#";
@@ -14,14 +15,15 @@ function Ultimidossierage1() {
     const [loading, setLoading] = useState(true);
     const [records, setRecords] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const headerRefs = useRef([]);
+
     useEffect(() => {
-        return () => {
-            headerRefs.current = {};
-        };
+        fetchData();
     }, []);
-    useEffect(() => {
-        axios.get("tabulas/mobile/ultimdossier")
+
+    const fetchData = () => {
+        setLoading(true);
+        axios
+            .get("tabulas/mobile/ultimdossier")
             .then((res) => {
                 setRecords(res.data);
                 setLoading(false);
@@ -30,25 +32,7 @@ function Ultimidossierage1() {
                 console.error(err);
                 setLoading(false);
             });
-    }, []);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            const stickyHeader = document.getElementById("main-sticky-header");
-            const isOverlapping = Object.values(headerRefs.current).some((el) => {
-                const rect = el.getBoundingClientRect();
-                return rect.top <= 0 && rect.bottom > 0;
-            });
-
-
-            if (stickyHeader) {
-                stickyHeader.style.visibility = isOverlapping ? "hidden" : "visible";
-            }
-        };
-
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+    };
 
     if (loading) {
         return (
@@ -58,6 +42,7 @@ function Ultimidossierage1() {
         );
     }
 
+    // Pagination logic
     const totalPages = Math.ceil(records.length / ITEMS_PER_PAGE);
     const displayedRecords = records.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
@@ -85,8 +70,7 @@ function Ultimidossierage1() {
 
                 <table className="w-full border-collapse ">
                     <thead>
-                        <tr id="main-sticky-header"
-                            style={{ position: "sticky", top: 0, zIndex: 10 }}
+                        <tr
                             className="bg-red-800 text-white"
                         >
                             <th className="py-3 px-4 text-left">
@@ -101,13 +85,7 @@ function Ultimidossierage1() {
                         {displayedRecords.map((record, index) => (
                             <React.Fragment key={index}>
                                 {/* Header row */}
-                                <tr
-                                    ref={(el) => {
-                                        if (el) {
-                                            headerRefs.current[record.documentIdentifier] = el;
-                                        }
-                                    }} className="bg-gray-100 header-row"
-                                >
+                                <tr className="border-b bg-gray-100">
                                     <td className="py-3 px-4 text-left">
                                         {record.documentIdentifier}
                                     </td>
@@ -133,7 +111,7 @@ function Ultimidossierage1() {
                                     </td>
                                 </tr>
                                 {/* Content row */}
-                                <tr className="border-b border-l border-r bg-white" style={{ boxShadow: '4px 3px 6px #b8b8b85c' }}>
+                                <tr className="border-b border-l border-r bg-white">
                                     <td colSpan="4" className="py-3 px-4 text-left description-row">
                                         <strong>Description:</strong>{" "}
                                         {record.description || "-"}
@@ -150,7 +128,7 @@ function Ultimidossierage1() {
                                         )}
                                     </td>
                                 </tr>
-                                <tr style={{ height: '30px' }}></tr>
+                                <tr style={{ height: '50px' }}></tr>
                             </React.Fragment>
                         ))}
                     </tbody>
