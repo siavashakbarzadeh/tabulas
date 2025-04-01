@@ -86,7 +86,7 @@ function Ultimidossierage1() {
                         {displayedRecords.map((record, index) => (
                             <React.Fragment key={index}>
                                 {/* Header row */}
-                                <tr className="border-b bg-gray-100">
+                                <tr className="border-b bg-gray-100 header-row">
                                     <td className="py-3 px-4 text-left">
                                         {record.documentIdentifier}
                                     </td>
