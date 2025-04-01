@@ -86,7 +86,15 @@ function Ultimidossierage1() {
                         {displayedRecords.map((record, index) => (
                             <React.Fragment key={index}>
                                 {/* Header row */}
-                                <tr className="border-b bg-gray-100 header-row">
+                                <tr
+                                    className="border-b bg-gray-100 header-row"
+                                    style={{
+                                        position: "sticky",
+                                        top: 0,
+                                        zIndex: 5, // Lower than thead
+                                        boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)"
+                                    }}
+                                >
                                     <td className="py-3 px-4 text-left">
                                         {record.documentIdentifier}
                                     </td>
@@ -112,7 +120,7 @@ function Ultimidossierage1() {
                                     </td>
                                 </tr>
                                 {/* Content row */}
-                                <tr className="border-b border-l border-r bg-white">
+                                <tr className="border-b border-l border-r bg-white" style={{ boxShadow: '4px 3px 6px #b8b8b85c' }}>
                                     <td colSpan="4" className="py-3 px-4 text-left description-row">
                                         <strong>Description:</strong>{" "}
                                         {record.description || "-"}
@@ -129,7 +137,7 @@ function Ultimidossierage1() {
                                         )}
                                     </td>
                                 </tr>
-                                <tr style={{ height: '50px' }}></tr>
+                                <tr style={{ height: '30px' }}></tr>
                             </React.Fragment>
                         ))}
                     </tbody>

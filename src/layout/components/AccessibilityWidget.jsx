@@ -13,11 +13,11 @@ function AccessibilityWidget({
     const toggleMenu = () => setOpen(!open);
 
     return (
-        <div className="fixed bottom-4 right-4 z-50">
+        <div className="fixed bottom-4 left-4 z-50">
             {/* Floating Button */}
             <button
                 onClick={toggleMenu}
-                className="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition"
+                className="bg-gray-600 text-white px-3 py-2 rounded-full shadow-lg hover:bg-gray-700 transition"
                 aria-label="Accessibilità"
             >
                 <i className="fa-duotone fa-universal-access text-xl"></i>
