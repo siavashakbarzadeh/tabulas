@@ -49,6 +49,29 @@ function Ultimidossierage1() {
         currentPage * ITEMS_PER_PAGE
     );
 
+
+
+
+    const headerRefs = useRef([]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const stickyHeader = document.getElementById("main-sticky-header");
+            const firstIntersecting = headerRefs.current.find(
+                (el) => el && el.getBoundingClientRect().top <= 0
+            );
+
+            if (firstIntersecting) {
+                stickyHeader.style.visibility = "hidden";
+            } else {
+                stickyHeader.style.visibility = "visible";
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
     return (
         <div className="flex flex-col min-h-screen w-full">
             <div className="flex-1 bg-white rounded-2xl relative p-4">
@@ -70,7 +93,7 @@ function Ultimidossierage1() {
 
                 <table className="w-full border-collapse ">
                     <thead>
-                        <tr
+                        <tr id="main-sticky-header"
                             style={{ position: "sticky", top: 0, zIndex: 10 }}
                             className="bg-red-800 text-white"
                         >
@@ -87,13 +110,8 @@ function Ultimidossierage1() {
                             <React.Fragment key={index}>
                                 {/* Header row */}
                                 <tr
-                                    className="border-b bg-gray-100 header-row"
-                                    style={{
-                                        position: "sticky",
-                                        top: 0,
-                                        zIndex: 5, // Lower than thead
-                                        boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)"
-                                    }}
+                                    ref={(el) => headerRefs.current[index] = el}
+                                    className="bg-gray-100 header-row"
                                 >
                                     <td className="py-3 px-4 text-left">
                                         {record.documentIdentifier}
