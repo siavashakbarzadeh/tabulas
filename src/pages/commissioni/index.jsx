@@ -267,8 +267,8 @@ function CommissioniPage() {
                               </td>
                             );
                           } else if (col.id === "ultimaSeduta") {
-                            // const ultimaNode = findChildByName(rowNode, "Ultima seduta");
-                            const ultimaNode = rowSinottico?.ultimaSedutaUrl;
+                            const ultimaNode = findChildByName(rowNode, "Ultima seduta");
+                            // const fallbackUrl = rowSinottico?.ultimaSedutaUrl;
                             // Or fallback to rowSinottico?.ultimaSedutaUrl if desired
                             return (
                               <td
