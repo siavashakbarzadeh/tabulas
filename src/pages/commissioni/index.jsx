@@ -256,7 +256,7 @@ function CommissioniPage() {
                                 {linkUrl && (
                                   <span
                                     className="inline-block cursor-pointer"
-                                    onClick={() => handleOpenModalWithUrl(linkUrl)}
+                                    onClick={() => handleOpenModalWithUrl(fallbackUrl)}
                                   >
                                     <i
                                       className="fa-duotone fa-calendar-alt text-xl text-red-800"
@@ -267,7 +267,8 @@ function CommissioniPage() {
                               </td>
                             );
                           } else if (col.id === "ultimaSeduta") {
-                            const ultimaNode = findChildByName(rowNode, "Ultima seduta");
+                            // const ultimaNode = findChildByName(rowNode, "Ultima seduta");
+                            const ultimaNode = rowSinottico?.ultimaSedutaUrl;
                             // Or fallback to rowSinottico?.ultimaSedutaUrl if desired
                             return (
                               <td
