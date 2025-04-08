@@ -7,6 +7,9 @@ function CommissioniPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
 
+  // We'll store sinottico results keyed by topNode.name
+  const [sinotticoData, setSinotticoData] = useState({});
+
   // Modal state
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
@@ -17,10 +20,36 @@ function CommissioniPage() {
     fetchData();
   }, []);
 
+  // After “commissioni” data arrives, we trigger a sinottico fetch for each topNode.
+  useEffect(() => {
+    if (data?.docNodes?.length) {
+      data.docNodes.forEach((topNode) => {
+        const commName = topNode.name;
+        if (!commName) return;
+
+        // NOTE: If your back end truly requires that single-quoted format in the query,
+        // then literally use ?descTipoCommissione='NOME' as shown below:
+        axios
+          .get(
+            `https://svil-tabulas4.intra.senato.it/v1/tabulas/sinottico/?descTipoCommissione='${commName}'`
+          )
+          .then((res) => {
+            setSinotticoData((prev) => ({
+              ...prev,
+              [commName]: res.data,
+            }));
+          })
+          .catch((err) => {
+            console.error("Error fetching sinottico for", commName, err);
+          });
+      });
+    }
+  }, [data]);
+
   const fetchData = () => {
     setLoading(true);
     axios
-      .get("tabulas/mobile/commissioni")
+      .get("tabulas/mobile/commissioni") // This is your original API call
       .then((res) => {
         setData(res.data);
         setLoading(false);
@@ -31,22 +60,13 @@ function CommissioniPage() {
       });
   };
 
-  /**
-   * Opens a new tab for "Convocazioni" or day columns.
-   * (If senato.it is blocking iframes, we just open in a new window/tab.)
-   */
   const handleOpenModalWithUrl = (url) => {
     if (!url) return;
     window.open(url, "_blank", "noopener,noreferrer,width=900,height=600");
   };
 
-  /**
-   * The updated logic for "Ultima Seduta." 
-   * Instead of a new tab, it shows HTML in the same page (a React modal).
-   */
   const handleOpenUltimaSeduta = (node) => {
     if (!node) return;
-
     setModalTitle("Ultima Seduta");
 
     if (node.docContentStreamContent) {
@@ -54,7 +74,7 @@ function CommissioniPage() {
       setIsIframe(false);
       setModalContent(node.docContentStreamContent);
     } else if (node.docContentUrl) {
-      // We have a URL => load it in an iframe (note: might be blocked by X-Frame-Options)
+      // We have a URL => load it in an iframe
       setIsIframe(true);
       const iframeHtml = `<iframe 
           src="${node.docContentUrl}" 
@@ -63,7 +83,6 @@ function CommissioniPage() {
         </iframe>`;
       setModalContent(iframeHtml);
     } else {
-      // No content at all
       setIsIframe(false);
       setModalContent("Nessun contenuto disponibile.");
     }
@@ -90,7 +109,7 @@ function CommissioniPage() {
   const getCurrentWeekDays = () => {
     const days = [];
     const today = new Date();
-    // Anchor on Monday (JS: Sunday=0, Monday=1, etc.)
+    // Anchor on Monday
     const dayOfWeek = today.getDay() === 0 ? 7 : today.getDay();
     const monday = new Date(today);
     monday.setDate(today.getDate() - (dayOfWeek - 1));
@@ -103,13 +122,13 @@ function CommissioniPage() {
         weekday: "long",
         day: "numeric",
         month: "long",
+        year: "numeric",
       });
       days.push(label);
     }
     return days;
   };
 
-  // Columns
   const columns = [
     { id: "name", label: "" }, // Commission name column
     { id: "convocazioni", label: "Convocazioni" },
@@ -125,10 +144,46 @@ function CommissioniPage() {
     );
   };
 
-  // Since columns are "lunedì 20 marzo ..." we only match the first word
+  // We only match the first word to docNode child if needed
   const getDayNode = (parentDocNode, fullLabel) => {
-    const firstWord = fullLabel.split(" ")[0].toLowerCase(); // e.g. "lunedì"
+    const firstWord = fullLabel.split(" ")[0].toLowerCase();
     return findChildByName(parentDocNode, firstWord);
+  };
+
+  // For each row, find the matching sinottico item by rowName (es: "1ª Commissione permanente").
+  const getSinotticoForRow = (topNodeName, rowName) => {
+    const sinotticoList = sinotticoData[topNodeName] || [];
+    return sinotticoList.find((item) => item.nomeComm === rowName);
+  };
+
+  // Use column label (e.g. "martedì 9 aprile 2025") to find matching day in “sinoGiorni”.
+  const getSinoGiornoInfo = (sinotticoItem, targetDateStr) => {
+    if (!sinotticoItem?.sinoGiorni) return null;
+
+    const splitted = targetDateStr.split(" ");
+    if (splitted.length < 4) return null;
+    const day = splitted[1].padStart(2, "0");
+    const monthName = splitted[2].toLowerCase();
+    const year = splitted[3];
+
+    const monthMap = {
+      gennaio: "01",
+      febbraio: "02",
+      marzo: "03",
+      aprile: "04",
+      maggio: "05",
+      giugno: "06",
+      luglio: "07",
+      agosto: "08",
+      settembre: "09",
+      ottobre: "10",
+      novembre: "11",
+      dicembre: "12",
+    };
+    const mm = monthMap[monthName] || "01";
+    const formattedStr = `${day}/${mm}/${year}`; // e.g. “09/04/2025”
+
+    return sinotticoItem.sinoGiorni.find((g) => g.dataGiorno === formattedStr);
   };
 
   return (
@@ -145,7 +200,7 @@ function CommissioniPage() {
           </label>
         </form>
 
-        {/* For each first-level node => create a table */}
+        {/* For each top-level node => create a table */}
         {data?.docNodes
           ?.filter((topNode) => topNode.docNodes && topNode.docNodes.length > 0)
           .map((topNode, tableIdx) => (
@@ -153,7 +208,6 @@ function CommissioniPage() {
               key={tableIdx}
               className="border border-gray-300 rounded-md overflow-hidden mb-6"
             >
-              {/* Table Title = topNode.name */}
               <div className="bg-red-800 text-white px-4 py-2 text-lg font-semibold">
                 {topNode.name}
               </div>
@@ -162,10 +216,7 @@ function CommissioniPage() {
                 <thead>
                   <tr className="bg-gray-50 text-dark">
                     {columns.map((col, cIdx) => (
-                      <th
-                        key={cIdx}
-                        className="py-2 px-3 border text-center"
-                      >
+                      <th key={cIdx} className="py-2 px-3 border text-center">
                         {col.label}
                       </th>
                     ))}
@@ -173,115 +224,112 @@ function CommissioniPage() {
                 </thead>
                 <tbody>
                   {/* Each second-level node => row */}
-                  {topNode.docNodes.map((rowNode, rowIdx) => (
-                    <tr key={rowIdx} className="odd:bg-white even:bg-gray-50">
-                      {columns.map((col, colIdx) => {
-                        if (col.id === "name") {
-                          // Row's name
-                          return (
-                            <td
-                              key={colIdx}
-                              className="border border-gray-300 px-3 py-2 font-semibold text-sm"
-                            >
-                              {rowNode.name}
-                            </td>
-                          );
-                        } else if (col.id === "convocazioni") {
-                          // Child named "Convocazioni"
-                          const convocazioniNode = findChildByName(
-                            rowNode,
-                            "Convocazioni"
-                          );
-                          // Use a different icon for Convocazioni (like fa-calendar-alt)
-                          return (
-                            <td
-                              key={colIdx}
-                              className="border border-gray-300 px-3 py-2 text-sm text-center"
-                            >
-                              {convocazioniNode?.docContentUrl && (
-                                <span
-                                  className="inline-block cursor-pointer"
-                                  onClick={() =>
-                                    handleOpenModalWithUrl(
-                                      convocazioniNode.docContentUrl
-                                    )
-                                  }
-                                >
-                                  <i
-                                    className="fa-duotone fa-calendar-alt text-xl text-red-800"
-                                    title="Apri Convocazioni"
-                                  ></i>
-                                </span>
-                              )}
-                            </td>
-                          );
-                        } else if (col.id === "ultimaSeduta") {
-                          // Child named "Ultima seduta"
-                          const ultimaNode = findChildByName(
-                            rowNode,
-                            "Ultima seduta"
-                          );
-                          return (
-                            <td
-                              key={colIdx}
-                              className="border border-gray-300 px-3 py-2 text-sm text-center"
-                            >
-                              {ultimaNode && (
-                                <span
-                                  className="inline-block cursor-pointer"
-                                  onClick={() => handleOpenUltimaSeduta(ultimaNode)}
-                                >
-                                  <i
-                                    className="fa-duotone fa-file-alt text-xl text-red-800"
-                                    title="Ultima Seduta"
-                                  />
-                                </span>
-                              )}
-                            </td>
-                          );
-                        } else {
-                          // Day columns
-                          const dayNode = getDayNode(rowNode, col.label);
-                          if (dayNode?.docContentUrl) {
+                  {topNode.docNodes.map((rowNode, rowIdx) => {
+                    const rowSinottico = getSinotticoForRow(topNode.name, rowNode.name);
+
+                    return (
+                      <tr key={rowIdx} className="odd:bg-white even:bg-gray-50">
+                        {columns.map((col, colIdx) => {
+                          if (col.id === "name") {
+                            return (
+                              <td
+                                key={colIdx}
+                                className="border border-gray-300 px-3 py-2 font-semibold text-sm"
+                              >
+                                {rowNode.name}
+                              </td>
+                            );
+                          } else if (col.id === "convocazioni") {
+                            const convocazioniNode = findChildByName(
+                              rowNode,
+                              "Convocazioni"
+                            );
+                            // Also check sinottico for a fallback
+                            const fallbackUrl = rowSinottico?.convocazioneUrl;
+                            const linkUrl = convocazioniNode?.docContentUrl || fallbackUrl;
+
                             return (
                               <td
                                 key={colIdx}
                                 className="border border-gray-300 px-3 py-2 text-sm text-center"
                               >
-                                <span
-                                  className="inline-block cursor-pointer"
-                                  onClick={() =>
-                                    handleOpenModalWithUrl(dayNode.docContentUrl)
-                                  }
-                                >
-                                  <i
-                                    className="fas fa-file-alt text-xl"
-                                    title="Apri Documento"
-                                  ></i>
-                                </span>
+                                {linkUrl && (
+                                  <span
+                                    className="inline-block cursor-pointer"
+                                    onClick={() => handleOpenModalWithUrl(linkUrl)}
+                                  >
+                                    <i
+                                      className="fa-duotone fa-calendar-alt text-xl text-red-800"
+                                      title="Apri Convocazioni"
+                                    ></i>
+                                  </span>
+                                )}
+                              </td>
+                            );
+                          } else if (col.id === "ultimaSeduta") {
+                            const ultimaNode = findChildByName(rowNode, "Ultima seduta");
+                            // Or fallback to rowSinottico?.ultimaSedutaUrl if desired
+                            return (
+                              <td
+                                key={colIdx}
+                                className="border border-gray-300 px-3 py-2 text-sm text-center"
+                              >
+                                {ultimaNode && (
+                                  <span
+                                    className="inline-block cursor-pointer"
+                                    onClick={() => handleOpenUltimaSeduta(ultimaNode)}
+                                  >
+                                    <i
+                                      className="fa-duotone fa-file-alt text-xl text-red-800"
+                                      title="Ultima Seduta"
+                                    />
+                                  </span>
+                                )}
                               </td>
                             );
                           } else {
+                            // Day columns
+                            const dayNode = getDayNode(rowNode, col.label);
+                            const sinoDayInfo = getSinoGiornoInfo(rowSinottico, col.label);
+
                             return (
                               <td
                                 key={colIdx}
                                 className="border border-gray-300 px-3 py-2 text-sm text-center"
                               >
-                                {/* No link for that day */}
+                                {/* Show docNode link if available */}
+                                {dayNode?.docContentUrl && (
+                                  <span
+                                    className="inline-block cursor-pointer mr-2"
+                                    onClick={() => handleOpenModalWithUrl(dayNode.docContentUrl)}
+                                  >
+                                    <i
+                                      className="fas fa-file-alt text-xl"
+                                      title="Apri Documento"
+                                    ></i>
+                                  </span>
+                                )}
+                                {/* Show sinottico times if available */}
+                                {sinoDayInfo && (
+                                  <div>
+                                    <small>
+                                      {sinoDayInfo.primaConvOra} - {sinoDayInfo.ultConvOra}
+                                    </small>
+                                  </div>
+                                )}
                               </td>
                             );
                           }
-                        }
-                      })}
-                    </tr>
-                  ))}
+                        })}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
           ))}
       </div>
 
-      {/* Single Modal – used now for “Ultima Seduta” only */}
       {showModal && (
         <div
           className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
@@ -291,18 +339,11 @@ function CommissioniPage() {
             className="bg-white rounded-lg p-6 w-3/4 max-w-4xl"
             onClick={(e) => e.stopPropagation()}
           >
-
-            {/* 
-            Add maxHeight and scrolling here
-            - overflow-y-auto (Tailwind) ensures a scrollbar if content overflows
-            - maxHeight: "70vh" limits the container’s vertical size to 70% of the viewport
-          */}
             <div
               className="rich-text-content p-4 bg-gray-100 rounded overflow-y-auto"
               style={{ maxHeight: "70vh" }}
               dangerouslySetInnerHTML={{ __html: modalContent }}
             />
-
             <button
               onClick={handleCloseModal}
               className="mt-4 px-4 py-2 bg-red-600 text-white rounded"
