@@ -2,8 +2,8 @@ import { PublicClientApplication } from "@azure/msal-browser";
 
 const msalConfig = {
   auth: {
-    clientId: "16c24428-0bd3-4bc1-a192-d315f43f5bb4",
-    authority: "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+    clientId: "aa825561-377d-4414-8acc-2905cd587e98", // from user
+    authority: "https://login.microsoftonline.com/16c24428-0bd3-4bc1-a192-d315f43f5bb4",
     redirectUri: "https://tabulas.vercel.app/",
   },
   cache: {
@@ -11,6 +11,5 @@ const msalConfig = {
     storeAuthStateInCookie: true,
   },
 };
-
 
 export const msalInstance = new PublicClientApplication(msalConfig);
