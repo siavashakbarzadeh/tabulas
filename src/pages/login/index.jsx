@@ -5,19 +5,27 @@ import axios from "../../configs/axiosConfig.js";
 import { useAuth } from "../../contexts/AuthContext.jsx";
 import { toast } from "react-toastify";
 
-/**
- * Icons, images, etc.
- */
-// import LogoImage from "../../assets/svg/logo.svg";
-// import MicrosoftIcon from "../../icons/Microsoft.jsx";
-// import CheckIcon from "../../icons/Check.jsx"; // etc.
-
 function NewLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { instance, accounts } = useMsal();
-  const { login } = useAuth();
+  const { login, logout: localLogout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  /**
+   * Auto logout on page load if already logged in
+   */
+  useEffect(() => {
+    if (isAuthenticated) {
+      localLogout();
+    }
+
+    if (accounts.length > 0) {
+      instance.logoutPopup().catch((err) => {
+        console.error("MSAL logout failed:", err);
+      });
+    }
+  }, []);
 
   /**
    * Handle normal email/password login
@@ -58,11 +66,8 @@ function NewLoginPage() {
 
   /**
    * Handle Microsoft login via MSAL popup
-   * - On success, we get an ID token in `response.idToken`
-   * - Then we POST that ID token to our backend
    */
   const handleMicrosoftLogin = () => {
-    // You can define custom scopes if needed:
     const loginRequest = {
       scopes: ["api://aa825561-377d-4414-8acc-2905cd587e98/Roles.Read"],
     };
@@ -98,15 +103,6 @@ function NewLoginPage() {
       });
   };
 
-  /**
-   * Example logout from MSAL (optional)
-   */
-  const handleLogout = () => {
-    instance.logoutRedirect({
-      onRedirectNavigate: () => false,
-    });
-  };
-
   return (
     <div className="flex w-full">
       {/* Left side: login form */}
@@ -119,13 +115,14 @@ function NewLoginPage() {
           {/* Microsoft login button */}
           <div className="w-full mb-4">
             {accounts.length ? (
-              <button onClick={handleLogout}>Logout from MSAL</button>
+              <button onClick={() => instance.logoutPopup()}>
+                Logout from MSAL
+              </button>
             ) : (
               <button
                 onClick={handleMicrosoftLogin}
                 className="w-full flex justify-center items-center h-11 border border-zinc-900 rounded-md"
               >
-                {/* <MicrosoftIcon className="size-5 absolute left-4 ... " /> */}
                 <span className="font-medium text-sm">
                   Accedi con Microsoft
                 </span>
@@ -174,7 +171,10 @@ function NewLoginPage() {
                 >
                   Password
                 </label>
-                <Link to="/forgot-password" className="text-sm text-primary-900 font-medium leading-6">
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-primary-900 font-medium leading-6"
+                >
                   Hai dimenticato la password?
                 </Link>
               </div>
@@ -196,7 +196,7 @@ function NewLoginPage() {
                   className="absolute left-0 top-0 w-0 h-0 invisible peer"
                 />
                 <span className="size-4.5 flex items-center justify-center bg-gray-100 rounded-sm peer-checked:bg-primary-900 peer-checked:[&>*]:block">
-                  {/* <CheckIcon className="size-3.5 text-white hidden" /> */}
+                  {/* Custom check icon can go here */}
                 </span>
                 <span className="text-sm font-medium text-zinc-900 leading-4.5">
                   Ricordati di me
@@ -219,7 +219,7 @@ function NewLoginPage() {
 
       {/* Right side: your design/branding */}
       <div className="w-1/2 hidden lg:flex flex-col justify-center items-center bg-gradient-to-b from-[#B83D62] to-primary-900">
-        {/* ... your existing background shapes, images, etc. ... */}
+        {/* ... background/design elements go here ... */}
       </div>
     </div>
   );
