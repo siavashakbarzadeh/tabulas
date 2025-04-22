@@ -117,6 +117,9 @@ import ServicePage from "../pages/services";
 import GuidemanualiPage from "../pages/guidemanuali";
 import EbookPage from "../pages/ebook";
 import CommissioniPage from "../pages/commissioni";
+import CommissioniPermanentiPage from "../pages/commissioni/CommissioniPermanentiPage.jsx";
+import BicameraliEDelegazioniPage from "../pages/commissioni/BicameraliEDelegazioniPage.jsx";
+import GiunteEAltreComissioniPage from "../pages/commissioni/GiunteEAltreComissioniPage.jsx";
 import UltimiattiPage from "../pages/ultimiatti";
 import Ultimidossierage from "../pages/ultimdossier";
 import Ultimidossierage1 from "../pages/ultimdossier1";
@@ -156,6 +159,9 @@ function Router() {
                 <Route path="guidemanuali" element={<GuidemanualiPage />} />
                 <Route path="ebook" element={<EbookPage />} />
                 <Route path="commissioni" element={<CommissioniPage />} />
+                <Route path="commissioni-permanenti" element={<CommissioniPermanentiPage />} />
+                <Route path="giunte-e-altre-comissioni" element={<GiunteEAltreComissioniPage />} />
+                <Route path="bicamerali-e-delegazioni" element={<BicameraliEDelegazioniPage />} />
                 <Route path="ultimiatti" element={<UltimiattiPage />} />
                 <Route path="ultimdossier" element={<Ultimidossierage />} />
                 <Route path="ultimdossier1" element={<Ultimidossierage1 />} />

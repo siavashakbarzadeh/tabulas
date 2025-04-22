@@ -125,7 +125,7 @@ const Menu = [
     id: 13,
     title: "Bicamerali e delegazioni",
     icon: <i className="fa-duotone text-xl fa-user-group w-6 h-6" />,
-    link: "/giunte-e-altre-comissioni"
+    link: "/bicamerali-e-delegazioni"
   },
   {
     id: 14,
