@@ -2,7 +2,7 @@ import React from "react";
 import CommissioniPageBase from "./CommissioniPageBase";
 
 const BicameraliEDelegazioniPage = () => {
-    return <CommissioniPageBase pageTitle="Bicamerali e delegazioni" />;
+    return <CommissioniPageBase pageTitle="Bicamerali" />;
 };
 
 export default BicameraliEDelegazioniPage;

@@ -2,7 +2,7 @@ import React from "react";
 import CommissioniPageBase from "./CommissioniPageBase";
 
 const GiunteEAltreComissioniPage = () => {
-    return <CommissioniPageBase pageTitle="Giunte e altre comissioni" />;
+    return <CommissioniPageBase pageTitle="Giunte" />;
 };
 
 export default GiunteEAltreComissioniPage;
