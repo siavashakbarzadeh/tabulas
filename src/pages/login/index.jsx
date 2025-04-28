@@ -1,227 +1,158 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useMsal } from "@azure/msal-react";
-import { useEffect, useState } from "react";
-import axios from "../../configs/axiosConfig.js";
-import { useAuth } from "../../contexts/AuthContext.jsx";
+/* NewLoginPage.jsx — versione Expo */
+
+import React, { useEffect, useState } from "react";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { Link, useNavigate } from "react-router-dom";   // solo se usi React-Router v6 web-style in RN; altrimenti sostituisci
+import * as AuthSession from "expo-auth-session";
+import * as WebBrowser from "expo-web-browser";
+import axios from "../../configs/axiosConfig";
+import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
+import msalConfig from "../../configs/msalConfig";   // se usi MSAL per il login Microsoft
+
+// chiude la web-view di login al ritorno
+
+const CLIENT_ID = msalConfig.auth.clientId;
+const AUTHORITY = msalConfig.auth.authority;
+const TENANT_ID = AUTHORITY.split("/").at(-1);
+const DISCOVERY = `${AUTHORITY}/v2.0`;
+const SCOPES = ["openid", "profile", "email"];
+const REDIRECT_SCHEME = "tabulas";
+WebBrowser.maybeCompleteAuthSession();                      // deve corrispondere a app.json > scheme
 
 function NewLoginPage() {
+  /* stato formulario email/password */
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { instance, accounts } = useMsal();
+
+  /* auth context */
   const { login, logout: localLogout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  /**
-   * Auto logout on page load if already logged in
-   */
+  /* ───────────────────────── 1. AUTO-LOGOUT ───────────────────────── */
   useEffect(() => {
-    if (isAuthenticated) {
-      localLogout();
-    }
-
-    if (accounts.length > 0) {
-      instance.logoutPopup().catch((err) => {
-        console.error("MSAL logout failed:", err);
-      });
-    }
+    if (isAuthenticated) localLogout();
   }, []);
 
-  /**
-   * Handle normal email/password login
-   */
-  const handleLogin = () => {
-    axios
-      .post("login", {
-        email,
-        password,
-      })
-      .then((response) => {
-        login(response.data.data.token);
-        navigate("/");
-      })
-      .catch((error) => {
-        if (error.response?.status === 422) {
-          const responseErrors = error.response.data.errors;
-          const errors = [];
-          Object.keys(responseErrors).forEach((key) => {
-            const item = responseErrors[key];
-            if (item && item.length) {
-              errors.push(item[0]);
-            }
-          });
+  /* ───────────────────────── 2. OAUTH REQUEST SETUP ───────────────────────── */
+  const redirectUri = AuthSession.makeRedirectUri({
+    scheme: REDIRECT_SCHEME,          // myapp://redirect
+    // useProxy: AuthSession.isAvailableAsync() dev proxy -> opzionale
+  });
 
-          toast.error(errors.join(" "), {
-            position: "bottom-right",
-            hideProgressBar: true,
-          });
-        } else {
-          toast.error(error.response?.data?.data?.message || "Login failed", {
-            position: "bottom-right",
-            hideProgressBar: true,
-          });
-        }
-      });
-  };
+  const [request, response, promptAsync] = AuthSession.useAuthRequest(
+    {
+      clientId: CLIENT_ID,
+      scopes: [...SCOPES, "offline_access"],
+      redirectUri,
+      responseType: AuthSession.ResponseType.Code,   // code + PKCE
+    },
+    {
+      authorizationEndpoint: `${DISCOVERY}/authorize`,
+      tokenEndpoint: `${DISCOVERY}/token`
+    }
+  );
 
-  /**
-   * Handle Microsoft login via MSAL popup
-   */
-  const handleMicrosoftLogin = () => {
-    const loginRequest = {
-      scopes: ["api://aa825561-377d-4414-8acc-2905cd587e98/Roles.Read"],
-    };
+  /* ───────────────────────── 3. GESTIONE RISPOSTA OAUTH ───────────────────────── */
+  useEffect(() => {
+    (async () => {
+      if (response?.type !== "success") return;
 
-    instance
-      .loginPopup(loginRequest)
-      .then((response) => {
-        const idToken = response.idToken;
-        axios
-          .post("/login/microsoft", {
-            id_token: idToken,
-          })
-          .then((res) => {
-            login(res.data.data.token);
-            navigate("/");
-          })
-          .catch((err) => {
-            toast.error(
-              err.response?.data?.data?.message || "Microsoft login failed",
-              {
-                position: "bottom-right",
-                hideProgressBar: true,
-              }
-            );
-          });
-      })
-      .catch((error) => {
-        console.error("MSAL loginPopup error", error);
-        toast.error("Could not sign in with Microsoft.", {
-          position: "bottom-right",
-          hideProgressBar: true,
+      try {
+        /* step A: recupero codice */
+        const { code } = response.params;
+
+        /* step B: exchange code→token con Azure (PKCE) */
+        const { access_token, id_token } = await AuthSession.exchangeCodeAsync(
+          {
+            clientId: CLIENT_ID,
+            code,
+            redirectUri,
+            scopes: SCOPES.join(" "),
+            extraParams: { code_verifier: request.codeVerifier }
+          },
+          { tokenEndpoint: `${DISCOVERY}/token` }
+        );
+
+        /* step C: invio id_token (o access_token) al backend */
+        const res = await axios.post("/login/microsoft", {
+          id_token,
         });
+
+        login(res.data.data.token);          // salvo token app
+        navigate("/");                       // redirect home
+      } catch (err) {
+        console.error("Token exchange failed", err);
+        toast.error("Microsoft login failed", { position: "bottom-right", hideProgressBar: true });
+      }
+    })();
+  }, [response]);
+
+  /* ───────────────────────── 4. LOGIN EMAIL/PASSWORD ───────────────────────── */
+  const handlePasswordLogin = () => {
+    axios.post("login", { email, password })
+      .then(res => { login(res.data.data.token); navigate("/"); })
+      .catch(err => {
+        const msg =
+          err.response?.status === 422
+            ? Object.values(err.response.data.errors).flat().join(" ")
+            : err.response?.data?.data?.message || "Login failed";
+        toast.error(msg, { position: "bottom-right", hideProgressBar: true });
       });
   };
 
+  /* ───────────────────────── 5. RENDER ───────────────────────── */
   return (
-    <div className="flex w-full">
-      {/* Left side: login form */}
-      <div className="w-full lg:w-1/2 bg-white flex items-center">
-        <div className="w-full md:w-10/12 flex flex-col mx-auto py-4 md:py-2 px-2 md:px-0">
-          <div className="w-full flex justify-center">
-            {/* place your logo or branding here */}
-          </div>
+    <View style={{ flex: 1, flexDirection: "row" }}>
+      {/* sinistra: form */}
+      <View style={{ flex: 1, padding: 24, justifyContent: "center" }}>
+        {/* pulsante Microsoft */}
+        <TouchableOpacity
+          disabled={!request}
+          onPress={() => promptAsync({ useProxy: false })}   // usa proxy true in dev se vuoi
+          style={{ height: 44, borderWidth: 1, borderColor: "#000", alignItems: "center", justifyContent: "center", marginBottom: 16 }}
+        >
+          <Text>Accedi con Microsoft</Text>
+        </TouchableOpacity>
 
-          {/* Microsoft login button */}
-          <div className="w-full mb-4">
-            {accounts.length ? (
-              <button onClick={() => instance.logoutPopup()}>
-                Logout from MSAL
-              </button>
-            ) : (
-              <button
-                onClick={handleMicrosoftLogin}
-                className="w-full flex justify-center items-center h-11 border border-zinc-900 rounded-md"
-              >
-                <span className="font-medium text-sm">
-                  Accedi con Microsoft
-                </span>
-              </button>
-            )}
-          </div>
+        {/* separatore */}
+        <View style={{ alignItems: "center", marginVertical: 8 }}>
+          <Text>— Oppure —</Text>
+        </View>
 
-          <div className="w-full relative h-6 before:content-[''] before:h-px before:absolute before:left-0 before:right-0 before:top-1/2 before:-translate-y-1/2 before:bg-gray-100">
-            <span className="px-3 bg-white text-sm font-semibold text-zinc-900 absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
-              O
-            </span>
-          </div>
+        {/* email/password */}
+        <TextInput
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Email"
+          style={{ height: 44, borderWidth: 1, marginBottom: 12, paddingHorizontal: 8 }}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <TextInput
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Password"
+          style={{ height: 44, borderWidth: 1, marginBottom: 12, paddingHorizontal: 8 }}
+          secureTextEntry
+        />
 
-          {/* Email/password login form */}
-          <div className="mt-5">
-            <div className="text-xl font-medium leading-6">ACCEDI</div>
-            <p className="leading-7 text-zinc-700 font-light mt-2">
-              Puoi effettuare l'accesso qui con il tuo nome utente e password
-              oppure utilizzare l'applicazione Microsoft.
-            </p>
-          </div>
+        <TouchableOpacity
+          onPress={handlePasswordLogin}
+          style={{ height: 46, backgroundColor: "#B83D62", alignItems: "center", justifyContent: "center", borderRadius: 4 }}
+        >
+          <Text style={{ color: "#fff", fontWeight: "bold" }}>ACCEDI</Text>
+        </TouchableOpacity>
 
-          <div className="w-full space-y-5 mt-8">
-            <div className="w-full flex flex-col">
-              <label
-                htmlFor="email"
-                className="text-sm text-zinc-900 font-medium mb-1"
-              >
-                La tua email o il tuo codice cliente
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-12 px-4 bg-gray-100 text-sm border-none outline-none"
-                placeholder="Email"
-              />
-            </div>
+        {/* link “hai dimenticato la password?” */}
+        <Link to="/forgot-password">
+          <Text style={{ marginTop: 12, color: "#B83D62" }}>Hai dimenticato la password?</Text>
+        </Link>
+      </View>
 
-            <div className="w-full flex flex-col">
-              <div className="w-full flex justify-between mb-1">
-                <label
-                  htmlFor="password"
-                  className="text-sm text-zinc-900 font-medium leading-6"
-                >
-                  Password
-                </label>
-                <Link
-                  to="/forgot-password"
-                  className="text-sm text-primary-900 font-medium leading-6"
-                >
-                  Hai dimenticato la password?
-                </Link>
-              </div>
-              <input
-                type="password"
-                id="password"
-                className="h-12 px-4 bg-gray-100 text-sm border-none outline-none"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-
-            {/* "Remember me" checkbox */}
-            <div className="w-full flex">
-              <label className="flex relative gap-2">
-                <input
-                  type="checkbox"
-                  className="absolute left-0 top-0 w-0 h-0 invisible peer"
-                />
-                <span className="size-4.5 flex items-center justify-center bg-gray-100 rounded-sm peer-checked:bg-primary-900 peer-checked:[&>*]:block">
-                  {/* Custom check icon can go here */}
-                </span>
-                <span className="text-sm font-medium text-zinc-900 leading-4.5">
-                  Ricordati di me
-                </span>
-              </label>
-            </div>
-
-            {/* Submit for normal login */}
-            <div className="w-full">
-              <button
-                onClick={handleLogin}
-                className="w-full h-12 bg-primary-900 text-white flex justify-center items-center rounded-lg hover:bg-primary-950"
-              >
-                ACCEDI
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Right side: your design/branding */}
-      <div className="w-1/2 hidden lg:flex flex-col justify-center items-center bg-gradient-to-b from-[#B83D62] to-primary-900">
-        {/* ... background/design elements go here ... */}
-      </div>
-    </div>
+      {/* destra: grafica (solo tablet/web) */}
+      {/* in RN puoi omettere o usare Platform.select */}
+    </View>
   );
 }
 
