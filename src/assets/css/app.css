@@ -155,3 +155,45 @@
 .wcag-aa .description-row::before {
   background-color: #000 !important;
 }
+
+@media (max-width: 639px) {
+
+  /* Tailwind “sm” breakpoint */
+  /* hide thead; we’ll label cells with :before instead */
+  thead {
+    display: none;
+  }
+
+  tr {
+    /* each data row becomes a block card */
+    display: grid;
+    grid-template-columns: 1fr;
+    /* single column */
+    margin-bottom: .75rem;
+    /* space between cards */
+    border: 1px solid #d1d5db;
+    /* same gray-300 you already use */
+    border-radius: .5rem;
+    /* rounded-lg */
+    background: #fff;
+  }
+
+  /* turn every table cell into a row of the card */
+  td {
+    display: flex;
+    padding: .5rem .75rem;
+    border: 0;
+    /* remove cell borders */
+  }
+
+  /* add the header label before each cell’s text */
+  td[data-label]::before {
+    content: attr(data-label) " : ";
+    font-weight: 600;
+    /* semibold */
+    flex: 0 0 45%;
+    /* label width */
+    color: #6b7280;
+    /* gray-500 */
+  }
+}
