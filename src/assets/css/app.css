@@ -196,4 +196,8 @@
     color: #6b7280;
     /* gray-500 */
   }
+
+  .description-row {
+    display: block;
+  }
 }
