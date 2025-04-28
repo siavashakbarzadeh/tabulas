@@ -11,6 +11,9 @@ function DashboardLayout({ ...props }) {
   const [largeText, setLargeText] = useState(false);
   const [highContrast, setHighContrast] = useState(false);
 
+  const toggleSidebarClickHandler = () => {
+    setIsSidebarActive((prevState) => !prevState);
+  };
 
   // On mount, load stored preferences
   useEffect(() => {
