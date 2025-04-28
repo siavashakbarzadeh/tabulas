@@ -40,18 +40,7 @@ function DashboardLayout({ ...props }) {
         ${largeText ? "wcag-aa-large-text" : ""}
       `}
     >
-      {/* Background overlay when sidebar is open (mobile only) */}
-      {isSidebarActive && (
-        <div className="absolute top-4 right-4 z-30 lg:hidden">
-          <button
-            onClick={() => setIsSidebarActive(false)}
-            className="text-white text-3xl font-bold"
-            aria-label="Close menu"
-          >
-            &times;
-          </button>
-        </div>
-      )}
+
 
 
       {/* Sidebar */}
