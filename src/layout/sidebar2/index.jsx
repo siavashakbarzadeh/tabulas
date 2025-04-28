@@ -1,9 +1,15 @@
 import { Link } from "react-router-dom";
 import Menu2 from "./Menu";
+import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 
 function Sidebar2({ isSidebarActive = false }) {
   const { user } = useAuth();
+  const [isSidebarActive, setIsSidebarActive] = useState(false);
+
+  const toggleSidebarClickHandler = () => {
+    setIsSidebarActive((prevState) => !prevState);
+  };
 
   return (
     /* bottom-12 active */
@@ -11,6 +17,18 @@ function Sidebar2({ isSidebarActive = false }) {
       className={`w-auto lg:w-68 pt-4 pb-16 lg:pb-4 pl-4 pr-2 fixed left-0 top-auto lg:top-0 right-0 lg:right-auto bottom-0 z-10 bg-primary-900 transition-transform lg:transition-none duration-300 ${isSidebarActive ? "translate-y-0" : "translate-y-full"
         } lg:translate-y-0`}
     >
+      {isSidebarActive && (
+        <div className="absolute top-4 right-4 z-30 lg:hidden">
+          <button
+            onClick={() => setIsSidebarActive(false)}
+            className="text-white text-3xl font-bold"
+            aria-label="Close menu"
+            style={{ position: "absolute", right: "25px" }}
+          >
+            &times;
+          </button>
+        </div>
+      )}
       <Link className="flex gap-2 select-none">
         <div className="w-11 h-11 flex justify-center items-center flex-shrink-0 rounded-xl bg-white">
           {(user && user.email) && (
