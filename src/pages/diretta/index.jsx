@@ -27,7 +27,7 @@ function DirettaPage() {
                     {/* Centered container for the live video */}
                     <div className="flex w-full">
                         <div className="p-4 flex-1 flex justify-center items-start">
-                            <div className="gap-4 w-8/12 lg:w-8/12 p-4 bg-gray-100 rounded-xl drop-shadow-lg absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <div className="gap-4 w-11/12 sm:w-10/12 md:w-9/12 lg:w-8/12 p-4 bg-gray-100 rounded-xl drop-shadow-lg absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                 <div className="w-full block">
                                     <div className="w-full aspect-video relative">
                                         <iframe
@@ -35,8 +35,9 @@ function DirettaPage() {
                                             frameBorder="0"
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                             className="w-full h-full object-contain"
+                                            allowFullScreen
                                         ></iframe>
-                                        <span className="bg-primary-900 text-white leading-6 px-2 absolute left-2 top-2">
+                                        <span className="bg-primary-900 text-white leading-6 px-2 absolute left-2 top-2 rounded">
                                             Live
                                         </span>
                                     </div>
