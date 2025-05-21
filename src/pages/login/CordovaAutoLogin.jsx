@@ -7,9 +7,9 @@ const CordovaAutoLogin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const isCordova = typeof window !== "undefined" && window.cordova;
+    // const isCordova = typeof window !== "undefined" && window.cordova;
 
-    if (!isCordova) return;
+    // if (!isCordova) return;
 
     document.addEventListener(
       "deviceready",
