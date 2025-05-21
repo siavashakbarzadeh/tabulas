@@ -5,7 +5,7 @@ import CordovaAutoLogin from "./pages/login/CordovaAutoLogin.jsx";
 
 function App() {
     return <AuthProvider>
-        <CordovaAutoLogin/>
+        {/* <CordovaAutoLogin/> */}
         <Router/>
     </AuthProvider>;
 }

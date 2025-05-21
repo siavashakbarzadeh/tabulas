@@ -7,36 +7,44 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const AUTH_TOKEN_STORAGE_KEY = "auth-token";
 
+  // useEffect(() => {
+  //   if (localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)) {
+  //     creadetioalUser();
+  //   }
+  // }, []);
   useEffect(() => {
     const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
-    if (token) {
-      const isCordova = typeof window !== "undefined" && window.cordova;
   
-      if (isCordova) {
-        // Fake user for Cordova on reload
-        setUser({
-          name: "Cordova Dev User",
-          email: "dev@mobile.app",
-          roles: ["admin"],
-          id: 9999,
-        });
-      } else {
-        creadetioalUser();
-      }
+    if (!token) {
+      // Always fake-login for now
+      const fakeToken = "dev-token";
+      const fakeUser = {
+        name: "Cordova Dev User",
+        email: "dev@mobile.app",
+        roles: ["admin"],
+        id: 9999,
+      };
+  
+      localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, fakeToken);
+      setUser(fakeUser);
+    } else {
+      // If a token exists, assume already logged in
+      const fakeUser = {
+        name: "Cordova Dev User",
+        email: "dev@mobile.app",
+        roles: ["admin"],
+        id: 9999,
+      };
+  
+      setUser(fakeUser);
     }
   }, []);
 
-  const login = (token, fakeUser = null) => {
+  const login = (token) => {
     localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
-  
-    if (fakeUser) {
-      // Directly set user if passed (Cordova or mock login)
-      setUser(fakeUser);
-    } else {
-      // Normal login – fetch from backend
-      creadetioalUser();
-    }
+    creadetioalUser();
   };
+
   const creadetioalUser = async () => {
     axios.get("/user").then((response) => {
       setUser(response.data.data.user);
