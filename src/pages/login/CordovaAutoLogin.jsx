@@ -7,13 +7,6 @@ const CordovaAutoLogin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // const isCordova = typeof window !== "undefined" && window.cordova;
-
-    // if (!isCordova) return;
-
-    document.addEventListener(
-      "deviceready",
-      () => {
         const fakeToken = "dev-token";
         const fakeUser = {
           name: "Cordova Dev User",
@@ -27,9 +20,7 @@ const CordovaAutoLogin = () => {
       },
       { once: true }
     );
-  }, []);
 
-  return null;
 };
 
 export default CordovaAutoLogin;
