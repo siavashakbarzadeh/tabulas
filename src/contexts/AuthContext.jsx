@@ -8,16 +8,35 @@ export const AuthProvider = ({ children }) => {
   const AUTH_TOKEN_STORAGE_KEY = "auth-token";
 
   useEffect(() => {
-    if (localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)) {
-      creadetioalUser();
+    const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
+    if (token) {
+      const isCordova = typeof window !== "undefined" && window.cordova;
+  
+      if (isCordova) {
+        // Fake user for Cordova on reload
+        setUser({
+          name: "Cordova Dev User",
+          email: "dev@mobile.app",
+          roles: ["admin"],
+          id: 9999,
+        });
+      } else {
+        creadetioalUser();
+      }
     }
   }, []);
 
-  const login = (token) => {
+  const login = (token, fakeUser = null) => {
     localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
-    creadetioalUser();
+  
+    if (fakeUser) {
+      // Directly set user if passed (Cordova or mock login)
+      setUser(fakeUser);
+    } else {
+      // Normal login – fetch from backend
+      creadetioalUser();
+    }
   };
-
   const creadetioalUser = async () => {
     axios.get("/user").then((response) => {
       setUser(response.data.data.user);
