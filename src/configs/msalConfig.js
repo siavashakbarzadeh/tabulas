@@ -1,6 +1,7 @@
 import { PublicClientApplication } from "@azure/msal-browser";
 
 const isCordova = typeof window !== "undefined" && window.cordova;
+console.log(isCordova);
 
 const msalConfig = {
   auth: {
