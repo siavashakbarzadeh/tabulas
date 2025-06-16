@@ -12,33 +12,6 @@ export const AuthProvider = ({ children }) => {
       creadetioalUser();
     }
   }, []);
-  // useEffect(() => {
-  //   const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
-  
-  //   if (!token) {
-  //     // Always fake-login for now
-  //     const fakeToken = "dev-token";
-  //     const fakeUser = {
-  //       name: "Cordova Dev User",
-  //       email: "dev@mobile.app",
-  //       roles: ["admin"],
-  //       id: 9999,
-  //     };
-  
-  //     localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, fakeToken);
-  //     setUser(fakeUser);
-  //   } else {
-  //     // If a token exists, assume already logged in
-  //     const fakeUser = {
-  //       name: "Cordova Dev User",
-  //       email: "dev@mobile.app",
-  //       roles: ["admin"],
-  //       id: 9999,
-  //     };
-  
-  //     setUser(fakeUser);
-  //   }
-  // }, []);
 
   const login = (token) => {
     localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
