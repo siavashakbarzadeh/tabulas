@@ -41,7 +41,6 @@
     "react-dropzone": "^14.2.10",
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.53.1",
-    "react-native-web": "^0.20.0",
     "react-popper": "^2.3.0",
     "react-router-dom": "^6.27.0",
     "react-toastify": "^11.0.3",
