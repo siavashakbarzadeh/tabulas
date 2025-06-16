@@ -96,7 +96,7 @@ function NewLoginPage() {
       })
       .catch((error) => {
         console.error("MSAL loginPopup error", error);
-        toast.error("Could not sign in with Microsoft.", {
+        toast.error("Could not sign in with Microsoft.".error, {
           position: "bottom-right",
           hideProgressBar: true,
         });
