@@ -43,7 +43,7 @@ document.body.innerHTML = `
     <h2>Login Successful</h2>
     <p style="word-break:break-all; font-size:14px; margin:1rem 0;">
       <strong>Token:</strong><br>
-      <span id="token">${token}</span>
+      <span id="token">${response.data.data.token}</span>
     </p>
     <button id="copyBtn" style="padding:0.5rem 1rem; font-size:16px;">
       Copy to Clipboard
