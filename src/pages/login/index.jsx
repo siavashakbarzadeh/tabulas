@@ -37,14 +37,14 @@ function NewLoginPage() {
         password,
       })
       .then((response) => {
-        if (window.innerWidth < 768) {
-          // 👉 Mobile – likely opened from React Native
-          window.location.href = `tabulas://auth?token=${encodeURIComponent(response.data.data.token)}`;
-        } else {
+        // if (window.innerWidth < 768) {
+        //   // 👉 Mobile – likely opened from React Native
+        //   window.location.href = `tabulas://auth?token=${encodeURIComponent(response.data.data.token)}`;
+        // } else {
           // 👉 Desktop – use normal React Router navigation
           login(response.data.data.token);
           navigate("/");
-        }
+        // }
       })
       .catch((error) => {
         if (error.response?.status === 422) {
