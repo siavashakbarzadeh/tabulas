@@ -2,57 +2,59 @@ import { createContext, useContext, useEffect, useState } from "react";
 import axios from "../configs/axiosConfig";
 
 const AuthContext = createContext();
+const AUTH_TOKEN_STORAGE_KEY = "auth-token";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const AUTH_TOKEN_STORAGE_KEY = "auth-token";
+
+  const isWeb = typeof window !== "undefined";
 
   useEffect(() => {
-    if (localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)) {
-      creadetioalUser();
+    // Desktop web login
+    if (isWeb && localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)) {
+      credentialUser();
+    }
+
+    // Mobile app: Listen for token from React Native WebView
+    if (isWeb) {
+      window.addEventListener("message", receiveTokenFromApp);
+      return () => window.removeEventListener("message", receiveTokenFromApp);
     }
   }, []);
-  // useEffect(() => {
-  //   const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
-  
-  //   if (!token) {
-  //     // Always fake-login for now
-  //     const fakeToken = "dev-token";
-  //     const fakeUser = {
-  //       name: "Cordova Dev User",
-  //       email: "dev@mobile.app",
-  //       roles: ["admin"],
-  //       id: 9999,
-  //     };
-  
-  //     localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, fakeToken);
-  //     setUser(fakeUser);
-  //   } else {
-  //     // If a token exists, assume already logged in
-  //     const fakeUser = {
-  //       name: "Cordova Dev User",
-  //       email: "dev@mobile.app",
-  //       roles: ["admin"],
-  //       id: 9999,
-  //     };
-  
-  //     setUser(fakeUser);
-  //   }
-  // }, []);
 
-  const login = (token) => {
-    localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
-    creadetioalUser();
+  const receiveTokenFromApp = (event) => {
+    try {
+      const { token } = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+      if (token) {
+        login(token);
+      }
+    } catch (err) {
+      console.warn("Invalid token message from app", err);
+    }
   };
 
-  const creadetioalUser = async () => {
-    axios.get("/user").then((response) => {
-      setUser(response.data.data.user);
-    });
+  const login = (token) => {
+    if (isWeb) {
+      localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
+    }
+    credentialUser();
+  };
+
+  const credentialUser = () => {
+    axios
+      .get("/user")
+      .then((response) => {
+        setUser(response.data.data.user);
+      })
+      .catch(() => {
+        logout(); // optional: cleanup on error
+      });
   };
 
   const logout = () => {
-    localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
+    if (isWeb) {
+      localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
+    }
     setUser(null);
   };
 

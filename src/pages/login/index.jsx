@@ -71,18 +71,28 @@ function NewLoginPage() {
     const loginRequest = {
       scopes: ["api://aa825561-377d-4414-8acc-2905cd587e98/Roles.Read"],
     };
-
+  
     instance
       .loginPopup(loginRequest)
       .then((response) => {
         const idToken = response.idToken;
+  
         axios
           .post("/login/microsoft", {
             id_token: idToken,
           })
           .then((res) => {
-            login(res.data.data.token);
-            navigate("/");
+            const appToken = res.data.data.token;
+  
+            // 👉 Redirect to deep link if running outside of the app (e.g., mobile browser)
+            if (window.location.href.includes("tabulas.vercel.app")) {
+              // Use custom deep link to return to React Native app
+              window.location.href = `tabulas://auth?token=${encodeURIComponent(appToken)}`;
+            } else {
+              // Fallback: this is a browser user, navigate as usual
+              login(appToken);
+              navigate("/");
+            }
           })
           .catch((err) => {
             toast.error(
@@ -96,12 +106,13 @@ function NewLoginPage() {
       })
       .catch((error) => {
         console.error("MSAL loginPopup error", error);
-        toast.error("Could not sign in with Microsoft.".error, {
+        toast.error("Could not sign in with Microsoft.", {
           position: "bottom-right",
           hideProgressBar: true,
         });
       });
   };
+  
 
   return (
     <div className="flex w-full">
