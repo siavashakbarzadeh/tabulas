@@ -37,20 +37,8 @@ function NewLoginPage() {
         password,
       })
       .then((response) => {
-        
-        const token = response.data.data.token;
-
-        // Detect if we're in the mobile app (e.g., opened from React Native)
-        const isMobileDeepLink = window.location.href.includes("tabulas.vercel.app/login");
-    
-        if (isMobileDeepLink && window.location.href.startsWith("https://tabulas.vercel.app")) {
-          // 👉 Redirect to React Native deep link
-          window.location.href = `tabulas://auth?token=${encodeURIComponent(token)}`;
-        } else {
-          // 👉 Normal web flow (desktop or standalone browser)
-          login(token);
-          navigate("/");
-        }
+        login(response.data.data.token);
+        navigate("/");
       })
       .catch((error) => {
         if (error.response?.status === 422) {
