@@ -46,7 +46,7 @@ function UltimiattiPage() {
     <div className="flex flex-col min-h-screen w-full">
       <div className="flex-1 bg-white rounded-2xl relative p-4">
         {/* Search Bar (not currently filtering anything) */}
-        <form className="w-full mb-4">
+        <form className="w-full mb-4 dm-mt-8">
           <label className="w-full block relative">
             <input
               type="text"

@@ -9,7 +9,7 @@ function DirettaPage() {
                 {/* Main white container */}
                 <div className="flex-1 bg-white rounded-2xl relative p-4">
                     {/* Full-width Search Bar */}
-                    <form className="w-full mb-4">
+                    <form className="w-full mb-4 dm-mt-8">
                         <label className="w-full block relative before:w-px before:h-2/3 before:bg-neutral-300 before:absolute before:left-14 before:top-1/2 before:-translate-y-1/2">
                             <input
                                 type="text"

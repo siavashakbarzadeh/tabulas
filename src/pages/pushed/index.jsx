@@ -47,7 +47,7 @@ export default function PushedMessagesPage() {
     return (
         <div className="min-h-screen bg-white p-4 w-full">
             {/* Full-width Search Bar */}
-            <form className="w-full mx-auto mb-6">
+            <form className="w-full mx-auto mb-6 dm-mt-8">
                 <label className="relative w-full flex items-center bg-gray-100 border border-gray-200 rounded-xl px-4">
                     <img src={SearchIcon} alt="Search" className="w-6 h-6 mr-2" />
                     <input

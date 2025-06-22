@@ -30,7 +30,7 @@ function WebTvPage() {
   return (
     <>
       <div className="w-full bg-white rounded-tl-none lg:rounded-tl-2xl rounded-tr-none lg:rounded-tr-2xl rounded-bl-2xl rounded-br-2xl relative px-4 pt-4 pb-13">
-        <form className="w-full">
+        <form className="w-full dm-mt-8">
           <label className="w-full block relative before:w-px before:h-2/3 before:bg-neutral-300 before:absolute before:left-14 before:top-1/2 before:-translate-y-1/2">
             <input
               type="text"

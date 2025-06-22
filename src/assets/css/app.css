@@ -200,5 +200,12 @@
   .description-row {
     display: block;
   }
-  
+
+/* mobile-only “dm-mt-8” — 40 px top margin */
+@media (max-width: 767.98px) {
+  .dm-mt-8 {
+    margin-top: 40px !important;   /* force if needed */
+  }
+}
+
 }

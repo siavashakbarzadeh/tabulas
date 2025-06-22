@@ -41,7 +41,7 @@ function GuidemanualiPage() {
   return (
     <div className="min-h-screen bg-white p-4 md:p-8 w-full">
       {/* Full-width search bar */}
-      <form className="w-full mx-auto mb-6">
+      <form className="w-full mx-auto mb-6 dm-mt-8">
         <label className="relative w-full flex items-center bg-gray-100 border border-gray-200 rounded-xl px-4">
           <img src={SearchIcon} alt="Search" className="w-6 h-6 mr-2" />
           <input
