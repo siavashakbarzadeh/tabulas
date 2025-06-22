@@ -37,25 +37,14 @@ function NewLoginPage() {
         password,
       })
       .then((response) => {
-// Replace redirect with UI display
-document.body.innerHTML = `
-  <div style="padding:2rem; font-family:sans-serif; text-align:center;">
-    <h2>Login Successful</h2>
-    <p style="word-break:break-all; font-size:14px; margin:1rem 0;">
-      <strong>Token:</strong><br>
-      <span id="token">${response.data.data.token}</span>
-    </p>
-    <button id="copyBtn" style="padding:0.5rem 1rem; font-size:16px;">
-      Copy to Clipboard
-    </button>
-  </div>
-`;
-
-document.getElementById("copyBtn").onclick = () => {
-  navigator.clipboard.writeText(token).then(() => {
-    alert("Token copied! Open the Tabulas app.");
-  });
-};
+        if (window.innerWidth < 768) {
+          // 👉 Mobile – likely opened from React Native
+          window.location.href = `/export-storage`;
+        } else {
+          // 👉 Desktop – use normal React Router navigation
+          login(response.data.data.token);
+          navigate("/");
+        }
       })
       .catch((error) => {
         if (error.response?.status === 422) {
