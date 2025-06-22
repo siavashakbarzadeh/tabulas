@@ -37,12 +37,14 @@ function NewLoginPage() {
         password,
       })
       .then((response) => {
+        login(response.data.data.token);
+
         if (window.innerWidth < 768) {
           // 👉 Mobile – likely opened from React Native
+
           window.location.href = `/export-storage`;
         } else {
           // 👉 Desktop – use normal React Router navigation
-          login(response.data.data.token);
           navigate("/");
         }
       })
