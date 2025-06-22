@@ -57,7 +57,7 @@ function DashboardLayout({ ...props }) {
       </div>
 
       {/* Mobile bottom bar */}
-      <div className="w-full h-12 flex lg:hidden fixed bottom-0 inset-x-0 bg-primary-900 z-20">
+      <div className="w-full dm-h-24 flex lg:hidden fixed bottom-0 inset-x-0 bg-primary-900 z-20">
         <div className="w-1/2 flex items-center justify-center">
           <User className="w-6 h-6" />
         </div>

@@ -206,6 +206,14 @@
   .dm-mt-8 {
     margin-top: 40px !important;   /* force if needed */
   }
+  .dm-h-24{
+    height: 5rem !important;
+    padding-bottom: 15px !important ;
+  }
+  .dm-bottom-6rem{
+    bottom: 6rem !important;
+  }
+
 }
 
 }
