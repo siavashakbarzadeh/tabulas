@@ -213,7 +213,19 @@
   .dm-bottom-6rem{
     bottom: 6rem !important;
   }
+  .px-5-5 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 
+  .py-4-4{
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+  }
+
+  .bottom-16-16{
+    bottom: 5.9rem;
+  }
 }
 
 }
