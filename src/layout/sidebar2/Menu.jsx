@@ -190,79 +190,84 @@ function Menu2() {
     setActiveMain((prev) => (prev === id ? null : id));
     setActiveSub(null);
   };
+/* ...inside Menu2() */
 
-  return (
-    <ul className="w-full mt-4">
-      {Menu.map((item) => {
-        const isMainOpen = activeMain === item.id;
-        const hasSubmenu = !!item.subMenu;
+const closeMenu = () => {
+  setActiveMain(null);   // collapse the currently expanded section
+  setActiveSub(null);    // clear the highlighted sub-item
+};
 
-        return (
-          <li key={item.id} className="w-full">
-            {hasSubmenu ? (
-              <div
-                onClick={toggleMenuHandler(item.id)}
-                className={`w-full h-10 flex items-center space-x-2 px-2 text-sm cursor-pointer ${isMainOpen
+return (
+  <ul className="w-full mt-4">
+    {Menu.map((item) => {
+      const isMainOpen = activeMain === item.id;
+      const hasSubmenu = !!item.subMenu;
+
+      return (
+        <li key={item.id} className="w-full">
+          {/* ───── Main item ───── */}
+          {hasSubmenu ? (
+            <div
+              onClick={toggleMenuHandler(item.id)}
+              className={`w-full h-10 flex items-center space-x-2 px-2 text-sm cursor-pointer ${
+                isMainOpen
                   ? "bg-white text-red-700 rounded-md hover:text-red-600"
                   : "text-white hover:text-white/80"
-                  }`}
-              >
-                {item.icon}
-                <span>{item.title}</span>
-                <ArraowDownIcon
-                  className={`w-2.5 transition-transform duration-150 ${isMainOpen ? "" : "-rotate-90"
-                    }`}
-                />
-              </div>
-            ) : (
-              <Link
-                to={item.link}
-                onClick={() => {
-                  setActiveMain(item.id);
-                  setActiveSub(null);
-                }}
-                className={`w-full h-10 flex items-center space-x-2 px-2 text-sm cursor-pointer ${activeMain === item.id
+              }`}
+            >
+              {item.icon}
+              <span>{item.title}</span>
+              <ArraowDownIcon
+                className={`w-2.5 transition-transform duration-150 ${
+                  isMainOpen ? "" : "-rotate-90"
+                }`}
+              />
+            </div>
+          ) : (
+            <Link
+              to={item.link}
+              onClick={closeMenu}          {/* <── collapse after click */}
+              className={`w-full h-10 flex items-center space-x-2 px-2 text-sm cursor-pointer ${
+                activeMain === item.id
                   ? "bg-white text-red-700 rounded-md hover:text-red-600"
                   : "text-white hover:text-white/80"
-                  }`}
-              >
-                {item.icon}
-                <span>{item.title}</span>
-              </Link>
-            )}
+              }`}
+            >
+              {item.icon}
+              <span>{item.title}</span>
+            </Link>
+          )}
 
-            {/* Submenu */}
-            {hasSubmenu && (
-              <ul
-                className={`w-full ${isMainOpen ? "" : "hidden"
-                  } space-y-1 rounded-xl overflow-hidden`}
-              >
-                {item.subMenu.map((subItem) => {
-                  const isSubActive = activeSub === subItem.id;
-                  return (
-                    <li key={subItem.id} className="w-full">
-                      <Link
-                        to={subItem.link}
-                        onClick={() => {
-                          setActiveMain(item.id);
-                          setActiveSub(subItem.id);
-                        }}
-                        className={`w-full h-10 flex items-center px-6 space-x-2 text-[11px] text-white bg-white/5 cursor-pointer ${isSubActive ? "bg-red-700" : ""
-                          }`}
-                      >
-                        {subItem.icon && <span>{subItem.icon}</span>}
-                        <span>{subItem.title}</span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </li>
-        );
-      })}
-    </ul>
-  );
+          {/* ───── Sub-menu ───── */}
+          {hasSubmenu && (
+            <ul
+              className={`w-full ${isMainOpen ? "" : "hidden"} space-y-1 rounded-xl overflow-hidden`}
+            >
+              {item.subMenu.map((subItem) => {
+                const isSubActive = activeSub === subItem.id;
+                return (
+                  <li key={subItem.id} className="w-full">
+                    <Link
+                      to={subItem.link}
+                      onClick={closeMenu}      {/* <── collapse after click */}
+                      className={`w-full h-10 flex items-center px-6 space-x-2 text-[11px] text-white bg-white/5 cursor-pointer ${
+                        isSubActive ? "bg-red-700" : ""
+                      }`}
+                    >
+                      {subItem.icon && <span>{subItem.icon}</span>}
+                      <span>{subItem.title}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </li>
+      );
+    })}
+  </ul>
+);
+
 }
 
 export default Menu2;
