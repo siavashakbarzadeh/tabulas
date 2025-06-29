@@ -131,6 +131,8 @@ import NotificationPage from "../pages/notification/index.jsx";
 import PushedMessagesPage from "../pages/pushed/index.jsx";
 import DirettaPage from "../pages/diretta/index.jsx";
 import ExportStorage from "../pages/ExportStorage/ExportStorage.jsx";
+import AccountPage from "./pages/AccountPage";
+
 
 const ScrollToTop = (props) => {
   const location = useLocation();
@@ -153,6 +155,7 @@ function Router() {
                 <Route index element={<MainPage />} />
                 <Route path="/confirm/:id" element={<ConfirmPage />} />
                 <Route path="/finalize/:id" element={<FinalizePage />} />
+                <Route path="/account" element={<AccountPage />} />
                 <Route path="email" element={<EmailPage />} />
                 <Route path="services" element={<ServicePage />} />
                 <Route path="form" element={<FormPage />} />

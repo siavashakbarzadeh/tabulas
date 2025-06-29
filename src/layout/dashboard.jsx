@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import Sidebar2 from "./sidebar2";
 import AppIcon from "../icons/App";
 import User from "../icons/User";
@@ -59,7 +59,13 @@ function DashboardLayout({ ...props }) {
       {/* Mobile bottom bar */}
       <div className="w-full dm-h-24 flex lg:hidden fixed bottom-0 inset-x-0 bg-primary-900 z-20">
         <div className="w-1/2 flex items-center justify-center">
+                <Link
+          to="/account"
+          className="w-1/2 flex items-center justify-center"
+          onClick={() => setIsSidebarActive(false)}  /* optional */
+        >
           <User className="w-6 h-6" />
+        </Link>
         </div>
         <div
           className="w-1/2 flex items-center justify-center"
