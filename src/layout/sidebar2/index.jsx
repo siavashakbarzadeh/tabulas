@@ -1,9 +1,13 @@
+// Sidebar2.jsx
 import { Link } from "react-router-dom";
 import Menu2 from "./Menu";
 import { useAuth } from "../../contexts/AuthContext";
 
 function Sidebar2({ isSidebarActive = false, setIsSidebarActive }) {
   const { user } = useAuth();
+
+  /* helper: hide the whole sidebar */
+  const closeSidebar = () => setIsSidebarActive(false);
 
   return (
     <aside
@@ -14,21 +18,18 @@ function Sidebar2({ isSidebarActive = false, setIsSidebarActive }) {
         ${isSidebarActive ? "translate-y-0" : "translate-y-full"} lg:translate-y-0
       `}
     >
-      {/* Mobile Close Button */}
+      {/* Mobile “×” button */}
       {isSidebarActive && (
-        <div className="absolute top-4 right-4 z-30 lg:hidden">
-          <button
-            onClick={() => setIsSidebarActive(false)}
-            className="text-white text-3xl font-bold"
-            aria-label="Close menu"
-            style={{ position: "absolute", right: "25px" }}
-          >
-            &times;
-          </button>
-        </div>
+        <button
+          onClick={closeSidebar}
+          className="absolute top-4 right-4 z-30 lg:hidden text-white text-3xl font-bold"
+          aria-label="Close menu"
+        >
+          &times;
+        </button>
       )}
 
-      {/* User Info */}
+      {/* User block */}
       <Link className="flex gap-2 select-none">
         <div className="w-11 h-11 flex justify-center items-center flex-shrink-0 rounded-xl bg-white">
           {user?.email && (
@@ -44,7 +45,7 @@ function Sidebar2({ isSidebarActive = false, setIsSidebarActive }) {
       </Link>
 
       {/* Menu */}
-      <Menu2 />
+      <Menu2 onNavigate={closeSidebar} />   {/* ← pass the callback */}
     </aside>
   );
 }
