@@ -9,7 +9,7 @@ function AccountPage() {
 
   if (!user) {
     return (
-      <div className="p-6 text-white mt-4">
+      <div className="pt-6 text-white mt-6">
         <h1 className="text-2xl font-semibold mb-4">Account</h1>
         <p>No user information found.</p>
       </div>
@@ -19,7 +19,7 @@ function AccountPage() {
   const initial = user.email.substring(0, 1).toUpperCase();
 
   return (
-    <div className="p-6 text-white space-y-6">
+    <div className="p-6 text-white space-y-6 mt-6">
       {/* ───────── Header row ───────── */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Account</h1>
