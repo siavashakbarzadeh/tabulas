@@ -131,7 +131,7 @@ import NotificationPage from "../pages/notification/index.jsx";
 import PushedMessagesPage from "../pages/pushed/index.jsx";
 import DirettaPage from "../pages/diretta/index.jsx";
 import ExportStorage from "../pages/ExportStorage/ExportStorage.jsx";
-import AccountPage from "./pages/AccountPage";
+import AccountPage from "../pages/AccountPage";
 
 
 const ScrollToTop = (props) => {
