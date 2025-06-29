@@ -1,6 +1,6 @@
 // Sidebar2.jsx
 import { Link } from "react-router-dom";
-import Menu2 from "./Menu";
+import Menu2 from "./Menu.jsx";
 import { useAuth } from "../../contexts/AuthContext";
 
 function Sidebar2({ isSidebarActive = false, setIsSidebarActive }) {
