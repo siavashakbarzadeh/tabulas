@@ -226,7 +226,7 @@ return (
           ) : (
             <Link
               to={item.link}
-              onClick={closeMenu}          {/* <── collapse after click */}
+              onClick={closeMenu}          
               className={`w-full h-10 flex items-center space-x-2 px-2 text-sm cursor-pointer ${
                 activeMain === item.id
                   ? "bg-white text-red-700 rounded-md hover:text-red-600"
@@ -249,7 +249,7 @@ return (
                   <li key={subItem.id} className="w-full">
                     <Link
                       to={subItem.link}
-                      onClick={closeMenu}      {/* <── collapse after click */}
+                      onClick={closeMenu}      
                       className={`w-full h-10 flex items-center px-6 space-x-2 text-[11px] text-white bg-white/5 cursor-pointer ${
                         isSubActive ? "bg-red-700" : ""
                       }`}
