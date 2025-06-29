@@ -1,6 +1,6 @@
 // Sidebar2.jsx
 import { Link } from "react-router-dom";
-import Menu2 from "./Menu.jsx";
+import Menu2 from "./Menu";
 import { useAuth } from "../../contexts/AuthContext";
 
 function Sidebar2({ isSidebarActive = false, setIsSidebarActive }) {
@@ -45,7 +45,7 @@ function Sidebar2({ isSidebarActive = false, setIsSidebarActive }) {
       </Link>
 
       {/* Menu */}
-      <Menu2 onNavigate={closeSidebar} />   {/* ← pass the callback */}
+      <Menu2 onNavigate={closeSidebar} />   
     </aside>
   );
 }

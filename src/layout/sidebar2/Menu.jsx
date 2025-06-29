@@ -4,9 +4,76 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ArraowDownIcon from "../../icons/ArraowDown";
 
-/* … your Menu array is unchanged … */
-
-function Menu2({ onNavigate = () => {} }) {          // ← NEW PROP
+/* ───────────── Your menu data (unchanged) ───────────── */
+const Menu = [
+  {
+    id: 1,
+    title: "Assemblea",
+    icon: <i className="fa-duotone text-xl fa-poll-people w-6 h-6" />,
+    link: "/",
+  },
+  {
+    id: 2,
+    title: "Commissioni",
+    icon: <i className="fa-duotone text-xl fa-users w-6 h-6" />,
+    subMenu: [
+      { id: 1, title: "Tutte le commissioni", icon: <i className="fa-duotone text-xl fa-users w-6 h-6" />, link: "/commissioni" },
+      { id: 2, title: "Commissioni permanenti", icon: <i className="fa-duotone text-xl fa-user-group w-6 h-6" />, link: "/commissioni-permanenti" },
+      { id: 3, title: "Giunte e altre comissioni", icon: <i className="fa-duotone text-xl fa-comments w-6 h-6" />, link: "/giunte-e-altre-comissioni" },
+      { id: 4, title: "Bicamerali e delegazioni", icon: <i className="fa-duotone text-xl fa-user-group w-6 h-6" />, link: "/bicamerali-e-delegazioni" },
+    ],
+  },
+  {
+    id: 3,
+    title: "Ultimi atti",
+    icon: <i className="fa-duotone text-xl fa-clock-rotate-left w-6 h-6" />,
+    link: "/ultimiatti",
+  },
+  {
+    id: 4,
+    title: "Ultimi dossier",
+    icon: <i className="fa-duotone text-xl fa-file-circle-exclamation w-6 h-6" />,
+    subMenu: [
+      { id: 1, title: "Prima pagina", icon: "", link: "/ultimdossier" },
+      { id: 2, title: "Seconda pagina", icon: "", link: "/ultimdossier1" },
+    ],
+  },
+  {
+    id: 5, title: "Ebook", icon: <i className="fa-duotone text-xl fa-book w-6 h-6" />, link: "/ebook",
+  },
+  {
+    id: 6, title: "Guide e manuali", icon: <i className="fa-duotone text-xl fa-book-open-cover w-6 h-6" />, link: "/guidemanuali",
+  },
+  {
+    id: 7, title: "Diretta Senato", icon: <i className="fa-duotone text-xl fa-play w-6 h-6" />, link: "/diretta",
+  },
+  {
+    id: 8,
+    title: "Le Firme",
+    icon: <i className="fa-duotone text-xl fa-pen-to-square w-6 h-6" />,
+    subMenu: [
+      { id: 1, title: "Nuova", icon: <i className="fa-duotone text-sm fa-file-pen w-6 h-6" />, link: "/form" },
+      { id: 2, title: "Inbox", icon: <i className="fa-duotone text-sm fa-inbox w-6 h-6" />, link: "/inbox" },
+      { id: 3, title: "Outbox", icon: <i className="fa-duotone text-sm fa-paper-plane w-6 h-6" />, link: "/outbox" },
+    ],
+  },
+  {
+    id: 9,
+    title: "Notifiche",
+    icon: <i className="fa-duotone text-xl fa-bell w-6 h-6" />,
+    subMenu: [
+      { id: 1, title: "Nuova", icon: <i className="fa-duotone text-sm fa-bell w-6 h-6" />, link: "/notification" },
+      { id: 2, title: "Messaggi inviati", icon: <i className="fa-duotone text-sm fa-envelope-open-text w-6 h-6" />, link: "/pushed" },
+    ],
+  },
+  {
+    id: 10, title: "Servizi", icon: <i className="fa-duotone text-xl fa-screwdriver-wrench w-6 h-6" />, link: "/services",
+  },
+  {
+    id: 11, title: "INFORMAZIONE", icon: <i className="fa-duotone text-xl fa-square-exclamation w-6 h-6" />, link: "/",
+  },
+];
+function Menu2({ onNavigate = () => {} }) {        
   const location = useLocation();
 
   // which section is open?
