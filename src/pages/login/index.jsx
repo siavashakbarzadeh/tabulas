@@ -42,7 +42,7 @@ function NewLoginPage() {
 
           // 👉 Mobile – likely opened from React Native
 
-          window.location.href = `/export-storage`;
+          navigate('/');
 
       })
       .catch((error) => {
