@@ -36,8 +36,8 @@ function NewLoginPage() {
         email,
         password,
       })
-      .then((response) => {
-        login(response.data.data.token);
+      .then(async (response) => {
+        await login(response.data.data.token);
 
 
           // 👉 Mobile – likely opened from React Native
