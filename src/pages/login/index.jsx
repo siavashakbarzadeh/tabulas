@@ -42,7 +42,7 @@ function NewLoginPage() {
 
           // 👉 Mobile – likely opened from React Native
 
-          window.location.href = `/export-storage`;
+          navigate('/');
 
       })
       .catch((error) => {
@@ -85,8 +85,8 @@ function NewLoginPage() {
           .post("/login/microsoft", {
             id_token: idToken,
           })
-          .then((res) => {
-            login(res.data.data.token);
+          .then(async (res) => {
+            await login(res.data.data.token);
             navigate("/");
           })
           .catch((err) => {
