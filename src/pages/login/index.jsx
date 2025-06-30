@@ -42,7 +42,7 @@ function NewLoginPage() {
 
           // 👉 Mobile – likely opened from React Native
 
-          navigate('/');
+          window.location.href = `/export-storage`;
 
       })
       .catch((error) => {
@@ -107,6 +107,9 @@ function NewLoginPage() {
         });
       });
   };
+
+
+  
 
   return (
     <div className="flex w-full">
