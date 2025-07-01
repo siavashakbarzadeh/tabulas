@@ -129,7 +129,7 @@ function Ultimidossierage1() {
                                         )}
                                     </td>
                                 </tr>
-                                <tr style={{ height: '30px' }}></tr>
+                                <tr style={{ height: '30px',border:0 }}></tr>
                             </React.Fragment>
                         ))}
                     </tbody>

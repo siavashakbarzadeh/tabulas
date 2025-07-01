@@ -94,7 +94,7 @@ function UltimiattiPage() {
                   </td>
                 </tr>
                 {/* Description row */}
-                <tr className="border-b bg-white">
+                <tr className="border-b bg-white" style={{ boxShadow: "5px 5px 6px rgba(0, 0, 0, 0.08)" }}>
                   <td colSpan="4" className="py-3 px-4 text-left description-row">
                     <strong>Descrizione:</strong>{" "}
                     {record.description && record.description !== "-"
@@ -102,6 +102,8 @@ function UltimiattiPage() {
                       : "-"}
                   </td>
                 </tr>
+                <tr style={{ height: '30px',border:0 }}></tr>
+
               </React.Fragment>
             ))}
           </tbody>
