@@ -39,7 +39,7 @@ function AccountPage() {
   return (
     <div className="p-6 text-white space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mt-6">
         <h1 className="text-2xl font-semibold">Account</h1>
 
         <button
