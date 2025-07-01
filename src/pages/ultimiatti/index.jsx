@@ -61,7 +61,7 @@ function UltimiattiPage() {
           </label>
         </form>
 
-        <table className="w-full border-collapse border border-gray-300">
+        <table className="w-full border-collapse border border-gray-300" style={{ border:0 }}>
           <thead>
             <tr
               style={{ position: "sticky", top: 0, zIndex: 10 }}
@@ -73,7 +73,7 @@ function UltimiattiPage() {
               <th className="py-3 px-4 text-left">PDF</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody style={{ border:0 }}>
             {displayedRecords.map((record, index) => (
               <React.Fragment key={index}>
                 {/* Main row */}
