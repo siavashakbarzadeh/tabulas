@@ -76,18 +76,28 @@ function NewLoginPage() {
     const loginRequest = {
       scopes: ["api://aa825561-377d-4414-8acc-2905cd587e98/Roles.Read"],
     };
-
+  
     instance
       .loginPopup(loginRequest)
       .then((response) => {
         const idToken = response.idToken;
+  
         axios
-          .post("/login/microsoft", {
-            id_token: idToken,
-          })
+          .post("/login/microsoft", { id_token: idToken })
           .then(async (res) => {
-            await login(res.data.data.token);
-            navigate("/");
+            const token = res.data.data.token;
+  
+            // 👇 Replace this part with deep link redirect
+            const payload = {
+              "auth-token": token,
+              "__web_blob__": JSON.stringify(res.data.data),
+            };
+  
+            const encoded = btoa(JSON.stringify(payload));
+            const deepLink = `tabulas://storage?data=${encoded}`;
+  
+            window.location.href = deepLink; // 👈 Redirect to mobile app
+  
           })
           .catch((err) => {
             toast.error(
@@ -101,12 +111,13 @@ function NewLoginPage() {
       })
       .catch((error) => {
         console.error("MSAL loginPopup error", error);
-        toast.error("Could not sign in with Microsoft.".error, {
+        toast.error("Could not sign in with Microsoft.", {
           position: "bottom-right",
           hideProgressBar: true,
         });
       });
   };
+  
 
 
   
