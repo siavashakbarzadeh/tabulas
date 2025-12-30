@@ -132,6 +132,7 @@ import PushedMessagesPage from "../pages/pushed/index.jsx";
 import DirettaPage from "../pages/diretta/index.jsx";
 import ExportStorage from "../pages/ExportStorage/ExportStorage.jsx";
 import AccountPage from "../pages/AccountPage";
+import AssembleaPage from "../pages/assemblea";
 // Note: Kiosk page removed - file doesn't exist
 
 const ScrollToTop = (props) => {
@@ -174,6 +175,7 @@ function Router() {
                 <Route path="inbox" element={<InboxPage />} />
                 <Route path="outbox" element={<OutboxPage />} />
                 <Route path="diretta" element={<DirettaPage />} />
+                <Route path="assemblea" element={<AssembleaPage />} />
                 <Route path='export-storage' element={<ExportStorage/>}/>
 
               </Route>
