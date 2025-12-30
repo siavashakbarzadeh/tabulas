@@ -402,13 +402,115 @@ function CommissioniPageBase({ pageTitle }) {
                             </button>
                         </div>
                         <div
-                            className="rich-text-content p-6 overflow-y-auto"
+                            className="commissioni-modal-content p-6 overflow-y-auto"
                             style={{ maxHeight: "calc(90vh - 80px)" }}
                             dangerouslySetInnerHTML={{ __html: modalContent }}
                         />
                     </div>
                 </div>
             )}
+
+            {/* Custom styles for modal content */}
+            <style>{`
+                .commissioni-modal-content {
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                    font-size: 15px;
+                    line-height: 1.8;
+                    color: #374151;
+                }
+                
+                .commissioni-modal-content * {
+                    font-family: inherit !important;
+                    background: transparent !important;
+                }
+                
+                .commissioni-modal-content h1,
+                .commissioni-modal-content h2,
+                .commissioni-modal-content h3,
+                .commissioni-modal-content h4,
+                .commissioni-modal-content h5 {
+                    color: #97002D !important;
+                    font-weight: 600;
+                    margin: 1.25rem 0 0.75rem;
+                }
+                
+                .commissioni-modal-content h2 {
+                    font-size: 1.25rem;
+                    padding-bottom: 0.5rem;
+                    border-bottom: 2px solid #f3f4f6;
+                }
+                
+                .commissioni-modal-content h3 {
+                    font-size: 1.1rem;
+                }
+                
+                .commissioni-modal-content p {
+                    margin-bottom: 0.75rem;
+                }
+                
+                .commissioni-modal-content a {
+                    color: #97002D !important;
+                    font-weight: 500;
+                    text-decoration: none;
+                    background: #fef2f2 !important;
+                    padding: 0.125rem 0.5rem;
+                    border-radius: 0.25rem;
+                    transition: all 0.2s;
+                }
+                
+                .commissioni-modal-content a:hover {
+                    background: #fee2e2 !important;
+                    color: #7f1d1d !important;
+                }
+                
+                .commissioni-modal-content ul,
+                .commissioni-modal-content ol {
+                    background: #f8f9fa !important;
+                    padding: 1rem 1rem 1rem 2rem !important;
+                    border-radius: 0.5rem;
+                    margin: 0.75rem 0;
+                    border: 1px solid #e5e7eb !important;
+                }
+                
+                .commissioni-modal-content li {
+                    margin-bottom: 0.5rem;
+                }
+                
+                .commissioni-modal-content table {
+                    width: 100% !important;
+                    border-collapse: collapse;
+                    margin: 1rem 0;
+                }
+                
+                .commissioni-modal-content th {
+                    background: #97002D !important;
+                    color: white !important;
+                    padding: 0.75rem;
+                    text-align: left;
+                    font-weight: 600;
+                }
+                
+                .commissioni-modal-content td {
+                    padding: 0.75rem;
+                    border-bottom: 1px solid #e5e7eb;
+                }
+                
+                .commissioni-modal-content tr:hover td {
+                    background: #f9fafb !important;
+                }
+                
+                .commissioni-modal-content b,
+                .commissioni-modal-content strong {
+                    font-weight: 600;
+                    color: #1f2937 !important;
+                }
+                
+                .commissioni-modal-content hr {
+                    border: none;
+                    border-top: 2px solid #e5e7eb;
+                    margin: 1.5rem 0;
+                }
+            `}</style>
         </>
     );
 }
