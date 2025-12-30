@@ -117,82 +117,85 @@ function AssembleaPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen w-full space-y-4">
-      {/* Top section: Tabs on left, YouTube on right */}
-      <div className="flex flex-col lg:flex-row gap-4">
-        {/* Section tabs - left side */}
-        <div className="flex-1">
-          {sections.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {sections.map((section, idx) => (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(idx)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
-                    activeSection === idx
-                      ? 'bg-red-800 text-white shadow-md'
-                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-                  }`}
-                  aria-selected={activeSection === idx}
-                  role="tab"
-                >
-                  <i className={`fa-duotone ${section.icon}`} aria-hidden="true"></i>
-                  {section.name}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+    <div className="flex flex-col min-h-screen w-full">
+      {/* White container like other pages */}
+      <div className="flex-1 bg-white rounded-2xl relative p-4">
+        {/* Top section: Tabs on left, YouTube on right - aligned heights */}
+        <div className="flex flex-col lg:flex-row gap-4 mb-6">
+          {/* Section tabs - left side, same height as video, centered */}
+          <div className="flex-1 flex items-center">
+            {sections.length > 0 && (
+              <div className="flex flex-wrap gap-3 w-full">
+                {sections.map((section, idx) => (
+                  <button
+                    key={section.id}
+                    onClick={() => setActiveSection(idx)}
+                    className={`px-6 py-4 rounded-xl font-medium transition-all flex items-center gap-3 text-base ${
+                      activeSection === idx
+                        ? 'bg-red-800 text-white shadow-lg'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
+                    }`}
+                    aria-selected={activeSection === idx}
+                    role="tab"
+                  >
+                    <i className={`fa-duotone ${section.icon} text-lg`} aria-hidden="true"></i>
+                    {section.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
-        {/* YouTube Live Stream - top right */}
-        <div className="lg:w-80 xl:w-96 flex-shrink-0">
-          <div className="bg-white rounded-2xl overflow-hidden shadow-md">
-            <div className="aspect-video w-full">
-              <iframe
-                src={`https://www.youtube.com/embed/${SENATO_YOUTUBE_VIDEO_ID}?autoplay=1&mute=1`}
-                className="w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                title="Senato TV - In diretta"
-              />
-            </div>
-            <div className="px-3 py-2 flex items-center gap-2 border-t border-gray-100">
-              <span className="inline-flex items-center gap-1.5 text-red-600 font-medium text-sm">
-                <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
-                In diretta
-              </span>
+          {/* YouTube Live Stream - top right */}
+          <div className="lg:w-72 xl:w-80 flex-shrink-0">
+            <div className="bg-gray-100 rounded-xl overflow-hidden shadow-sm h-full">
+              <div className="aspect-video w-full">
+                <iframe
+                  src={`https://www.youtube.com/embed/${SENATO_YOUTUBE_VIDEO_ID}?autoplay=1&mute=1`}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  title="Senato TV - In diretta"
+                />
+              </div>
+              <div className="px-3 py-2 flex items-center gap-2 bg-white">
+                <span className="inline-flex items-center gap-1.5 text-red-600 font-medium text-sm">
+                  <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+                  In diretta
+                </span>
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Active section content */}
+        {sections[activeSection] && (
+          <div className="rounded-xl overflow-hidden shadow-sm border border-gray-100">
+            {/* Section header */}
+            <div className="bg-red-800 text-white px-6 py-4">
+              <h2 className="text-xl font-semibold flex items-center gap-3">
+                <i className={`fa-duotone ${sections[activeSection].icon}`} aria-hidden="true"></i>
+                {sections[activeSection].name}
+              </h2>
+            </div>
+            
+            {/* Content with styled cards */}
+            <div 
+              ref={contentRef}
+              className="p-6 assemblea-content bg-white"
+              dangerouslySetInnerHTML={{ __html: sections[activeSection].content }}
+            />
+          </div>
+        )}
+
+        {/* Empty state */}
+        {sections.length === 0 && (
+          <div className="text-center py-12 text-gray-500">
+            <i className="fa-duotone fa-inbox text-4xl mb-4" aria-hidden="true"></i>
+            <p>Nessun contenuto disponibile</p>
+          </div>
+        )}
       </div>
-
-      {/* Active section content */}
-      {sections[activeSection] && (
-        <div className="bg-white rounded-2xl overflow-hidden shadow-md">
-          {/* Section header */}
-          <div className="bg-red-800 text-white px-6 py-4">
-            <h2 className="text-xl font-semibold flex items-center gap-3">
-              <i className={`fa-duotone ${sections[activeSection].icon}`} aria-hidden="true"></i>
-              {sections[activeSection].name}
-            </h2>
-          </div>
-          
-          {/* Content with styled cards */}
-          <div 
-            ref={contentRef}
-            className="p-6 assemblea-content"
-            dangerouslySetInnerHTML={{ __html: sections[activeSection].content }}
-          />
-        </div>
-      )}
-
-      {/* Empty state */}
-      {sections.length === 0 && (
-        <div className="text-center py-12 text-gray-500 bg-white rounded-2xl">
-          <i className="fa-duotone fa-inbox text-4xl mb-4" aria-hidden="true"></i>
-          <p>Nessun contenuto disponibile</p>
-        </div>
-      )}
 
       {/* Custom styles for assemblea content */}
       <style>{`
