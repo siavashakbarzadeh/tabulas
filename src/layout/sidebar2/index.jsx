@@ -44,17 +44,6 @@ function Sidebar2({ isSidebarActive = false, setIsSidebarActive }) {
         ${isSidebarActive ? "translate-y-0" : "translate-y-full"} lg:translate-y-0
       `}
     >
-      {/* Mobile "×" button */}
-      {isSidebarActive && (
-        <button
-          onClick={closeSidebar}
-          className="absolute top-4 right-4 z-30 lg:hidden text-white text-3xl font-bold"
-          aria-label="Close menu"
-        >
-          &times;
-        </button>
-      )}
-
       {/* User block */}
       <div className="flex gap-2 select-none items-center">
         <div className="w-11 h-11 flex justify-center items-center flex-shrink-0 rounded-xl bg-white">

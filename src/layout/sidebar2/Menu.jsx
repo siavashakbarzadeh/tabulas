@@ -11,12 +11,14 @@ const Menu = [
     title: "Assemblea",
     icon: <i className="fa-duotone text-xl fa-poll-people w-6 h-6" />,
     link: "/",
+    mobileHidden: true,  // Already in bottom nav
   },
   {
     id: 2,
     title: "Commissioni",
     icon: <i className="fa-duotone text-xl fa-users w-6 h-6" />,
     link: "/commissioni",
+    mobileHidden: true,  // Already in bottom nav
   },
   {
     id: 3,
@@ -29,6 +31,7 @@ const Menu = [
     title: "Ultimi dossier",
     icon: <i className="fa-duotone text-xl fa-file-circle-exclamation w-6 h-6" />,
     link: "/ultimdossier",
+    mobileHidden: true,  // Already in bottom nav
   },
   {
     id: 5, title: "Ebook", icon: <i className="fa-duotone text-xl fa-book w-6 h-6" />, link: "/ebook",
@@ -117,7 +120,7 @@ function Menu2({ onNavigate = () => {} }) {
         const active  = activeMain === item.id;
 
         return (
-          <li key={item.id} className="w-full">
+          <li key={item.id} className={`w-full ${item.mobileHidden ? 'hidden lg:block' : ''}`}>
             {/* ─── Main row ─── */}
             {hasSub ? (
               <div
