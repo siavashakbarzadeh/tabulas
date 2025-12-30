@@ -1,4 +1,4 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import Sidebar2 from "./sidebar2";
 import AppIcon from "../icons/App";
 import User from "../icons/User";
@@ -10,6 +10,7 @@ function DashboardLayout({ ...props }) {
   const [isSidebarActive, setIsSidebarActive] = useState(false);
   const [largeText, setLargeText] = useState(false);
   const [highContrast, setHighContrast] = useState(false);
+  const location = useLocation();
 
   const toggleSidebarClickHandler = () => {
     setIsSidebarActive((prevState) => !prevState);
@@ -57,22 +58,52 @@ function DashboardLayout({ ...props }) {
       </div>
 
       {/* Mobile bottom bar */}
-      <div className="w-full dm-h-24 flex lg:hidden fixed bottom-0 inset-x-0 bg-primary-900 z-20">
-        <div className="w-1/2 flex items-center justify-center">
-                <Link
-          to="/account"
-          className="w-1/2 flex items-center justify-center"
-          onClick={() => setIsSidebarActive(false)}  /* optional */
+      <div className="w-full h-16 flex lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 z-20 safe-area-bottom">
+        <Link
+          to="/"
+          className={`flex-1 flex flex-col items-center justify-center gap-1 ${
+            location.pathname === '/' || location.pathname === '/assemblea' 
+              ? 'text-red-800' 
+              : 'text-gray-500'
+          }`}
+          onClick={() => setIsSidebarActive(false)}
         >
-          <User className="w-6 h-6" />
+          <i className="fa-duotone fa-house text-lg" aria-hidden="true"></i>
+          <span className="text-[10px] font-medium">Home</span>
         </Link>
-        </div>
-        <div
-          className="w-1/2 flex items-center justify-center"
+        <Link
+          to="/commissioni"
+          className={`flex-1 flex flex-col items-center justify-center gap-1 ${
+            location.pathname === '/commissioni' 
+              ? 'text-red-800' 
+              : 'text-gray-500'
+          }`}
+          onClick={() => setIsSidebarActive(false)}
+        >
+          <i className="fa-duotone fa-users text-lg" aria-hidden="true"></i>
+          <span className="text-[10px] font-medium">Commissioni</span>
+        </Link>
+        <Link
+          to="/ultimdossier"
+          className={`flex-1 flex flex-col items-center justify-center gap-1 ${
+            location.pathname === '/ultimdossier' 
+              ? 'text-red-800' 
+              : 'text-gray-500'
+          }`}
+          onClick={() => setIsSidebarActive(false)}
+        >
+          <i className="fa-duotone fa-file-lines text-lg" aria-hidden="true"></i>
+          <span className="text-[10px] font-medium">Dossier</span>
+        </Link>
+        <button
+          className={`flex-1 flex flex-col items-center justify-center gap-1 ${
+            isSidebarActive ? 'text-red-800' : 'text-gray-500'
+          }`}
           onClick={toggleSidebarClickHandler}
         >
-          <AppIcon className="w-6 h-6" />
-        </div>
+          <i className={`fa-duotone ${isSidebarActive ? 'fa-xmark' : 'fa-bars'} text-lg`} aria-hidden="true"></i>
+          <span className="text-[10px] font-medium">Menu</span>
+        </button>
       </div>
 
       {/* Utilities */}

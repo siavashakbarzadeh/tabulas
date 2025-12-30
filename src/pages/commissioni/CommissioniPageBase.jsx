@@ -297,24 +297,27 @@ function CommissioniPageBase({ pageTitle }) {
                             </h2>
                         </div>
 
-                        {/* Days Header */}
-                        <div className="grid grid-cols-8 bg-gray-100 text-gray-700 text-sm font-medium">
-                            <div className="p-3 border-r border-gray-200">
-                                Commissione
-                            </div>
-                            {weekDays.map((day, idx) => (
-                                <div
-                                    key={idx}
-                                    className={`p-2 text-center border-r border-gray-200 last:border-r-0 ${
-                                        day.isToday ? 'bg-red-100' : ''
-                                    } ${day.isWeekend ? 'bg-gray-200/50' : ''}`}
-                                >
-                                    <div className="text-xs uppercase opacity-70">{day.dayName}</div>
-                                    <div className={`text-lg font-bold ${day.isToday ? 'text-red-800' : ''}`}>
-                                        {day.dayNum}
+                        {/* Scrollable Calendar Grid on Mobile */}
+                        <div className="overflow-x-auto">
+                            <div className="min-w-[700px]">
+                                {/* Days Header */}
+                                <div className="grid grid-cols-8 bg-gray-100 text-gray-700 text-sm font-medium">
+                                    <div className="p-2 md:p-3 border-r border-gray-200 text-xs md:text-sm">
+                                        Commissione
                                     </div>
-                                </div>
-                            ))}
+                                    {weekDays.map((day, idx) => (
+                                        <div
+                                            key={idx}
+                                            className={`p-1 md:p-2 text-center border-r border-gray-200 last:border-r-0 ${
+                                                day.isToday ? 'bg-red-100' : ''
+                                            } ${day.isWeekend ? 'bg-gray-200/50' : ''}`}
+                                        >
+                                            <div className="text-[10px] md:text-xs uppercase opacity-70">{day.dayName}</div>
+                                            <div className={`text-sm md:text-lg font-bold ${day.isToday ? 'text-red-800' : ''}`}>
+                                                {day.dayNum}
+                                            </div>
+                                        </div>
+                                    ))}
                         </div>
 
                         {/* Commission Rows */}
@@ -381,16 +384,8 @@ function CommissioniPageBase({ pageTitle }) {
                                                         {sinoDayInfo.primaConvOra || '—'}
                                                     </button>
                                                 )}
-                                                {!sinoDayInfo && !dayNode?.docContentUrl && (
+                                                {!sinoDayInfo && (
                                                     <span className="text-gray-300">—</span>
-                                                )}
-                                                {!sinoDayInfo && dayNode?.docContentUrl && (
-                                                    <button
-                                                        onClick={() => openInPopupWindow(dayNode.docContentUrl)}
-                                                        className="w-full px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded transition-colors"
-                                                    >
-                                                        Apri
-                                                    </button>
                                                 )}
                                             </div>
                                         );
