@@ -1,53 +1,141 @@
-/* Example: custom-rich-text.css */
+/* Enhanced rich-text styling - overrides API inline styles */
 .rich-text-content {
-    font-family: sans-serif;
-    line-height: 1.5;
-    font-size: 14px;
-    color: #333;
-  }
-  
-  .rich-text-content h1,
-  .rich-text-content h2,
-  .rich-text-content h3,
-  .rich-text-content h4 {
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-  }
-  
-  .rich-text-content h1 {
-    font-size: 1.25rem;
-  }
-  .rich-text-content h2 {
-    font-size: 1.125rem;
-  }
-    
-  .rich-text-content p,
-  .rich-text-content div,
-  .rich-text-content li {
-    margin-bottom: 0.75rem;
-  }
-  
-  .rich-text-content ul,
-  .rich-text-content ol {
-    padding-left: 1.2em;
-    margin-bottom: 1rem;
-  }
-  
-  .rich-text-content a {
-    color: rgb(151 0 45);
-    text-decoration: underline;
-  }
-  
-  .rich-text-content table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1rem;
-  }
-  
-  .rich-text-content th,
-  .rich-text-content td {
-    border: 1px solid #ccc;
-    padding: 0.5rem;
-  }
-  
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Force override all inline styles */
+.rich-text-content * {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  color: inherit !important;
+  background-color: transparent !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Headings */
+.rich-text-content h1,
+.rich-text-content h2,
+.rich-text-content h3,
+.rich-text-content h4 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600 !important;
+  color: #1a1a1a !important;
+}
+
+.rich-text-content h1 {
+  font-size: 1.5rem !important;
+}
+.rich-text-content h2 {
+  font-size: 1.25rem !important;
+}
+.rich-text-content h3 {
+  font-size: 1.125rem !important;
+}
+.rich-text-content h4 {
+  font-size: 1rem !important;
+}
+
+/* Paragraphs and lists */
+.rich-text-content p,
+.rich-text-content div,
+.rich-text-content li {
+  margin-bottom: 0.75rem;
+}
+
+.rich-text-content ul,
+.rich-text-content ol {
+  padding-left: 1.5em;
+  margin-bottom: 1rem;
+}
+
+.rich-text-content li {
+  padding: 0.25rem 0;
+}
+
+/* Links */
+.rich-text-content a {
+  color: #97002d !important;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.rich-text-content a:hover {
+  color: #c41048 !important;
+}
+
+/* Tables */
+.rich-text-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  background: white !important;
+}
+
+.rich-text-content th {
+  background-color: #97002d !important;
+  color: white !important;
+  font-weight: 600 !important;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border: 1px solid #7a0024 !important;
+}
+
+.rich-text-content td {
+  border: 1px solid #e5e7eb !important;
+  padding: 0.75rem 1rem;
+  background-color: white !important;
+}
+
+.rich-text-content tr:nth-child(even) td {
+  background-color: #f9fafb !important;
+}
+
+.rich-text-content tr:hover td {
+  background-color: #f3f4f6 !important;
+}
+
+/* HR separators */
+.rich-text-content hr {
+  border: none;
+  border-top: 2px solid #e5e7eb;
+  margin: 1.5rem 0;
+}
+
+/* Remove ugly inline font tags */
+.rich-text-content font {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  color: inherit !important;
+}
+
+/* Strong/Bold */
+.rich-text-content strong,
+.rich-text-content b {
+  font-weight: 600 !important;
+  color: #1a1a1a !important;
+}
+
+/* Images */
+.rich-text-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* Accessibility improvements */
+.rich-text-content {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus states for links */
+.rich-text-content a:focus {
+  outline: 2px solid #97002d;
+  outline-offset: 2px;
+}
