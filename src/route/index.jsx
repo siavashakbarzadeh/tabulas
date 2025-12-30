@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Layout from "../layout/main";
 import FullScreenLayout from "../layout/full-screen";
@@ -153,7 +153,7 @@ function Router() {
           <Route element={<ThemeProvider2 />}>
             <Route element={<PrivateRoute />}>
               <Route element={<DashboardLayout />}>
-                <Route index element={<AssembleaPage />} />
+                <Route index element={<Navigate to="/assemblea" replace />} />
                 <Route path="/confirm/:id" element={<ConfirmPage />} />
                 <Route path="/finalize/:id" element={<FinalizePage />} />
                 <Route path="/account" element={<AccountPage />} />

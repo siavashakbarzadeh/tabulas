@@ -31,7 +31,8 @@ function BackToTopButton() {
     return (
         <button
             onClick={scrollToTop}
-            className="fixed bottom-16-16 right-4 bg-primary-900 text-white px-5-5 py-4-4 rounded-full hover:bg-primary-700 z-50"
+            className="fixed bottom-6 right-4 bg-primary-900 text-white w-12 h-12 rounded-full hover:bg-primary-700 z-50 shadow-lg flex items-center justify-center text-xl"
+            aria-label="Torna in cima"
         >
             ↑
         </button>
