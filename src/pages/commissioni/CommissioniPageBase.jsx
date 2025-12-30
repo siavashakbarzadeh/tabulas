@@ -197,7 +197,8 @@ function CommissioniPageBase({ pageTitle }) {
 
     return (
         <>
-            <div className="w-full space-y-4">
+            <div className="flex flex-col min-h-screen w-full">
+                <div className="flex-1 bg-white rounded-2xl relative p-6 space-y-4">
                 {/* Tabs for commission types */}
                 {filteredDocNodes.length > 1 && (
                     <div className="bg-white rounded-2xl p-4 shadow-sm">
@@ -381,6 +382,7 @@ function CommissioniPageBase({ pageTitle }) {
                         <p>Nessuna commissione disponibile</p>
                     </div>
                 )}
+                </div>
             </div>
 
             {/* Modal */}
