@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import swaggerApi from "../../configs/swaggerApiConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
 import "../../assets/css/custom/rich-text-content.css";
@@ -13,6 +13,8 @@ function AssembleaPage() {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [dateFilter, setDateFilter] = useState('');
+  const [matchCount, setMatchCount] = useState(0);
+  const [currentMatch, setCurrentMatch] = useState(0);
   const contentRef = useRef(null);
 
   useEffect(() => {
@@ -23,7 +25,59 @@ function AssembleaPage() {
   useEffect(() => {
     setSearchQuery('');
     setDateFilter('');
+    setMatchCount(0);
+    setCurrentMatch(0);
   }, [activeSection]);
+
+  // Count and navigate matches
+  useEffect(() => {
+    if (!contentRef.current || !searchQuery) {
+      setMatchCount(0);
+      setCurrentMatch(0);
+      return;
+    }
+
+    const marks = contentRef.current.querySelectorAll('mark[data-search-match]');
+    setMatchCount(marks.length);
+    if (marks.length > 0 && currentMatch === 0) {
+      setCurrentMatch(1);
+      scrollToMatch(1);
+    }
+  }, [searchQuery, sections, activeSection]);
+
+  // Scroll to specific match
+  const scrollToMatch = useCallback((index) => {
+    if (!contentRef.current) return;
+    
+    const marks = contentRef.current.querySelectorAll('mark[data-search-match]');
+    marks.forEach((mark, i) => {
+      mark.style.background = i === index - 1 ? '#fbbf24' : '#fef3c7';
+    });
+    
+    if (marks[index - 1]) {
+      marks[index - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, []);
+
+  const goToNextMatch = () => {
+    if (matchCount === 0) return;
+    const next = currentMatch >= matchCount ? 1 : currentMatch + 1;
+    setCurrentMatch(next);
+    scrollToMatch(next);
+  };
+
+  const goToPrevMatch = () => {
+    if (matchCount === 0) return;
+    const prev = currentMatch <= 1 ? matchCount : currentMatch - 1;
+    setCurrentMatch(prev);
+    scrollToMatch(prev);
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+    setMatchCount(0);
+    setCurrentMatch(0);
+  };
 
   // Set up click handler for links when content changes
   useEffect(() => {
@@ -83,9 +137,9 @@ function AssembleaPage() {
   // Get section type for filter logic
   const getSectionType = (name) => {
     const lowerName = name.toLowerCase();
-    if (lowerName.includes('comunicati')) return 'comunicati'; // past dates
-    if (lowerName.includes('calendario')) return 'calendario'; // future dates
-    if (lowerName.includes('ordine')) return 'ordine'; // search only
+    if (lowerName.includes('comunicati')) return 'comunicati';
+    if (lowerName.includes('calendario')) return 'calendario';
+    if (lowerName.includes('ordine')) return 'ordine';
     return 'other';
   };
 
@@ -93,9 +147,9 @@ function AssembleaPage() {
   const filterContent = (html) => {
     if (!searchQuery) return html;
     
-    // Highlight search matches
-    const regex = new RegExp(`(${searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-    html = html.replace(regex, '<mark style="background: #fef3c7; padding: 0 2px; border-radius: 2px;">$1</mark>');
+    const escaped = searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escaped})`, 'gi');
+    html = html.replace(regex, '<mark data-search-match style="background: #fef3c7; padding: 0 2px; border-radius: 2px;">$1</mark>');
     
     return html;
   };
@@ -159,8 +213,8 @@ function AssembleaPage() {
       <div className="flex-1 bg-white rounded-2xl relative p-6">
         {/* Top section: Tabs + Filters on left, YouTube on right */}
         <div className="flex flex-col lg:flex-row gap-4 mb-6">
-          {/* Left side: Tabs and Filters */}
-          <div className="flex-1 flex flex-col gap-4">
+          {/* Left side: Tabs and Filters - vertically centered */}
+          <div className="flex-1 flex flex-col justify-center gap-4">
             {/* Section tabs */}
             {sections.length > 0 && (
               <div className="flex flex-wrap gap-3">
@@ -200,17 +254,15 @@ function AssembleaPage() {
               
               {/* Date filter - only for comunicati and calendario */}
               {(sectionType === 'comunicati' || sectionType === 'calendario') && (
-                <div className="relative">
-                  <input
-                    type="date"
-                    value={dateFilter}
-                    onChange={(e) => setDateFilter(e.target.value)}
-                    max={sectionType === 'comunicati' ? getTodayDate() : undefined}
-                    min={sectionType === 'calendario' ? getTodayDate() : undefined}
-                    className="h-10 bg-gray-50 text-sm rounded-lg border border-gray-200 px-3 focus:ring-2 focus:ring-red-800 focus:border-transparent transition-all cursor-pointer"
-                    aria-label={sectionType === 'comunicati' ? 'Filtra data (fino ad oggi)' : 'Filtra data (da oggi)'}
-                  />
-                </div>
+                <input
+                  type="date"
+                  value={dateFilter}
+                  onChange={(e) => setDateFilter(e.target.value)}
+                  max={sectionType === 'comunicati' ? getTodayDate() : undefined}
+                  min={sectionType === 'calendario' ? getTodayDate() : undefined}
+                  className="h-10 bg-gray-50 text-sm rounded-lg border border-gray-200 px-3 focus:ring-2 focus:ring-red-800 focus:border-transparent transition-all cursor-pointer"
+                  aria-label={sectionType === 'comunicati' ? 'Filtra data (fino ad oggi)' : 'Filtra data (da oggi)'}
+                />
               )}
             </div>
           </div>
@@ -265,6 +317,40 @@ function AssembleaPage() {
           </div>
         )}
       </div>
+
+      {/* Search Navigation Bar - Bottom Center */}
+      {searchQuery && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-3 z-50">
+          <span className="text-sm font-medium min-w-[60px] text-center">
+            {matchCount > 0 ? `${currentMatch}/${matchCount}` : '0/0'}
+          </span>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={goToPrevMatch}
+              disabled={matchCount === 0}
+              className="w-8 h-8 rounded-full hover:bg-gray-700 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              aria-label="Risultato precedente"
+            >
+              <i className="fa-solid fa-chevron-up" aria-hidden="true"></i>
+            </button>
+            <button
+              onClick={goToNextMatch}
+              disabled={matchCount === 0}
+              className="w-8 h-8 rounded-full hover:bg-gray-700 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              aria-label="Risultato successivo"
+            >
+              <i className="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
+          </div>
+          <button
+            onClick={clearSearch}
+            className="w-8 h-8 rounded-full hover:bg-gray-700 flex items-center justify-center transition-colors"
+            aria-label="Cancella ricerca"
+          >
+            <i className="fa-solid fa-xmark" aria-hidden="true"></i>
+          </button>
+        </div>
+      )}
 
       {/* Custom styles for assemblea content */}
       <style>{`
@@ -387,9 +473,12 @@ function AssembleaPage() {
           background: #f9fafb !important;
         }
         
-        /* Hide native date picker text, only show icon */
-        input[type="date"]::-webkit-calendar-picker-indicator {
-          cursor: pointer;
+        /* Search match highlighting */
+        .assemblea-content mark[data-search-match] {
+          background: #fef3c7 !important;
+          color: inherit !important;
+          padding: 0 2px;
+          border-radius: 2px;
         }
       `}</style>
     </div>
