@@ -10,8 +10,6 @@ function Ultimidossierage() {
   const [records, setRecords] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState(null);
-  const [modalUrl, setModalUrl] = useState(null);
-  const [modalTitle, setModalTitle] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -84,22 +82,8 @@ function Ultimidossierage() {
     }
   };
 
-  const openModal = (url, title) => {
-    setModalUrl(url);
-    setModalTitle(title);
-  };
-
-  const closeModal = () => {
-    setModalUrl(null);
-    setModalTitle('');
-  };
-
   if (loading) {
-    return (
-      <div className="w-full flex justify-center p-8">
-        <Loading />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {
@@ -148,7 +132,7 @@ function Ultimidossierage() {
           {records.length} dossier trovati
         </p>
 
-        {/* Card-style rows */}
+        {/* Card-style rows with shadow */}
         <div className="space-y-4">
           {displayedRecords.map((record) => (
             <div 
@@ -168,27 +152,31 @@ function Ultimidossierage() {
                   )}
                 </div>
                 
-                {/* Action buttons */}
+                {/* Action buttons - open in new tab */}
                 <div className="flex gap-2 flex-shrink-0">
                   {record.webUrl && (
-                    <button 
-                      onClick={() => openModal(record.webUrl, record.title)}
+                    <a 
+                      href={record.webUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium transition-colors"
                       aria-label={`Apri online: ${record.title}`}
                     >
                       <i className="fa-duotone fa-globe text-lg" aria-hidden="true"></i>
                       <span className="hidden sm:inline">Web</span>
-                    </button>
+                    </a>
                   )}
                   {record.pdfUrl && (
-                    <button 
-                      onClick={() => openModal(record.pdfUrl, record.title)}
+                    <a 
+                      href={record.pdfUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-800 font-medium transition-colors"
                       aria-label={`Visualizza PDF: ${record.title}`}
                     >
                       <i className="fa-duotone fa-file-pdf text-lg" aria-hidden="true"></i>
                       <span className="hidden sm:inline">PDF</span>
-                    </button>
+                    </a>
                   )}
                 </div>
               </div>
@@ -228,51 +216,6 @@ function Ultimidossierage() {
           </nav>
         )}
       </div>
-
-      {/* Modal/Popup for viewing content */}
-      {modalUrl && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-          onClick={closeModal}
-        >
-          <div 
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl h-[90vh] flex flex-col overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal header */}
-            <div className="flex items-center justify-between px-4 py-3 bg-red-800 text-white">
-              <h3 className="font-semibold truncate flex-1 mr-4">{modalTitle}</h3>
-              <div className="flex items-center gap-2">
-                <a
-                  href={modalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-3 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-sm transition-colors"
-                >
-                  Apri in nuova scheda
-                </a>
-                <button
-                  onClick={closeModal}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
-                  aria-label="Chiudi"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-            
-            {/* Modal content - iframe */}
-            <div className="flex-1 bg-gray-100">
-              <iframe
-                src={modalUrl}
-                className="w-full h-full border-none"
-                title={modalTitle}
-                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
