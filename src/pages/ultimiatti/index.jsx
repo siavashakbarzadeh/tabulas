@@ -15,31 +15,36 @@ function UltimiattiPage() {
     fetchData();
   }, []);
 
-  /**
-   * Parse HTML content to extract structured records
-   * The API returns HTML with items separated by <HR class="defrss">
-   */
+  // Open URL in a popup window
+  const openInPopupWindow = (url, title) => {
+    const width = Math.min(1200, window.screen.width * 0.8);
+    const height = Math.min(800, window.screen.height * 0.8);
+    const left = (window.screen.width - width) / 2;
+    const top = (window.screen.height - height) / 2;
+    
+    window.open(
+      url,
+      title,
+      `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes`
+    );
+  };
+
   const parseHtmlToRecords = (htmlContent) => {
     if (!htmlContent) return [];
     
-    // Split by HR separator
     const items = htmlContent.split(/<hr[^>]*class="?defrss"?[^>]*>/i);
     
     return items.map((item, idx) => {
-      // Create a DOM parser to extract content
       const div = document.createElement('div');
       div.innerHTML = item;
       
-      // Extract text content and links
       const links = div.querySelectorAll('a');
       const text = div.textContent?.trim() || '';
       
-      // Try to extract structured info
       let title = '';
       let description = '';
       let pdfUrl = '';
       
-      // Find PDF link
       links.forEach(link => {
         const href = link.getAttribute('href') || '';
         if (href.toLowerCase().includes('.pdf')) {
@@ -50,7 +55,6 @@ function UltimiattiPage() {
         }
       });
       
-      // Get description from remaining text
       description = text.replace(title, '').trim().substring(0, 200);
       
       if (!title && !description) return null;
@@ -59,8 +63,7 @@ function UltimiattiPage() {
         id: idx,
         title: title || `Documento ${idx + 1}`,
         description: description,
-        pdfUrl: pdfUrl,
-        rawHtml: item
+        pdfUrl: pdfUrl
       };
     }).filter(Boolean);
   };
@@ -87,11 +90,7 @@ function UltimiattiPage() {
   };
 
   if (loading) {
-    return (
-      <div className="w-full flex justify-center p-8">
-        <Loading />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {
@@ -108,7 +107,6 @@ function UltimiattiPage() {
     );
   }
 
-  // Pagination
   const totalPages = Math.ceil(records.length / ITEMS_PER_PAGE);
   const displayedRecords = records.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
@@ -165,15 +163,13 @@ function UltimiattiPage() {
                   </td>
                   <td className="py-3 px-4 text-center">
                     {record.pdfUrl ? (
-                      <a 
-                        href={record.pdfUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
+                      <button 
+                        onClick={() => openInPopupWindow(record.pdfUrl, record.title)}
                         className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-red-100 hover:bg-red-200 transition-colors"
                         aria-label={`Scarica PDF: ${record.title}`}
                       >
                         <i className="fa-duotone fa-file-pdf text-xl text-red-800" aria-hidden="true"></i>
-                      </a>
+                      </button>
                     ) : (
                       <span className="text-gray-400">-</span>
                     )}

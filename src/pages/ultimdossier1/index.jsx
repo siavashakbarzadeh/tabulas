@@ -15,6 +15,20 @@ function Ultimidossierage1() {
     fetchData();
   }, []);
 
+  // Open URL in a popup window
+  const openInPopupWindow = (url, title) => {
+    const width = Math.min(1200, window.screen.width * 0.8);
+    const height = Math.min(800, window.screen.height * 0.8);
+    const left = (window.screen.width - width) / 2;
+    const top = (window.screen.height - height) / 2;
+    
+    window.open(
+      url,
+      title,
+      `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes`
+    );
+  };
+
   const parseHtmlToRecords = (htmlContent) => {
     if (!htmlContent) return [];
     
@@ -154,26 +168,22 @@ function Ultimidossierage1() {
                   <td className="py-3 px-4">
                     <div className="flex justify-center gap-2">
                       {record.webUrl && (
-                        <a 
-                          href={record.webUrl} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
+                        <button 
+                          onClick={() => openInPopupWindow(record.webUrl, record.title)}
                           className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-blue-100 hover:bg-blue-200 transition-colors"
                           aria-label={`Apri online: ${record.title}`}
                         >
                           <i className="fa-duotone fa-globe text-xl text-blue-800" aria-hidden="true"></i>
-                        </a>
+                        </button>
                       )}
                       {record.pdfUrl && (
-                        <a 
-                          href={record.pdfUrl} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
+                        <button 
+                          onClick={() => openInPopupWindow(record.pdfUrl, record.title)}
                           className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-red-100 hover:bg-red-200 transition-colors"
                           aria-label={`Scarica PDF: ${record.title}`}
                         >
                           <i className="fa-duotone fa-file-pdf text-xl text-red-800" aria-hidden="true"></i>
-                        </a>
+                        </button>
                       )}
                       {!record.webUrl && !record.pdfUrl && (
                         <span className="text-gray-400">-</span>

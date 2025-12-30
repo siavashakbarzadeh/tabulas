@@ -11,14 +11,38 @@ function AssembleaPage() {
 
   useEffect(() => {
     fetchData();
+    // Add click handler for links in rich-text-content
+    document.addEventListener('click', handleLinkClick);
+    return () => document.removeEventListener('click', handleLinkClick);
   }, []);
 
-  /**
-   * Strip inline styles from HTML content but keep structure
-   */
+  // Intercept clicks on links inside rich-text-content to open in popup
+  const handleLinkClick = (e) => {
+    const link = e.target.closest('.rich-text-content a');
+    if (link) {
+      e.preventDefault();
+      const url = link.href;
+      const title = link.textContent || 'Documento';
+      openInPopupWindow(url, title);
+    }
+  };
+
+  // Open URL in a popup window
+  const openInPopupWindow = (url, title) => {
+    const width = Math.min(1200, window.screen.width * 0.8);
+    const height = Math.min(800, window.screen.height * 0.8);
+    const left = (window.screen.width - width) / 2;
+    const top = (window.screen.height - height) / 2;
+    
+    window.open(
+      url,
+      title,
+      `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes`
+    );
+  };
+
   const cleanHtml = (html) => {
     if (!html) return '';
-    // Remove style attributes
     return html.replace(/style="[^"]*"/gi, '');
   };
 
@@ -48,11 +72,7 @@ function AssembleaPage() {
   };
 
   if (loading) {
-    return (
-      <div className="w-full flex justify-center p-8">
-        <Loading />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {
