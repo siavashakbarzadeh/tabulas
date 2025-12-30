@@ -10,6 +10,8 @@ function Ultimidossierage() {
   const [records, setRecords] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState(null);
+  const [modalUrl, setModalUrl] = useState(null);
+  const [modalTitle, setModalTitle] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -17,30 +19,24 @@ function Ultimidossierage() {
 
   /**
    * Parse HTML content to extract structured records
-   * The API returns HTML with items separated by <HR class="defrss">
    */
   const parseHtmlToRecords = (htmlContent) => {
     if (!htmlContent) return [];
     
-    // Split by HR separator
     const items = htmlContent.split(/<hr[^>]*class="?defrss"?[^>]*>/i);
     
     return items.map((item, idx) => {
-      // Create a DOM parser to extract content
       const div = document.createElement('div');
       div.innerHTML = item;
       
-      // Extract text content and links
       const links = div.querySelectorAll('a');
       const text = div.textContent?.trim() || '';
       
-      // Try to extract structured info
       let title = '';
       let description = '';
       let pdfUrl = '';
       let webUrl = '';
       
-      // Find links
       links.forEach(link => {
         const href = link.getAttribute('href') || '';
         if (href.toLowerCase().includes('.pdf')) {
@@ -53,7 +49,6 @@ function Ultimidossierage() {
         }
       });
       
-      // Get description from remaining text
       description = text.replace(title, '').trim().substring(0, 200);
       
       if (!title && !description) return null;
@@ -63,8 +58,7 @@ function Ultimidossierage() {
         title: title || `Dossier ${idx + 1}`,
         description: description,
         pdfUrl: pdfUrl,
-        webUrl: webUrl,
-        rawHtml: item
+        webUrl: webUrl
       };
     }).filter(Boolean);
   };
@@ -90,6 +84,16 @@ function Ultimidossierage() {
     }
   };
 
+  const openModal = (url, title) => {
+    setModalUrl(url);
+    setModalTitle(title);
+  };
+
+  const closeModal = () => {
+    setModalUrl(null);
+    setModalTitle('');
+  };
+
   if (loading) {
     return (
       <div className="w-full flex justify-center p-8">
@@ -112,7 +116,6 @@ function Ultimidossierage() {
     );
   }
 
-  // Pagination
   const totalPages = Math.ceil(records.length / ITEMS_PER_PAGE);
   const displayedRecords = records.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
@@ -145,61 +148,52 @@ function Ultimidossierage() {
           {records.length} dossier trovati
         </p>
 
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse" role="table">
-            <thead>
-              <tr className="bg-red-800 text-white">
-                <th className="py-3 px-4 text-left font-semibold" scope="col">Dossier</th>
-                <th className="py-3 px-4 text-left font-semibold" scope="col">Descrizione</th>
-                <th className="py-3 px-4 text-center font-semibold w-32" scope="col">Link</th>
-              </tr>
-            </thead>
-            <tbody>
-              {displayedRecords.map((record, index) => (
-                <tr 
-                  key={record.id} 
-                  className={`border-b border-gray-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100 transition-colors`}
-                >
-                  <td className="py-3 px-4 font-medium text-gray-900">
+        {/* Card-style rows */}
+        <div className="space-y-4">
+          {displayedRecords.map((record) => (
+            <div 
+              key={record.id} 
+              className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-4 border border-gray-100"
+            >
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-gray-900 text-lg mb-1 truncate">
                     {record.title}
-                  </td>
-                  <td className="py-3 px-4 text-gray-600 text-sm">
-                    {record.description || '-'}
-                  </td>
-                  <td className="py-3 px-4">
-                    <div className="flex justify-center gap-2">
-                      {record.webUrl && (
-                        <a 
-                          href={record.webUrl} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-blue-100 hover:bg-blue-200 transition-colors"
-                          aria-label={`Apri online: ${record.title}`}
-                        >
-                          <i className="fa-duotone fa-globe text-xl text-blue-800" aria-hidden="true"></i>
-                        </a>
-                      )}
-                      {record.pdfUrl && (
-                        <a 
-                          href={record.pdfUrl} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-red-100 hover:bg-red-200 transition-colors"
-                          aria-label={`Scarica PDF: ${record.title}`}
-                        >
-                          <i className="fa-duotone fa-file-pdf text-xl text-red-800" aria-hidden="true"></i>
-                        </a>
-                      )}
-                      {!record.webUrl && !record.pdfUrl && (
-                        <span className="text-gray-400">-</span>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </h3>
+                  {record.description && (
+                    <p className="text-gray-600 text-sm line-clamp-2">
+                      {record.description}
+                    </p>
+                  )}
+                </div>
+                
+                {/* Action buttons */}
+                <div className="flex gap-2 flex-shrink-0">
+                  {record.webUrl && (
+                    <button 
+                      onClick={() => openModal(record.webUrl, record.title)}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium transition-colors"
+                      aria-label={`Apri online: ${record.title}`}
+                    >
+                      <i className="fa-duotone fa-globe text-lg" aria-hidden="true"></i>
+                      <span className="hidden sm:inline">Web</span>
+                    </button>
+                  )}
+                  {record.pdfUrl && (
+                    <button 
+                      onClick={() => openModal(record.pdfUrl, record.title)}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-800 font-medium transition-colors"
+                      aria-label={`Visualizza PDF: ${record.title}`}
+                    >
+                      <i className="fa-duotone fa-file-pdf text-lg" aria-hidden="true"></i>
+                      <span className="hidden sm:inline">PDF</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Empty state */}
@@ -234,6 +228,51 @@ function Ultimidossierage() {
           </nav>
         )}
       </div>
+
+      {/* Modal/Popup for viewing content */}
+      {modalUrl && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+          onClick={closeModal}
+        >
+          <div 
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl h-[90vh] flex flex-col overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal header */}
+            <div className="flex items-center justify-between px-4 py-3 bg-red-800 text-white">
+              <h3 className="font-semibold truncate flex-1 mr-4">{modalTitle}</h3>
+              <div className="flex items-center gap-2">
+                <a
+                  href={modalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-sm transition-colors"
+                >
+                  Apri in nuova scheda
+                </a>
+                <button
+                  onClick={closeModal}
+                  className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+                  aria-label="Chiudi"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+            
+            {/* Modal content - iframe */}
+            <div className="flex-1 bg-gray-100">
+              <iframe
+                src={modalUrl}
+                className="w-full h-full border-none"
+                title={modalTitle}
+                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
