@@ -40,7 +40,7 @@ function Sidebar2({ isSidebarActive = false, setIsSidebarActive }) {
       className={`
         w-auto lg:w-68 pt-4 pb-16 lg:pb-4 pl-4 pr-2 fixed 
         left-0 top-auto lg:top-0 right-0 lg:right-auto bottom-0 
-        z-10 bg-primary-900 transition-transform lg:transition-none duration-300 
+        z-50 lg:z-10 bg-primary-900 transition-transform lg:transition-none duration-300 
         ${isSidebarActive ? "translate-y-0" : "translate-y-full"} lg:translate-y-0
       `}
     >
