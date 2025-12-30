@@ -154,7 +154,30 @@ function CommissioniPageBase({ pageTitle }) {
 
     const getSinotticoForRow = (topNodeName, rowName) => {
         const sinotticoList = sinotticoData[topNodeName] || [];
-        return sinotticoList.find((item) => item.nomeComm === rowName);
+        // Extract commission number from row name (e.g., "1ª Commissione" -> "1")
+        const commNum = rowName?.match(/(\d+)/)?.[1];
+        
+        // Try exact match first
+        let match = sinotticoList.find((item) => item.nomeComm === rowName);
+        
+        // Try partial match if no exact match
+        if (!match && rowName) {
+            match = sinotticoList.find((item) => 
+                item.nomeComm?.toLowerCase().includes(rowName.toLowerCase()) ||
+                rowName.toLowerCase().includes(item.nomeComm?.toLowerCase())
+            );
+        }
+        
+        // Try matching by commission number
+        if (!match && commNum) {
+            match = sinotticoList.find((item) => 
+                item.nomeComm?.includes(`${commNum}ª`) || 
+                item.nomeComm?.includes(`${commNum}°`) ||
+                item.nomeComm?.match(new RegExp(`\\b${commNum}\\b`))
+            );
+        }
+        
+        return match;
     };
 
     const getSinoGiornoInfo = (sinotticoItem, targetDateStr) => {
@@ -339,6 +362,10 @@ function CommissioniPageBase({ pageTitle }) {
                                         const sinoDayInfo = getSinoGiornoInfo(rowSinottico, day.fullLabel);
                                         const hasContent = dayNode?.docContentUrl || sinoDayInfo;
                                         
+                                        // Build convocazioni URL for this commission
+                                        const commNum = rowNode.name?.match(/(\d+)/)?.[1] || '';
+                                        const convocazioniUrl = commNum ? `https://www.senato.it/CLS/pub/conv/0/${commNum}` : convUrl;
+                                        
                                         return (
                                             <div
                                                 key={dayIdx}
@@ -346,25 +373,31 @@ function CommissioniPageBase({ pageTitle }) {
                                                     day.isToday ? 'bg-yellow-50/50' : ''
                                                 } ${day.isWeekend ? 'bg-gray-100/30' : ''}`}
                                             >
-                                                {hasContent && (
-                                                    <div className="space-y-1">
-                                                        {dayNode?.docContentUrl && (
-                                                            <button
-                                                                onClick={() => openInPopupWindow(dayNode.docContentUrl)}
-                                                                className="w-full px-2 py-1 bg-red-800 hover:bg-red-900 text-white text-xs rounded transition-colors"
-                                                            >
-                                                                Apri
-                                                            </button>
-                                                        )}
-                                                        {sinoDayInfo && (
-                                                            <div className="text-xs text-gray-600 bg-gray-100 rounded px-1 py-0.5">
-                                                                {sinoDayInfo.primaConvOra}
-                                                                {sinoDayInfo.ultConvOra && sinoDayInfo.ultConvOra !== sinoDayInfo.primaConvOra && (
-                                                                    <span>-{sinoDayInfo.ultConvOra}</span>
-                                                                )}
+                                                {sinoDayInfo && (
+                                                    <button
+                                                        onClick={() => openInPopupWindow(convocazioniUrl)}
+                                                        className="w-full px-2 py-1.5 bg-red-800 hover:bg-red-900 text-white text-xs rounded transition-colors space-y-0.5"
+                                                    >
+                                                        <div className="font-semibold">
+                                                            {sinoDayInfo.primaConvOra || ''}
+                                                            {sinoDayInfo.ultConvOra && sinoDayInfo.ultConvOra !== sinoDayInfo.primaConvOra && (
+                                                                <span> - {sinoDayInfo.ultConvOra}</span>
+                                                            )}
+                                                        </div>
+                                                        {sinoDayInfo.tipoSeduta && (
+                                                            <div className="text-red-200 text-[10px] truncate">
+                                                                {sinoDayInfo.tipoSeduta}
                                                             </div>
                                                         )}
-                                                    </div>
+                                                    </button>
+                                                )}
+                                                {!sinoDayInfo && dayNode?.docContentUrl && (
+                                                    <button
+                                                        onClick={() => openInPopupWindow(dayNode.docContentUrl)}
+                                                        className="w-full px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs rounded transition-colors"
+                                                    >
+                                                        Apri
+                                                    </button>
                                                 )}
                                             </div>
                                         );
