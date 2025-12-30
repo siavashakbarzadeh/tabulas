@@ -10,14 +10,14 @@ function Ultimidossierage() {
   const [records, setRecords] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState(null);
+  const [modalUrl, setModalUrl] = useState(null);
+  const [modalTitle, setModalTitle] = useState('');
+  const [isPdf, setIsPdf] = useState(false);
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  /**
-   * Parse HTML content to extract structured records
-   */
   const parseHtmlToRecords = (htmlContent) => {
     if (!htmlContent) return [];
     
@@ -80,6 +80,27 @@ function Ultimidossierage() {
       setError("Errore nel caricamento dei dati");
       setLoading(false);
     }
+  };
+
+  const openModal = (url, title, isPdfFile = false) => {
+    setModalUrl(url);
+    setModalTitle(title);
+    setIsPdf(isPdfFile);
+  };
+
+  const closeModal = () => {
+    setModalUrl(null);
+    setModalTitle('');
+    setIsPdf(false);
+  };
+
+  // Get embeddable URL - use Google Docs viewer for PDFs
+  const getEmbedUrl = (url) => {
+    if (isPdf) {
+      // Use Google Docs Viewer to embed PDFs (bypasses CORS)
+      return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+    }
+    return url;
   };
 
   if (loading) {
@@ -152,31 +173,27 @@ function Ultimidossierage() {
                   )}
                 </div>
                 
-                {/* Action buttons - open in new tab */}
+                {/* Action buttons */}
                 <div className="flex gap-2 flex-shrink-0">
                   {record.webUrl && (
-                    <a 
-                      href={record.webUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button 
+                      onClick={() => openModal(record.webUrl, record.title, false)}
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium transition-colors"
                       aria-label={`Apri online: ${record.title}`}
                     >
                       <i className="fa-duotone fa-globe text-lg" aria-hidden="true"></i>
                       <span className="hidden sm:inline">Web</span>
-                    </a>
+                    </button>
                   )}
                   {record.pdfUrl && (
-                    <a 
-                      href={record.pdfUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button 
+                      onClick={() => openModal(record.pdfUrl, record.title, true)}
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-800 font-medium transition-colors"
                       aria-label={`Visualizza PDF: ${record.title}`}
                     >
                       <i className="fa-duotone fa-file-pdf text-lg" aria-hidden="true"></i>
                       <span className="hidden sm:inline">PDF</span>
-                    </a>
+                    </button>
                   )}
                 </div>
               </div>
@@ -216,6 +233,65 @@ function Ultimidossierage() {
           </nav>
         )}
       </div>
+
+      {/* Mac-style Modal Window */}
+      {modalUrl && (
+        <div 
+          className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+          onClick={closeModal}
+        >
+          <div 
+            className="bg-gray-100 rounded-xl shadow-2xl w-full max-w-5xl h-[85vh] flex flex-col overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+            style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}
+          >
+            {/* Mac-style window header */}
+            <div className="flex items-center px-4 py-3 bg-gradient-to-b from-gray-200 to-gray-300 border-b border-gray-400">
+              {/* Traffic lights */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={closeModal}
+                  className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors flex items-center justify-center group"
+                  aria-label="Chiudi"
+                >
+                  <span className="opacity-0 group-hover:opacity-100 text-red-900 text-xs font-bold leading-none">×</span>
+                </button>
+                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              </div>
+              
+              {/* Title */}
+              <div className="flex-1 text-center">
+                <span className="text-sm text-gray-700 font-medium truncate block px-4">
+                  {modalTitle}
+                </span>
+              </div>
+              
+              {/* Actions */}
+              <div className="flex items-center gap-2">
+                <a
+                  href={modalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1 rounded bg-gray-400/50 hover:bg-gray-400/70 text-xs text-gray-700 transition-colors"
+                >
+                  Apri in nuova scheda ↗
+                </a>
+              </div>
+            </div>
+            
+            {/* Content - iframe with Google Docs Viewer for PDFs */}
+            <div className="flex-1 bg-white">
+              <iframe
+                src={getEmbedUrl(modalUrl)}
+                className="w-full h-full border-none"
+                title={modalTitle}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
