@@ -132,7 +132,7 @@ import PushedMessagesPage from "../pages/pushed/index.jsx";
 import DirettaPage from "../pages/diretta/index.jsx";
 import ExportStorage from "../pages/ExportStorage/ExportStorage.jsx";
 import AccountPage from "../pages/AccountPage";
-import Kiosk from './pages/Kiosk.jsx';
+// Note: Kiosk page removed - file doesn't exist
 
 const ScrollToTop = (props) => {
   const location = useLocation();
@@ -363,7 +363,7 @@ function Router() {
                   element={<TailwindConfigPage />}
                 />
               </Route>
-              <Route path="/kiosk" element={<Kiosk />} />
+              {/* Kiosk route removed - component doesn't exist */}
             </Route>
           </Route>
           
