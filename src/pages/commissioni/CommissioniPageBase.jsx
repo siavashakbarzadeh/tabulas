@@ -180,11 +180,11 @@ function CommissioniPageBase({ pageTitle }) {
     // Get icon for commission type
     const getTabIcon = (name) => {
         const lowerName = name?.toLowerCase() || '';
-        if (lowerName.includes('permanent')) return '🏛️';
-        if (lowerName.includes('special')) return '⭐';
-        if (lowerName.includes('bicamer')) return '🔗';
-        if (lowerName.includes('giunte')) return '⚖️';
-        return '📋';
+        if (lowerName.includes('permanent')) return 'fa-building-columns';
+        if (lowerName.includes('special')) return 'fa-star';
+        if (lowerName.includes('bicamer')) return 'fa-link';
+        if (lowerName.includes('giunte')) return 'fa-scale-balanced';
+        return 'fa-clipboard-list';
     };
 
     const filteredDocNodes = data?.docNodes?.filter((topNode) => {
@@ -213,7 +213,7 @@ function CommissioniPageBase({ pageTitle }) {
                                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                     }`}
                                 >
-                                    <span>{getTabIcon(topNode.name)}</span>
+                                    <i className={`fa-duotone ${getTabIcon(topNode.name)}`} aria-hidden="true"></i>
                                     <span className="hidden md:inline">{topNode.name}</span>
                                 </button>
                             ))}
@@ -269,7 +269,7 @@ function CommissioniPageBase({ pageTitle }) {
                         {/* Section Header */}
                         <div className="bg-gradient-to-r from-red-800 to-red-900 text-white px-6 py-4">
                             <h2 className="text-xl font-semibold flex items-center gap-3">
-                                <span>{getTabIcon(currentTopNode.name)}</span>
+                                <i className={`fa-duotone ${getTabIcon(currentTopNode.name)}`} aria-hidden="true"></i>
                                 {currentTopNode.name}
                             </h2>
                         </div>
@@ -318,7 +318,7 @@ function CommissioniPageBase({ pageTitle }) {
                                                     className="w-7 h-7 rounded-lg bg-red-100 hover:bg-red-200 text-red-800 flex items-center justify-center text-xs transition-colors"
                                                     title="Convocazioni"
                                                 >
-                                                    📅
+                                                    <i className="fa-duotone fa-calendar-alt" aria-hidden="true"></i>
                                                 </button>
                                             )}
                                             {ultimaNode && (
@@ -327,7 +327,7 @@ function CommissioniPageBase({ pageTitle }) {
                                                     className="w-7 h-7 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-800 flex items-center justify-center text-xs transition-colors"
                                                     title="Ultima Seduta"
                                                 >
-                                                    📄
+                                                    <i className="fa-duotone fa-file-lines" aria-hidden="true"></i>
                                                 </button>
                                             )}
                                         </div>
@@ -378,7 +378,7 @@ function CommissioniPageBase({ pageTitle }) {
                 {/* Empty State */}
                 {filteredDocNodes.length === 0 && (
                     <div className="bg-white rounded-2xl p-12 text-center text-gray-500">
-                        <span className="text-4xl mb-4 block">📋</span>
+                        <i className="fa-duotone fa-clipboard-list text-4xl mb-4 block" aria-hidden="true"></i>
                         <p>Nessuna commissione disponibile</p>
                     </div>
                 )}
