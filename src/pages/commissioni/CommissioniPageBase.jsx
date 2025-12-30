@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import swaggerApi from "../../configs/swaggerApiConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
@@ -11,7 +11,9 @@ function CommissioniPageBase({ pageTitle }) {
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState("");
     const [modalContent, setModalContent] = useState("");
-    const [isIframe, setIsIframe] = useState(false);
+    const [weekOffset, setWeekOffset] = useState(0);
+    const [activeTab, setActiveTab] = useState(0);
+    const modalRef = useRef(null);
 
     useEffect(() => {
         fetchData();
@@ -24,9 +26,7 @@ function CommissioniPageBase({ pageTitle }) {
                 if (!commName) return;
 
                 swaggerApi
-                    .get(
-                        `/v1/tabulas/sinottico/?descTipoCommissione='${commName}'`
-                    )
+                    .get(`/v1/tabulas/sinottico/?descTipoCommissione='${commName}'`)
                     .then((res) => {
                         setSinotticoData((prev) => ({
                             ...prev,
@@ -54,9 +54,18 @@ function CommissioniPageBase({ pageTitle }) {
             });
     };
 
-    const handleOpenModalWithUrl = (url) => {
+    const openInPopupWindow = (url) => {
         if (!url) return;
-        window.open(url, "_blank", "noopener,noreferrer,width=900,height=600");
+        const width = Math.min(1200, window.screen.width * 0.8);
+        const height = Math.min(800, window.screen.height * 0.8);
+        const left = (window.screen.width - width) / 2;
+        const top = (window.screen.height - height) / 2;
+        
+        window.open(
+            url,
+            'Documento',
+            `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes`
+        );
     };
 
     const handleOpenUltimaSeduta = (node) => {
@@ -64,14 +73,11 @@ function CommissioniPageBase({ pageTitle }) {
         setModalTitle("Ultima Seduta");
 
         if (node.docContentStreamContent) {
-            setIsIframe(false);
             setModalContent(node.docContentStreamContent);
         } else if (node.docContentUrl) {
-            setIsIframe(true);
-            const iframeHtml = `<iframe src="${node.docContentUrl}" style="width:100%; height:600px;" frameborder="0"></iframe>`;
-            setModalContent(iframeHtml);
+            openInPopupWindow(node.docContentUrl);
+            return;
         } else {
-            setIsIframe(false);
             setModalContent("Nessun contenuto disponibile.");
         }
 
@@ -82,45 +88,57 @@ function CommissioniPageBase({ pageTitle }) {
         setShowModal(false);
         setModalTitle("");
         setModalContent("");
-        setIsIframe(false);
     };
 
+    // Handle click outside modal
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (modalRef.current && !modalRef.current.contains(e.target)) {
+                handleCloseModal();
+            }
+        };
+        if (showModal) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [showModal]);
+
     if (loading) {
-        return (
-            <div className="w-full flex justify-center">
-                <Loading />
-            </div>
-        );
+        return <Loading />;
     }
 
-    const getCurrentWeekDays = () => {
+    const getWeekDays = (offset = 0) => {
         const days = [];
         const today = new Date();
         const dayOfWeek = today.getDay() === 0 ? 7 : today.getDay();
         const monday = new Date(today);
-        monday.setDate(today.getDate() - (dayOfWeek - 1));
+        monday.setDate(today.getDate() - (dayOfWeek - 1) + (offset * 7));
 
         for (let i = 0; i < 7; i++) {
             const currentDay = new Date(monday);
             currentDay.setDate(monday.getDate() + i);
-
-            const label = currentDay.toLocaleDateString("it-IT", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
+            
+            days.push({
+                date: currentDay,
+                dayName: currentDay.toLocaleDateString("it-IT", { weekday: "short" }),
+                dayNum: currentDay.getDate(),
+                monthName: currentDay.toLocaleDateString("it-IT", { month: "short" }),
+                fullLabel: currentDay.toLocaleDateString("it-IT", {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                }),
+                isToday: currentDay.toDateString() === new Date().toDateString(),
+                isWeekend: i >= 5,
             });
-            days.push(label);
         }
         return days;
     };
 
-    const columns = [
-        { id: "name", label: "" },
-        { id: "convocazioni", label: "Convocazioni" },
-        ...getCurrentWeekDays().map((dayLabel) => ({ id: dayLabel, label: dayLabel })),
-        { id: "ultimaSeduta", label: "Ultima Seduta" },
-    ];
+    const weekDays = getWeekDays(weekOffset);
+    const weekStart = weekDays[0];
+    const weekEnd = weekDays[6];
 
     const findChildByName = (parent, targetName) => {
         if (!parent?.docNodes) return null;
@@ -149,18 +167,9 @@ function CommissioniPageBase({ pageTitle }) {
         const year = splitted[3];
 
         const monthMap = {
-            gennaio: "01",
-            febbraio: "02",
-            marzo: "03",
-            aprile: "04",
-            maggio: "05",
-            giugno: "06",
-            luglio: "07",
-            agosto: "08",
-            settembre: "09",
-            ottobre: "10",
-            novembre: "11",
-            dicembre: "12",
+            gennaio: "01", febbraio: "02", marzo: "03", aprile: "04",
+            maggio: "05", giugno: "06", luglio: "07", agosto: "08",
+            settembre: "09", ottobre: "10", novembre: "11", dicembre: "12",
         };
         const mm = monthMap[monthName] || "01";
         const formattedStr = `${day}/${mm}/${year}`;
@@ -168,149 +177,233 @@ function CommissioniPageBase({ pageTitle }) {
         return sinotticoItem.sinoGiorni.find((g) => g.dataGiorno === formattedStr);
     };
 
+    // Get icon for commission type
+    const getTabIcon = (name) => {
+        const lowerName = name?.toLowerCase() || '';
+        if (lowerName.includes('permanent')) return '🏛️';
+        if (lowerName.includes('special')) return '⭐';
+        if (lowerName.includes('bicamer')) return '🔗';
+        if (lowerName.includes('giunte')) return '⚖️';
+        return '📋';
+    };
+
     const filteredDocNodes = data?.docNodes?.filter((topNode) => {
         if (!topNode.docNodes || topNode.docNodes.length === 0) return false;
         if (!pageTitle) return true;
         return topNode.name === pageTitle;
-    });
+    }) || [];
+
+    const currentTopNode = filteredDocNodes[activeTab];
 
     return (
         <>
-            <div className="w-full bg-white rounded-lg relative px-4 pt-4 pb-10">
-                {filteredDocNodes?.map((topNode, tableIdx) => (
-                    <div
-                        key={tableIdx}
-                        className="border border-gray-300 rounded-md overflow-hidden mb-6"
-                    >
-                        <div className="bg-red-800 text-white px-4 py-2 text-lg font-semibold">
-                            {topNode.name}
+            <div className="w-full space-y-4">
+                {/* Tabs for commission types */}
+                {filteredDocNodes.length > 1 && (
+                    <div className="bg-white rounded-2xl p-4 shadow-sm">
+                        <div className="flex flex-wrap gap-2">
+                            {filteredDocNodes.map((topNode, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => setActiveTab(idx)}
+                                    className={`px-4 py-2.5 rounded-xl font-medium transition-all flex items-center gap-2 ${
+                                        activeTab === idx
+                                            ? 'bg-red-800 text-white shadow-lg'
+                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    }`}
+                                >
+                                    <span>{getTabIcon(topNode.name)}</span>
+                                    <span className="hidden md:inline">{topNode.name}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Week Navigation */}
+                <div className="bg-white rounded-2xl p-4 shadow-sm">
+                    <div className="flex items-center justify-between">
+                        <button
+                            onClick={() => setWeekOffset(weekOffset - 1)}
+                            className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors text-lg"
+                            aria-label="Settimana precedente"
+                        >
+                            ←
+                        </button>
+                        
+                        <div className="text-center">
+                            <h2 className="text-lg font-semibold text-gray-800">
+                                {weekStart.dayNum} {weekStart.monthName} - {weekEnd.dayNum} {weekEnd.monthName}
+                            </h2>
+                            <p className="text-sm text-gray-500">
+                                {weekOffset === 0 ? 'Questa settimana' : 
+                                 weekOffset === -1 ? 'Settimana scorsa' :
+                                 weekOffset === 1 ? 'Prossima settimana' :
+                                 `${Math.abs(weekOffset)} settimane ${weekOffset > 0 ? 'avanti' : 'fa'}`}
+                            </p>
+                        </div>
+                        
+                        <button
+                            onClick={() => setWeekOffset(weekOffset + 1)}
+                            className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors text-lg"
+                            aria-label="Settimana successiva"
+                        >
+                            →
+                        </button>
+                    </div>
+                    
+                    {weekOffset !== 0 && (
+                        <button
+                            onClick={() => setWeekOffset(0)}
+                            className="mt-3 w-full py-2 text-sm text-red-800 hover:bg-red-50 rounded-lg transition-colors font-medium"
+                        >
+                            ↻ Torna a oggi
+                        </button>
+                    )}
+                </div>
+
+                {/* Calendar Grid for Active Tab */}
+                {currentTopNode && (
+                    <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
+                        {/* Section Header */}
+                        <div className="bg-gradient-to-r from-red-800 to-red-900 text-white px-6 py-4">
+                            <h2 className="text-xl font-semibold flex items-center gap-3">
+                                <span>{getTabIcon(currentTopNode.name)}</span>
+                                {currentTopNode.name}
+                            </h2>
                         </div>
 
-                        <table className="w-full border-collapse">
-                            <thead>
-                                <tr className="bg-gray-50 text-dark">
-                                    {columns.map((col, cIdx) => (
-                                        <th key={cIdx} className="py-2 px-3 border text-center">
-                                            {col.label}
-                                        </th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {topNode.docNodes.map((rowNode, rowIdx) => {
-                                    const rowSinottico = getSinotticoForRow(topNode.name, rowNode.name);
-                                    return (
-                                        <tr key={rowIdx} className="odd:bg-white even:bg-gray-50">
-                                            {columns.map((col, colIdx) => {
-                                                if (col.id === "name") {
-                                                    return (
-                                                        <td
-                                                            key={colIdx}
-                                                            className="border border-gray-300 px-3 py-2 font-semibold text-sm"
-                                                        >
-                                                            {rowNode.name}
-                                                        </td>
-                                                    );
-                                                } else if (col.id === "convocazioni") {
-                                                    const convocazioniNode = findChildByName(rowNode, "Convocazioni");
-                                                    const fallbackUrl = rowSinottico?.convocazioneUrl;
-                                                    const linkUrl = convocazioniNode?.docContentUrl || fallbackUrl;
+                        {/* Days Header */}
+                        <div className="grid grid-cols-8 bg-gray-100 text-gray-700 text-sm font-medium">
+                            <div className="p-3 border-r border-gray-200">
+                                Commissione
+                            </div>
+                            {weekDays.map((day, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`p-2 text-center border-r border-gray-200 last:border-r-0 ${
+                                        day.isToday ? 'bg-red-100' : ''
+                                    } ${day.isWeekend ? 'bg-gray-200/50' : ''}`}
+                                >
+                                    <div className="text-xs uppercase opacity-70">{day.dayName}</div>
+                                    <div className={`text-lg font-bold ${day.isToday ? 'text-red-800' : ''}`}>
+                                        {day.dayNum}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
 
-                                                    return (
-                                                        <td
-                                                            key={colIdx}
-                                                            className="border border-gray-300 px-3 py-2 text-sm text-center"
-                                                        >
-                                                            {linkUrl && (
-                                                                <span
-                                                                    className="inline-block cursor-pointer"
-                                                                    onClick={() => handleOpenModalWithUrl(linkUrl)}
-                                                                >
-                                                                    <i
-                                                                        className="fa-duotone fa-calendar-alt text-xl text-red-800"
-                                                                        title="Apri Convocazioni"
-                                                                    ></i>
-                                                                </span>
-                                                            )}
-                                                        </td>
-                                                    );
-                                                } else if (col.id === "ultimaSeduta") {
-                                                    const ultimaNode = findChildByName(rowNode, "Ultima seduta");
-                                                    return (
-                                                        <td
-                                                            key={colIdx}
-                                                            className="border border-gray-300 px-3 py-2 text-sm text-center"
-                                                        >
-                                                            {ultimaNode && (
-                                                                <span
-                                                                    className="inline-block cursor-pointer"
-                                                                    onClick={() => handleOpenUltimaSeduta(ultimaNode)}
-                                                                >
-                                                                    <i
-                                                                        className="fa-duotone fa-file-alt text-xl text-red-800"
-                                                                        title="Ultima Seduta"
-                                                                    />
-                                                                </span>
-                                                            )}
-                                                        </td>
-                                                    );
-                                                } else {
-                                                    const dayNode = getDayNode(rowNode, col.label);
-                                                    const sinoDayInfo = getSinoGiornoInfo(rowSinottico, col.label);
-
-                                                    return (
-                                                        <td
-                                                            key={colIdx}
-                                                            className="border border-gray-300 px-3 py-2 text-sm text-center"
-                                                        >
-                                                            {dayNode?.docContentUrl && (
-                                                                <span
-                                                                    className="inline-block cursor-pointer mr-2"
-                                                                    onClick={() => handleOpenModalWithUrl(dayNode.docContentUrl)}
-                                                                >
-                                                                    <i className="fas fa-file-alt text-xl" title="Apri Documento" />
-                                                                </span>
-                                                            )}
-                                                            {sinoDayInfo && (
-                                                                <div>
-                                                                    <small>
-                                                                        {sinoDayInfo.primaConvOra} - {sinoDayInfo.ultConvOra}
-                                                                    </small>
-                                                                </div>
-                                                            )}
-                                                        </td>
-                                                    );
-                                                }
-                                            })}
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                        {/* Commission Rows */}
+                        {currentTopNode.docNodes.map((rowNode, rowIdx) => {
+                            const rowSinottico = getSinotticoForRow(currentTopNode.name, rowNode.name);
+                            const convocazioniNode = findChildByName(rowNode, "Convocazioni");
+                            const ultimaNode = findChildByName(rowNode, "Ultima seduta");
+                            const convUrl = convocazioniNode?.docContentUrl || rowSinottico?.convocazioneUrl;
+                            
+                            return (
+                                <div
+                                    key={rowIdx}
+                                    className={`grid grid-cols-8 border-t border-gray-100 ${
+                                        rowIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'
+                                    } hover:bg-red-50/30 transition-colors`}
+                                >
+                                    {/* Commission Name */}
+                                    <div className="p-3 border-r border-gray-200 flex items-center justify-between gap-2">
+                                        <span className="font-medium text-sm text-gray-800 truncate">{rowNode.name}</span>
+                                        <div className="flex gap-1 flex-shrink-0">
+                                            {convUrl && (
+                                                <button
+                                                    onClick={() => openInPopupWindow(convUrl)}
+                                                    className="w-7 h-7 rounded-lg bg-red-100 hover:bg-red-200 text-red-800 flex items-center justify-center text-xs transition-colors"
+                                                    title="Convocazioni"
+                                                >
+                                                    📅
+                                                </button>
+                                            )}
+                                            {ultimaNode && (
+                                                <button
+                                                    onClick={() => handleOpenUltimaSeduta(ultimaNode)}
+                                                    className="w-7 h-7 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-800 flex items-center justify-center text-xs transition-colors"
+                                                    title="Ultima Seduta"
+                                                >
+                                                    📄
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Day Cells */}
+                                    {weekDays.map((day, dayIdx) => {
+                                        const dayNode = getDayNode(rowNode, day.fullLabel);
+                                        const sinoDayInfo = getSinoGiornoInfo(rowSinottico, day.fullLabel);
+                                        const hasContent = dayNode?.docContentUrl || sinoDayInfo;
+                                        
+                                        return (
+                                            <div
+                                                key={dayIdx}
+                                                className={`p-2 border-r border-gray-200 last:border-r-0 text-center min-h-[60px] flex flex-col justify-center ${
+                                                    day.isToday ? 'bg-yellow-50/50' : ''
+                                                } ${day.isWeekend ? 'bg-gray-100/30' : ''}`}
+                                            >
+                                                {hasContent && (
+                                                    <div className="space-y-1">
+                                                        {dayNode?.docContentUrl && (
+                                                            <button
+                                                                onClick={() => openInPopupWindow(dayNode.docContentUrl)}
+                                                                className="w-full px-2 py-1 bg-red-800 hover:bg-red-900 text-white text-xs rounded transition-colors"
+                                                            >
+                                                                Apri
+                                                            </button>
+                                                        )}
+                                                        {sinoDayInfo && (
+                                                            <div className="text-xs text-gray-600 bg-gray-100 rounded px-1 py-0.5">
+                                                                {sinoDayInfo.primaConvOra}
+                                                                {sinoDayInfo.ultConvOra && sinoDayInfo.ultConvOra !== sinoDayInfo.primaConvOra && (
+                                                                    <span>-{sinoDayInfo.ultConvOra}</span>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            );
+                        })}
                     </div>
-                ))}
+                )}
+
+                {/* Empty State */}
+                {filteredDocNodes.length === 0 && (
+                    <div className="bg-white rounded-2xl p-12 text-center text-gray-500">
+                        <span className="text-4xl mb-4 block">📋</span>
+                        <p>Nessuna commissione disponibile</p>
+                    </div>
+                )}
             </div>
 
+            {/* Modal */}
             {showModal && (
-                <div
-                    className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
-                    onClick={handleCloseModal}
-                >
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
                     <div
-                        className="bg-white rounded-lg p-6 w-3/4 max-w-4xl"
-                        onClick={(e) => e.stopPropagation()}
+                        ref={modalRef}
+                        className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl"
                     >
+                        <div className="bg-gradient-to-r from-red-800 to-red-900 text-white px-6 py-4 flex items-center justify-between">
+                            <h3 className="text-lg font-semibold">{modalTitle}</h3>
+                            <button
+                                onClick={handleCloseModal}
+                                className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+                            >
+                                ✕
+                            </button>
+                        </div>
                         <div
-                            className="rich-text-content p-4 bg-gray-100 rounded overflow-y-auto"
-                            style={{ maxHeight: "70vh" }}
+                            className="rich-text-content p-6 overflow-y-auto"
+                            style={{ maxHeight: "calc(90vh - 80px)" }}
                             dangerouslySetInnerHTML={{ __html: modalContent }}
                         />
-                        <button
-                            onClick={handleCloseModal}
-                            className="mt-4 px-4 py-2 bg-red-600 text-white rounded"
-                        >
-                            Chiudi
-                        </button>
                     </div>
                 </div>
             )}
