@@ -376,20 +376,13 @@ function CommissioniPageBase({ pageTitle }) {
                                                 {sinoDayInfo && (
                                                     <button
                                                         onClick={() => openInPopupWindow(convocazioniUrl)}
-                                                        className="w-full px-2 py-1.5 bg-red-800 hover:bg-red-900 text-white text-xs rounded transition-colors space-y-0.5"
+                                                        className="w-full px-2 py-1.5 bg-red-800 hover:bg-red-900 text-white text-xs rounded transition-colors"
                                                     >
-                                                        <div className="font-semibold">
-                                                            {sinoDayInfo.primaConvOra || ''}
-                                                            {sinoDayInfo.ultConvOra && sinoDayInfo.ultConvOra !== sinoDayInfo.primaConvOra && (
-                                                                <span> - {sinoDayInfo.ultConvOra}</span>
-                                                            )}
-                                                        </div>
-                                                        {sinoDayInfo.tipoSeduta && (
-                                                            <div className="text-red-200 text-[10px] truncate">
-                                                                {sinoDayInfo.tipoSeduta}
-                                                            </div>
-                                                        )}
+                                                        {sinoDayInfo.primaConvOra || '—'}
                                                     </button>
+                                                )}
+                                                {!sinoDayInfo && !dayNode?.docContentUrl && (
+                                                    <span className="text-gray-300">—</span>
                                                 )}
                                                 {!sinoDayInfo && dayNode?.docContentUrl && (
                                                     <button
