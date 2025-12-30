@@ -3,8 +3,8 @@ import swaggerApi from "../../configs/swaggerApiConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
 import "../../assets/css/custom/rich-text-content.css";
 
-// Senato TV YouTube Live Stream
-const SENATO_YOUTUBE_EMBED = "https://www.youtube.com/embed/live_stream?channel=UCySGVkEUDJmPYnWsBqgsVMA&autoplay=1&mute=1";
+// Senato TV YouTube Live Stream - specific video that's always live
+const SENATO_YOUTUBE_VIDEO_ID = "sPbVV3E737E";
 
 function AssembleaPage() {
   const [loading, setLoading] = useState(true);
@@ -55,16 +55,9 @@ function AssembleaPage() {
   const cleanHtml = (html) => {
     if (!html) return '';
     
-    // Remove inline styles but keep structure
     let cleaned = html.replace(/style="[^"]*"/gi, '');
-    
-    // Remove sidebar elements (printable version, etc)
     cleaned = cleaned.replace(/<div[^>]*id="?dxSmall"?[^>]*>[\s\S]*?<\/div>/gi, '');
-    
-    // Remove onclick handlers (we handle clicks ourselves)
     cleaned = cleaned.replace(/onclick="[^"]*"/gi, '');
-    
-    // Make sure all links have href
     cleaned = cleaned.replace(/href=["']javascript:[^"']*["']/gi, 'href="#"');
     
     return cleaned;
@@ -124,48 +117,54 @@ function AssembleaPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen w-full space-y-6">
-      {/* YouTube Live Stream Section */}
-      <div className="bg-white rounded-2xl overflow-hidden shadow-md">
-        <div className="aspect-video w-full">
-          <iframe
-            src={SENATO_YOUTUBE_EMBED}
-            className="w-full h-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            title="Senato TV - In diretta"
-          />
+    <div className="flex flex-col min-h-screen w-full space-y-4">
+      {/* Top section: Tabs on left, YouTube on right */}
+      <div className="flex flex-col lg:flex-row gap-4">
+        {/* Section tabs - left side */}
+        <div className="flex-1">
+          {sections.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {sections.map((section, idx) => (
+                <button
+                  key={section.id}
+                  onClick={() => setActiveSection(idx)}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
+                    activeSection === idx
+                      ? 'bg-red-800 text-white shadow-md'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                  aria-selected={activeSection === idx}
+                  role="tab"
+                >
+                  <i className={`fa-duotone ${section.icon}`} aria-hidden="true"></i>
+                  {section.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-        <div className="px-4 py-3 flex items-center gap-2 border-t border-gray-100">
-          <span className="inline-flex items-center gap-1.5 text-red-600 font-medium">
-            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
-            In diretta
-          </span>
-          <span className="text-gray-500 text-sm">Senato TV</span>
+
+        {/* YouTube Live Stream - top right */}
+        <div className="lg:w-80 xl:w-96 flex-shrink-0">
+          <div className="bg-white rounded-2xl overflow-hidden shadow-md">
+            <div className="aspect-video w-full">
+              <iframe
+                src={`https://www.youtube.com/embed/${SENATO_YOUTUBE_VIDEO_ID}?autoplay=1&mute=1`}
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title="Senato TV - In diretta"
+              />
+            </div>
+            <div className="px-3 py-2 flex items-center gap-2 border-t border-gray-100">
+              <span className="inline-flex items-center gap-1.5 text-red-600 font-medium text-sm">
+                <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+                In diretta
+              </span>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* Section tabs */}
-      {sections.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {sections.map((section, idx) => (
-            <button
-              key={section.id}
-              onClick={() => setActiveSection(idx)}
-              className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
-                activeSection === idx
-                  ? 'bg-red-800 text-white shadow-md'
-                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-              }`}
-              aria-selected={activeSection === idx}
-              role="tab"
-            >
-              <i className={`fa-duotone ${section.icon}`} aria-hidden="true"></i>
-              {section.name}
-            </button>
-          ))}
-        </div>
-      )}
 
       {/* Active section content */}
       {sections[activeSection] && (
@@ -271,7 +270,6 @@ function AssembleaPage() {
           color: #1a1a1a !important;
         }
         
-        /* Date badges - matches red style in screenshot */
         .assemblea-content .data,
         .assemblea-content [class*="data"] {
           display: inline-block;
