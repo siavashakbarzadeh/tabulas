@@ -15,6 +15,8 @@ function AssembleaPage() {
   const [dateFilter, setDateFilter] = useState('');
   const [matchCount, setMatchCount] = useState(0);
   const [currentMatch, setCurrentMatch] = useState(0);
+  const [news, setNews] = useState([]);
+  const [newsExpanded, setNewsExpanded] = useState(false);
   const contentRef = useRef(null);
 
   useEffect(() => {
@@ -175,8 +177,13 @@ function AssembleaPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await swaggerApi.get("/v2/tabulas/kiosk/assemblea");
-      const data = res.data;
+      // Fetch assemblea data and news in parallel
+      const [assembleaRes, newsRes] = await Promise.all([
+        swaggerApi.get("/v2/tabulas/kiosk/assemblea"),
+        swaggerApi.get("/v1/tabulas/news/nodes").catch(() => ({ data: null }))
+      ]);
+      
+      const data = assembleaRes.data;
       
       if (data?.docNodes && data.docNodes.length > 0) {
         const parsed = data.docNodes.map((node, idx) => ({
@@ -190,6 +197,12 @@ function AssembleaPage() {
       } else {
         setSections([]);
       }
+      
+      // Parse news
+      if (newsRes.data?.docNodes) {
+        setNews(newsRes.data.docNodes.slice(0, 20)); // Limit to 20 news items
+      }
+      
       setLoading(false);
     } catch (error) {
       console.error("Error fetching assemblea data:", error);
@@ -221,10 +234,12 @@ function AssembleaPage() {
 
   return (
     <div className="flex flex-col min-h-screen w-full">
-      {/* White container like other pages */}
-      <div className="flex-1 bg-white rounded-2xl relative p-6">
-        {/* Top section: Tabs + Filters on left, YouTube on right */}
-        <div className="flex flex-col lg:flex-row gap-4 mb-6">
+      {/* Two column layout: main content (8) + news sidebar (4) */}
+      <div className="flex flex-col lg:flex-row gap-4">
+        {/* Main Content - 8 columns */}
+        <div className="flex-1 lg:w-8/12 bg-white rounded-2xl relative p-6">
+          {/* Top section: Tabs + Filters on left, YouTube on right */}
+          <div className="flex flex-col lg:flex-row gap-4 mb-6">
           {/* Left side: Tabs and Filters - vertically centered */}
           <div className="flex-1 flex flex-col justify-center gap-4">
             {/* Section tabs */}
@@ -328,7 +343,6 @@ function AssembleaPage() {
             <p>Nessun contenuto disponibile</p>
           </div>
         )}
-      </div>
 
       {/* Search Navigation Bar - Bottom Center */}
       {searchQuery && (
@@ -493,6 +507,62 @@ function AssembleaPage() {
           border-radius: 2px;
         }
       `}</style>
+        </div>
+
+        {/* News Sidebar - 4 columns on desktop, collapsible on mobile */}
+        <div className="lg:w-4/12 bg-white rounded-2xl p-4 lg:p-6 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto">
+          {/* Mobile: Collapsible header */}
+          <button
+            onClick={() => setNewsExpanded(!newsExpanded)}
+            className="w-full lg:hidden flex items-center justify-between p-3 bg-gray-50 rounded-xl mb-2"
+          >
+            <div className="flex items-center gap-2">
+              <i className="fa-duotone fa-newspaper text-red-800" aria-hidden="true"></i>
+              <span className="font-semibold text-gray-800">Ultime Notizie</span>
+              <span className="text-xs text-gray-500">({news.length})</span>
+            </div>
+            <i className={`fa-duotone fa-chevron-down text-gray-400 transition-transform ${newsExpanded ? 'rotate-180' : ''}`} aria-hidden="true"></i>
+          </button>
+          
+          {/* Desktop: Always visible header */}
+          <div className="hidden lg:flex items-center gap-2 mb-4 pb-3 border-b border-gray-100">
+            <i className="fa-duotone fa-newspaper text-red-800 text-lg" aria-hidden="true"></i>
+            <h2 className="text-lg font-semibold text-gray-800">Ultime Notizie</h2>
+          </div>
+          
+          {/* News list */}
+          <div className={`space-y-2 ${!newsExpanded ? 'hidden lg:block' : ''}`}>
+            {news.length === 0 ? (
+              <p className="text-gray-400 text-sm text-center py-4">Nessuna notizia disponibile</p>
+            ) : (
+              news.map((item, idx) => {
+                // Parse time and headline from name (e.g., "09.03  ++ Meta, decisione...")
+                const match = item.name?.match(/^(\d{2}\.\d{2})\s+(.+)$/);
+                const time = match ? match[1] : '';
+                const headline = match ? match[2].replace(/^\+\+\s*/, '').replace(/\s*\+\+$/, '') : item.name || '';
+                
+                return (
+                  <div
+                    key={idx}
+                    className="p-3 bg-gray-50 hover:bg-red-50/50 rounded-xl transition-colors cursor-pointer group"
+                  >
+                    <div className="flex items-start gap-2">
+                      {time && (
+                        <span className="text-xs font-mono text-red-800 bg-red-100 px-1.5 py-0.5 rounded flex-shrink-0">
+                          {time}
+                        </span>
+                      )}
+                      <p className="text-sm text-gray-700 line-clamp-2 group-hover:text-gray-900">
+                        {headline}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
