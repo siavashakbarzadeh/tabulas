@@ -16,12 +16,7 @@ const Menu = [
     id: 2,
     title: "Commissioni",
     icon: <i className="fa-duotone text-xl fa-users w-6 h-6" />,
-    subMenu: [
-      { id: 1, title: "Tutte le commissioni", icon: <i className="fa-duotone text-xl fa-users w-6 h-6" />, link: "/commissioni" },
-      { id: 2, title: "Commissioni permanenti", icon: <i className="fa-duotone text-xl fa-user-group w-6 h-6" />, link: "/commissioni-permanenti" },
-      { id: 3, title: "Giunte e altre comissioni", icon: <i className="fa-duotone text-xl fa-comments w-6 h-6" />, link: "/giunte-e-altre-comissioni" },
-      { id: 4, title: "Bicamerali e delegazioni", icon: <i className="fa-duotone text-xl fa-user-group w-6 h-6" />, link: "/bicamerali-e-delegazioni" },
-    ],
+    link: "/commissioni",
   },
   {
     id: 3,
@@ -33,10 +28,7 @@ const Menu = [
     id: 4,
     title: "Ultimi dossier",
     icon: <i className="fa-duotone text-xl fa-file-circle-exclamation w-6 h-6" />,
-    subMenu: [
-      { id: 1, title: "Prima pagina", icon: "", link: "/ultimdossier" },
-      { id: 2, title: "Seconda pagina", icon: "", link: "/ultimdossier1" },
-    ],
+    link: "/ultimdossier",
   },
   {
     id: 5, title: "Ebook", icon: <i className="fa-duotone text-xl fa-book w-6 h-6" />, link: "/ebook",
