@@ -3,6 +3,9 @@ import swaggerApi from "../../configs/swaggerApiConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
 import "../../assets/css/custom/rich-text-content.css";
 
+// Senato TV YouTube Live Stream
+const SENATO_YOUTUBE_EMBED = "https://www.youtube.com/embed/live_stream?channel=UCySGVkEUDJmPYnWsBqgsVMA&autoplay=1&mute=1";
+
 function AssembleaPage() {
   const [loading, setLoading] = useState(true);
   const [sections, setSections] = useState([]);
@@ -121,81 +124,165 @@ function AssembleaPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen w-full">
-      <div className="flex-1 bg-white rounded-2xl relative p-4">
-        <h1 className="text-2xl font-bold text-red-800 mb-6 flex items-center gap-3">
-          <i className="fa-duotone fa-landmark-dome" aria-hidden="true"></i>
-          Assemblea
-        </h1>
-        
-        {/* Section cards/tabs */}
-        {sections.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            {sections.map((section, idx) => (
-              <button
-                key={section.id}
-                onClick={() => setActiveSection(idx)}
-                className={`p-4 rounded-xl border-2 transition-all text-left ${
-                  activeSection === idx
-                    ? 'border-red-800 bg-red-50 shadow-md'
-                    : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow'
-                }`}
-                aria-selected={activeSection === idx}
-                role="tab"
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                    activeSection === idx ? 'bg-red-800 text-white' : 'bg-gray-100 text-gray-600'
-                  }`}>
-                    <i className={`fa-duotone ${section.icon} text-lg`} aria-hidden="true"></i>
-                  </div>
-                  <span className={`font-medium ${activeSection === idx ? 'text-red-800' : 'text-gray-700'}`}>
-                    {section.name}
-                  </span>
-                </div>
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Active section content */}
-        {sections[activeSection] && (
-          <section 
-            className="bg-gray-50 rounded-xl p-6 shadow-inner"
-            role="tabpanel"
-            aria-label={sections[activeSection].name}
-          >
-            <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-200">
-              <div className="w-12 h-12 rounded-xl bg-red-800 text-white flex items-center justify-center">
-                <i className={`fa-duotone ${sections[activeSection].icon} text-xl`} aria-hidden="true"></i>
-              </div>
-              <h2 className="text-xl font-semibold text-gray-800">
-                {sections[activeSection].name}
-              </h2>
-            </div>
-            
-            <div 
-              ref={contentRef}
-              className="rich-text-content bg-white rounded-lg p-4 shadow-sm"
-              dangerouslySetInnerHTML={{ __html: sections[activeSection].content }}
-            />
-            
-            {/* Info message about links */}
-            <div className="mt-4 p-3 bg-blue-50 rounded-lg text-sm text-blue-800 flex items-center gap-2">
-              <i className="fa-duotone fa-info-circle" aria-hidden="true"></i>
-              <span>Clicca sui link nel documento per aprirli in una nuova finestra</span>
-            </div>
-          </section>
-        )}
-
-        {/* Empty state */}
-        {sections.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
-            <i className="fa-duotone fa-inbox text-4xl mb-4" aria-hidden="true"></i>
-            <p>Nessun contenuto disponibile</p>
-          </div>
-        )}
+    <div className="flex flex-col min-h-screen w-full space-y-6">
+      {/* YouTube Live Stream Section */}
+      <div className="bg-white rounded-2xl overflow-hidden shadow-md">
+        <div className="aspect-video w-full">
+          <iframe
+            src={SENATO_YOUTUBE_EMBED}
+            className="w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title="Senato TV - In diretta"
+          />
+        </div>
+        <div className="px-4 py-3 flex items-center gap-2 border-t border-gray-100">
+          <span className="inline-flex items-center gap-1.5 text-red-600 font-medium">
+            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+            In diretta
+          </span>
+          <span className="text-gray-500 text-sm">Senato TV</span>
+        </div>
       </div>
+
+      {/* Section tabs */}
+      {sections.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {sections.map((section, idx) => (
+            <button
+              key={section.id}
+              onClick={() => setActiveSection(idx)}
+              className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
+                activeSection === idx
+                  ? 'bg-red-800 text-white shadow-md'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+              }`}
+              aria-selected={activeSection === idx}
+              role="tab"
+            >
+              <i className={`fa-duotone ${section.icon}`} aria-hidden="true"></i>
+              {section.name}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Active section content */}
+      {sections[activeSection] && (
+        <div className="bg-white rounded-2xl overflow-hidden shadow-md">
+          {/* Section header */}
+          <div className="bg-red-800 text-white px-6 py-4">
+            <h2 className="text-xl font-semibold flex items-center gap-3">
+              <i className={`fa-duotone ${sections[activeSection].icon}`} aria-hidden="true"></i>
+              {sections[activeSection].name}
+            </h2>
+          </div>
+          
+          {/* Content with styled cards */}
+          <div 
+            ref={contentRef}
+            className="p-6 assemblea-content"
+            dangerouslySetInnerHTML={{ __html: sections[activeSection].content }}
+          />
+        </div>
+      )}
+
+      {/* Empty state */}
+      {sections.length === 0 && (
+        <div className="text-center py-12 text-gray-500 bg-white rounded-2xl">
+          <i className="fa-duotone fa-inbox text-4xl mb-4" aria-hidden="true"></i>
+          <p>Nessun contenuto disponibile</p>
+        </div>
+      )}
+
+      {/* Custom styles for assemblea content */}
+      <style>{`
+        .assemblea-content {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          font-size: 15px;
+          line-height: 1.7;
+          color: #333;
+        }
+        
+        .assemblea-content * {
+          font-family: inherit !important;
+          color: inherit !important;
+          background: transparent !important;
+        }
+        
+        .assemblea-content h1,
+        .assemblea-content h2,
+        .assemblea-content h3,
+        .assemblea-content h4,
+        .assemblea-content h5 {
+          color: #97002D !important;
+          font-weight: 600;
+          margin: 1.5rem 0 1rem;
+        }
+        
+        .assemblea-content h3 {
+          display: inline-block;
+          background: #97002D !important;
+          color: white !important;
+          padding: 0.75rem 1.25rem;
+          border-radius: 0.5rem;
+          font-size: 0.95rem;
+          margin: 1.5rem 0 1rem;
+        }
+        
+        .assemblea-content p,
+        .assemblea-content div {
+          margin-bottom: 0.75rem;
+        }
+        
+        .assemblea-content ul,
+        .assemblea-content ol {
+          background: #f3f4f6 !important;
+          padding: 1.25rem 1.25rem 1.25rem 2.5rem !important;
+          border-radius: 0.75rem;
+          margin: 1rem 0;
+        }
+        
+        .assemblea-content li {
+          margin-bottom: 0.5rem;
+          line-height: 1.6;
+        }
+        
+        .assemblea-content a {
+          color: #97002D !important;
+          font-weight: 500;
+          text-decoration: underline;
+          cursor: pointer;
+        }
+        
+        .assemblea-content a:hover {
+          color: #c41048 !important;
+        }
+        
+        .assemblea-content hr {
+          border: none;
+          border-top: 2px solid #e5e7eb;
+          margin: 1.5rem 0;
+        }
+        
+        .assemblea-content b,
+        .assemblea-content strong {
+          font-weight: 600;
+          color: #1a1a1a !important;
+        }
+        
+        /* Date badges - matches red style in screenshot */
+        .assemblea-content .data,
+        .assemblea-content [class*="data"] {
+          display: inline-block;
+          background: #97002D !important;
+          color: white !important;
+          padding: 0.5rem 1rem;
+          border-radius: 0.5rem;
+          font-weight: 500;
+          margin: 0.5rem 0;
+        }
+      `}</style>
     </div>
   );
 }
