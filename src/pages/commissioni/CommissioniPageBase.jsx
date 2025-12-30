@@ -318,81 +318,82 @@ function CommissioniPageBase({ pageTitle }) {
                                             </div>
                                         </div>
                                     ))}
-                        </div>
-
-                        {/* Commission Rows */}
-                        {currentTopNode.docNodes.map((rowNode, rowIdx) => {
-                            const rowSinottico = getSinotticoForRow(currentTopNode.name, rowNode.name);
-                            const convocazioniNode = findChildByName(rowNode, "Convocazioni");
-                            const ultimaNode = findChildByName(rowNode, "Ultima seduta");
-                            const convUrl = convocazioniNode?.docContentUrl || rowSinottico?.convocazioneUrl;
-                            
-                            return (
-                                <div
-                                    key={rowIdx}
-                                    className={`grid grid-cols-8 border-t border-gray-100 ${
-                                        rowIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'
-                                    } hover:bg-red-50/30 transition-colors`}
-                                >
-                                    {/* Commission Name */}
-                                    <div className="p-3 border-r border-gray-200 flex items-center justify-between gap-2">
-                                        <span className="font-medium text-sm text-gray-800 truncate">{rowNode.name}</span>
-                                        <div className="flex gap-1 flex-shrink-0">
-                                            {convUrl && (
-                                                <button
-                                                    onClick={() => openInPopupWindow(convUrl)}
-                                                    className="w-7 h-7 rounded-lg bg-red-100 hover:bg-red-200 text-red-800 flex items-center justify-center text-xs transition-colors"
-                                                    title="Convocazioni"
-                                                >
-                                                    <i className="fa-duotone fa-calendar-alt" aria-hidden="true"></i>
-                                                </button>
-                                            )}
-                                            {ultimaNode && (
-                                                <button
-                                                    onClick={() => handleOpenUltimaSeduta(ultimaNode)}
-                                                    className="w-7 h-7 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-800 flex items-center justify-center text-xs transition-colors"
-                                                    title="Ultima Seduta"
-                                                >
-                                                    <i className="fa-duotone fa-file-lines" aria-hidden="true"></i>
-                                                </button>
-                                            )}
-                                        </div>
-                                    </div>
-                                    
-                                    {/* Day Cells */}
-                                    {weekDays.map((day, dayIdx) => {
-                                        const dayNode = getDayNode(rowNode, day.fullLabel);
-                                        const sinoDayInfo = getSinoGiornoInfo(rowSinottico, day.fullLabel);
-                                        const hasContent = dayNode?.docContentUrl || sinoDayInfo;
-                                        
-                                        // Build convocazioni URL for this commission
-                                        const commNum = rowNode.name?.match(/(\d+)/)?.[1] || '';
-                                        const convocazioniUrl = commNum ? `https://www.senato.it/CLS/pub/conv/0/${commNum}` : convUrl;
-                                        
-                                        return (
-                                            <div
-                                                key={dayIdx}
-                                                className={`p-2 border-r border-gray-200 last:border-r-0 text-center min-h-[60px] flex flex-col justify-center ${
-                                                    day.isToday ? 'bg-yellow-50/50' : ''
-                                                } ${day.isWeekend ? 'bg-gray-100/30' : ''}`}
-                                            >
-                                                {sinoDayInfo && (
-                                                    <button
-                                                        onClick={() => openInPopupWindow(convocazioniUrl)}
-                                                        className="w-full px-2 py-1.5 bg-red-800 hover:bg-red-900 text-white text-xs rounded transition-colors"
-                                                    >
-                                                        {sinoDayInfo.primaConvOra || '—'}
-                                                    </button>
-                                                )}
-                                                {!sinoDayInfo && (
-                                                    <span className="text-gray-300">—</span>
-                                                )}
-                                            </div>
-                                        );
-                                    })}
                                 </div>
-                            );
-                        })}
+
+                                {/* Commission Rows */}
+                                {currentTopNode.docNodes.map((rowNode, rowIdx) => {
+                                    const rowSinottico = getSinotticoForRow(currentTopNode.name, rowNode.name);
+                                    const convocazioniNode = findChildByName(rowNode, "Convocazioni");
+                                    const ultimaNode = findChildByName(rowNode, "Ultima seduta");
+                                    const convUrl = convocazioniNode?.docContentUrl || rowSinottico?.convocazioneUrl;
+                                    
+                                    return (
+                                        <div
+                                            key={rowIdx}
+                                            className={`grid grid-cols-8 border-t border-gray-100 ${
+                                                rowIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'
+                                            } hover:bg-red-50/30 transition-colors`}
+                                        >
+                                            {/* Commission Name */}
+                                            <div className="p-2 md:p-3 border-r border-gray-200 flex items-center justify-between gap-1 md:gap-2">
+                                                <span className="font-medium text-xs md:text-sm text-gray-800 truncate">{rowNode.name}</span>
+                                                <div className="flex gap-1 flex-shrink-0">
+                                                    {convUrl && (
+                                                        <button
+                                                            onClick={() => openInPopupWindow(convUrl)}
+                                                            className="w-6 h-6 md:w-7 md:h-7 rounded-lg bg-red-100 hover:bg-red-200 text-red-800 flex items-center justify-center text-xs transition-colors"
+                                                            title="Convocazioni"
+                                                        >
+                                                            <i className="fa-duotone fa-calendar-alt" aria-hidden="true"></i>
+                                                        </button>
+                                                    )}
+                                                    {ultimaNode && (
+                                                        <button
+                                                            onClick={() => handleOpenUltimaSeduta(ultimaNode)}
+                                                            className="w-6 h-6 md:w-7 md:h-7 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-800 flex items-center justify-center text-xs transition-colors"
+                                                            title="Ultima Seduta"
+                                                        >
+                                                            <i className="fa-duotone fa-file-lines" aria-hidden="true"></i>
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            
+                                            {/* Day Cells */}
+                                            {weekDays.map((day, dayIdx) => {
+                                                const dayNode = getDayNode(rowNode, day.fullLabel);
+                                                const sinoDayInfo = getSinoGiornoInfo(rowSinottico, day.fullLabel);
+                                                
+                                                // Build convocazioni URL for this commission
+                                                const commNum = rowNode.name?.match(/(\d+)/)?.[1] || '';
+                                                const convocazioniUrl = commNum ? `https://www.senato.it/CLS/pub/conv/0/${commNum}` : convUrl;
+                                                
+                                                return (
+                                                    <div
+                                                        key={dayIdx}
+                                                        className={`p-1 md:p-2 border-r border-gray-200 last:border-r-0 text-center min-h-[50px] md:min-h-[60px] flex flex-col justify-center ${
+                                                            day.isToday ? 'bg-yellow-50/50' : ''
+                                                        } ${day.isWeekend ? 'bg-gray-100/30' : ''}`}
+                                                    >
+                                                        {sinoDayInfo && (
+                                                            <button
+                                                                onClick={() => openInPopupWindow(convocazioniUrl)}
+                                                                className="w-full px-1 md:px-2 py-1 md:py-1.5 bg-red-800 hover:bg-red-900 text-white text-[10px] md:text-xs rounded transition-colors"
+                                                            >
+                                                                {sinoDayInfo.primaConvOra || '—'}
+                                                            </button>
+                                                        )}
+                                                        {!sinoDayInfo && (
+                                                            <span className="text-gray-300 text-xs">—</span>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
                     </div>
                 )}
 
