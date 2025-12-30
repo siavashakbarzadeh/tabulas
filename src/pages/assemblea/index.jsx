@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import swaggerApi from "../../configs/swaggerApiConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
+import SearchIcon from "../../assets/svg/search.svg";
 import "../../assets/css/custom/rich-text-content.css";
 
 // Senato TV YouTube Live Stream - specific video that's always live
@@ -11,11 +12,19 @@ function AssembleaPage() {
   const [sections, setSections] = useState([]);
   const [activeSection, setActiveSection] = useState(0);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [dateFilter, setDateFilter] = useState('');
   const contentRef = useRef(null);
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Reset filters when changing tabs
+  useEffect(() => {
+    setSearchQuery('');
+    setDateFilter('');
+  }, [activeSection]);
 
   // Set up click handler for links when content changes
   useEffect(() => {
@@ -72,6 +81,33 @@ function AssembleaPage() {
     return 'fa-file-lines';
   };
 
+  // Get section type for filter logic
+  const getSectionType = (name) => {
+    const lowerName = name.toLowerCase();
+    if (lowerName.includes('comunicati')) return 'comunicati'; // past dates
+    if (lowerName.includes('calendario')) return 'calendario'; // future dates
+    if (lowerName.includes('ordine')) return 'ordine'; // search only
+    return 'other';
+  };
+
+  // Filter content based on search and date
+  const filterContent = (html) => {
+    if (!searchQuery && !dateFilter) return html;
+    
+    // Simple highlight for search
+    if (searchQuery) {
+      const regex = new RegExp(`(${searchQuery})`, 'gi');
+      html = html.replace(regex, '<mark style="background: #fef3c7; padding: 0 2px;">$1</mark>');
+    }
+    
+    return html;
+  };
+
+  // Get today's date in YYYY-MM-DD format
+  const getTodayDate = () => {
+    return new Date().toISOString().split('T')[0];
+  };
+
   const fetchData = async () => {
     setLoading(true);
     setError(null);
@@ -84,6 +120,7 @@ function AssembleaPage() {
           id: idx,
           name: node.name || `Sezione ${idx + 1}`,
           icon: getSectionIcon(node.name || ''),
+          type: getSectionType(node.name || ''),
           content: cleanHtml(node.docContentStreamContent || '')
         }));
         setSections(parsed);
@@ -116,10 +153,13 @@ function AssembleaPage() {
     );
   }
 
+  const currentSection = sections[activeSection];
+  const sectionType = currentSection?.type || 'other';
+
   return (
     <div className="flex flex-col min-h-screen w-full">
       {/* White container like other pages */}
-      <div className="flex-1 bg-white rounded-2xl relative p-4">
+      <div className="flex-1 bg-white rounded-2xl relative p-6">
         {/* Top section: Tabs on left, YouTube on right - aligned heights */}
         <div className="flex flex-col lg:flex-row gap-4 mb-6">
           {/* Section tabs - left side, same height as video, centered */}
@@ -130,16 +170,16 @@ function AssembleaPage() {
                   <button
                     key={section.id}
                     onClick={() => setActiveSection(idx)}
-                    className={`px-6 py-4 rounded-xl font-medium transition-all flex items-center gap-3 text-base ${
+                    className={`px-5 py-3 rounded-xl font-medium transition-all flex items-center gap-2.5 ${
                       activeSection === idx
                         ? 'bg-red-800 text-white shadow-lg'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
+                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
                     }`}
                     aria-selected={activeSection === idx}
                     role="tab"
                   >
                     <i className={`fa-duotone ${section.icon} text-lg`} aria-hidden="true"></i>
-                    {section.name}
+                    <span className="hidden sm:inline">{section.name}</span>
                   </button>
                 ))}
               </div>
@@ -148,7 +188,7 @@ function AssembleaPage() {
 
           {/* YouTube Live Stream - top right */}
           <div className="lg:w-72 xl:w-80 flex-shrink-0">
-            <div className="bg-gray-100 rounded-xl overflow-hidden shadow-sm h-full">
+            <div className="bg-gray-50 rounded-xl overflow-hidden shadow-sm h-full border border-gray-100">
               <div className="aspect-video w-full">
                 <iframe
                   src={`https://www.youtube.com/embed/${SENATO_YOUTUBE_VIDEO_ID}?autoplay=1&mute=1`}
@@ -158,7 +198,7 @@ function AssembleaPage() {
                   title="Senato TV - In diretta"
                 />
               </div>
-              <div className="px-3 py-2 flex items-center gap-2 bg-white">
+              <div className="px-3 py-2 flex items-center gap-2 bg-white border-t border-gray-100">
                 <span className="inline-flex items-center gap-1.5 text-red-600 font-medium text-sm">
                   <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
                   In diretta
@@ -168,14 +208,53 @@ function AssembleaPage() {
           </div>
         </div>
 
+        {/* Search and Filter Bar */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          {/* Search input */}
+          <div className="flex-1 relative">
+            <input
+              type="text"
+              placeholder="Cerca nel contenuto..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-12 bg-gray-50 text-sm rounded-xl border border-gray-200 pl-12 pr-4 focus:ring-2 focus:ring-red-800 focus:border-transparent transition-all"
+              aria-label="Cerca nel contenuto"
+            />
+            <img
+              src={SearchIcon}
+              alt=""
+              className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 opacity-50"
+              aria-hidden="true"
+            />
+          </div>
+          
+          {/* Date filter - only for comunicati and calendario */}
+          {(sectionType === 'comunicati' || sectionType === 'calendario') && (
+            <div className="sm:w-56">
+              <input
+                type="date"
+                value={dateFilter}
+                onChange={(e) => setDateFilter(e.target.value)}
+                max={sectionType === 'comunicati' ? getTodayDate() : undefined}
+                min={sectionType === 'calendario' ? getTodayDate() : undefined}
+                className="w-full h-12 bg-gray-50 text-sm rounded-xl border border-gray-200 px-4 focus:ring-2 focus:ring-red-800 focus:border-transparent transition-all"
+                aria-label={sectionType === 'comunicati' ? 'Filtra per data (fino ad oggi)' : 'Filtra per data (da oggi in poi)'}
+              />
+              <p className="text-xs text-gray-500 mt-1 px-1">
+                {sectionType === 'comunicati' ? 'Date passate (max oggi)' : 'Date future (min oggi)'}
+              </p>
+            </div>
+          )}
+        </div>
+
         {/* Active section content */}
-        {sections[activeSection] && (
+        {currentSection && (
           <div className="rounded-xl overflow-hidden shadow-sm border border-gray-100">
             {/* Section header */}
-            <div className="bg-red-800 text-white px-6 py-4">
+            <div className="bg-gradient-to-r from-red-800 to-red-900 text-white px-6 py-4">
               <h2 className="text-xl font-semibold flex items-center gap-3">
-                <i className={`fa-duotone ${sections[activeSection].icon}`} aria-hidden="true"></i>
-                {sections[activeSection].name}
+                <i className={`fa-duotone ${currentSection.icon}`} aria-hidden="true"></i>
+                {currentSection.name}
               </h2>
             </div>
             
@@ -183,7 +262,7 @@ function AssembleaPage() {
             <div 
               ref={contentRef}
               className="p-6 assemblea-content bg-white"
-              dangerouslySetInnerHTML={{ __html: sections[activeSection].content }}
+              dangerouslySetInnerHTML={{ __html: filterContent(currentSection.content) }}
             />
           </div>
         )}
@@ -202,8 +281,8 @@ function AssembleaPage() {
         .assemblea-content {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
           font-size: 15px;
-          line-height: 1.7;
-          color: #333;
+          line-height: 1.8;
+          color: #374151;
         }
         
         .assemblea-content * {
@@ -214,7 +293,6 @@ function AssembleaPage() {
         
         .assemblea-content h1,
         .assemblea-content h2,
-        .assemblea-content h3,
         .assemblea-content h4,
         .assemblea-content h5 {
           color: #97002D !important;
@@ -227,9 +305,10 @@ function AssembleaPage() {
           background: #97002D !important;
           color: white !important;
           padding: 0.75rem 1.25rem;
-          border-radius: 0.5rem;
+          border-radius: 0.625rem;
           font-size: 0.95rem;
           margin: 1.5rem 0 1rem;
+          font-weight: 600;
         }
         
         .assemblea-content p,
@@ -239,49 +318,83 @@ function AssembleaPage() {
         
         .assemblea-content ul,
         .assemblea-content ol {
-          background: #f3f4f6 !important;
-          padding: 1.25rem 1.25rem 1.25rem 2.5rem !important;
+          background: #f8f9fa !important;
+          padding: 1.5rem 1.5rem 1.5rem 2.5rem !important;
           border-radius: 0.75rem;
           margin: 1rem 0;
+          border: 1px solid #e5e7eb !important;
         }
         
         .assemblea-content li {
-          margin-bottom: 0.5rem;
-          line-height: 1.6;
+          margin-bottom: 0.625rem;
+          line-height: 1.7;
         }
         
+        /* Links with pastel red background */
         .assemblea-content a {
           color: #97002D !important;
           font-weight: 500;
-          text-decoration: underline;
+          text-decoration: none;
+          background: #fef2f2 !important;
+          padding: 0.125rem 0.5rem;
+          border-radius: 0.25rem;
           cursor: pointer;
+          transition: all 0.2s;
+          border-bottom: 1px solid #fecaca;
         }
         
         .assemblea-content a:hover {
-          color: #c41048 !important;
+          background: #fee2e2 !important;
+          color: #7f1d1d !important;
         }
         
         .assemblea-content hr {
           border: none;
           border-top: 2px solid #e5e7eb;
-          margin: 1.5rem 0;
+          margin: 2rem 0;
         }
         
         .assemblea-content b,
         .assemblea-content strong {
           font-weight: 600;
-          color: #1a1a1a !important;
+          color: #1f2937 !important;
         }
         
+        /* Date badges */
         .assemblea-content .data,
         .assemblea-content [class*="data"] {
           display: inline-block;
           background: #97002D !important;
           color: white !important;
-          padding: 0.5rem 1rem;
+          padding: 0.625rem 1.25rem;
           border-radius: 0.5rem;
           font-weight: 500;
           margin: 0.5rem 0;
+        }
+        
+        /* Better table styling */
+        .assemblea-content table {
+          width: 100% !important;
+          border-collapse: collapse;
+          margin: 1rem 0;
+          background: white !important;
+        }
+        
+        .assemblea-content th {
+          background: #97002D !important;
+          color: white !important;
+          padding: 0.75rem 1rem;
+          text-align: left;
+          font-weight: 600;
+        }
+        
+        .assemblea-content td {
+          padding: 0.75rem 1rem;
+          border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .assemblea-content tr:hover td {
+          background: #f9fafb !important;
         }
       `}</style>
     </div>
