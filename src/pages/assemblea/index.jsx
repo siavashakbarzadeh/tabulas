@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import swaggerApi from "../../configs/swaggerApiConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
-import SearchIcon from "../../assets/svg/search.svg";
 import "../../assets/css/custom/rich-text-content.css";
 
 // Senato TV YouTube Live Stream - specific video that's always live
@@ -90,15 +89,13 @@ function AssembleaPage() {
     return 'other';
   };
 
-  // Filter content based on search and date
+  // Filter content based on search
   const filterContent = (html) => {
-    if (!searchQuery && !dateFilter) return html;
+    if (!searchQuery) return html;
     
-    // Simple highlight for search
-    if (searchQuery) {
-      const regex = new RegExp(`(${searchQuery})`, 'gi');
-      html = html.replace(regex, '<mark style="background: #fef3c7; padding: 0 2px;">$1</mark>');
-    }
+    // Highlight search matches
+    const regex = new RegExp(`(${searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    html = html.replace(regex, '<mark style="background: #fef3c7; padding: 0 2px; border-radius: 2px;">$1</mark>');
     
     return html;
   };
@@ -160,12 +157,13 @@ function AssembleaPage() {
     <div className="flex flex-col min-h-screen w-full">
       {/* White container like other pages */}
       <div className="flex-1 bg-white rounded-2xl relative p-6">
-        {/* Top section: Tabs on left, YouTube on right - aligned heights */}
+        {/* Top section: Tabs + Filters on left, YouTube on right */}
         <div className="flex flex-col lg:flex-row gap-4 mb-6">
-          {/* Section tabs - left side, same height as video, centered */}
-          <div className="flex-1 flex items-center">
+          {/* Left side: Tabs and Filters */}
+          <div className="flex-1 flex flex-col gap-4">
+            {/* Section tabs */}
             {sections.length > 0 && (
-              <div className="flex flex-wrap gap-3 w-full">
+              <div className="flex flex-wrap gap-3">
                 {sections.map((section, idx) => (
                   <button
                     key={section.id}
@@ -184,6 +182,37 @@ function AssembleaPage() {
                 ))}
               </div>
             )}
+
+            {/* Search and Date Filter - under tabs */}
+            <div className="flex flex-wrap gap-3 items-center">
+              {/* Search input */}
+              <div className="flex-1 min-w-[200px] relative">
+                <input
+                  type="text"
+                  placeholder="Cerca nel contenuto..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full h-10 bg-gray-50 text-sm rounded-lg border border-gray-200 pl-10 pr-4 focus:ring-2 focus:ring-red-800 focus:border-transparent transition-all"
+                  aria-label="Cerca nel contenuto"
+                />
+                <i className="fa-duotone fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" aria-hidden="true"></i>
+              </div>
+              
+              {/* Date filter - only for comunicati and calendario */}
+              {(sectionType === 'comunicati' || sectionType === 'calendario') && (
+                <div className="relative">
+                  <input
+                    type="date"
+                    value={dateFilter}
+                    onChange={(e) => setDateFilter(e.target.value)}
+                    max={sectionType === 'comunicati' ? getTodayDate() : undefined}
+                    min={sectionType === 'calendario' ? getTodayDate() : undefined}
+                    className="h-10 bg-gray-50 text-sm rounded-lg border border-gray-200 px-3 focus:ring-2 focus:ring-red-800 focus:border-transparent transition-all cursor-pointer"
+                    aria-label={sectionType === 'comunicati' ? 'Filtra data (fino ad oggi)' : 'Filtra data (da oggi)'}
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
           {/* YouTube Live Stream - top right */}
@@ -206,45 +235,6 @@ function AssembleaPage() {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Search and Filter Bar */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
-          {/* Search input */}
-          <div className="flex-1 relative">
-            <input
-              type="text"
-              placeholder="Cerca nel contenuto..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-12 bg-gray-50 text-sm rounded-xl border border-gray-200 pl-12 pr-4 focus:ring-2 focus:ring-red-800 focus:border-transparent transition-all"
-              aria-label="Cerca nel contenuto"
-            />
-            <img
-              src={SearchIcon}
-              alt=""
-              className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 opacity-50"
-              aria-hidden="true"
-            />
-          </div>
-          
-          {/* Date filter - only for comunicati and calendario */}
-          {(sectionType === 'comunicati' || sectionType === 'calendario') && (
-            <div className="sm:w-56">
-              <input
-                type="date"
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
-                max={sectionType === 'comunicati' ? getTodayDate() : undefined}
-                min={sectionType === 'calendario' ? getTodayDate() : undefined}
-                className="w-full h-12 bg-gray-50 text-sm rounded-xl border border-gray-200 px-4 focus:ring-2 focus:ring-red-800 focus:border-transparent transition-all"
-                aria-label={sectionType === 'comunicati' ? 'Filtra per data (fino ad oggi)' : 'Filtra per data (da oggi in poi)'}
-              />
-              <p className="text-xs text-gray-500 mt-1 px-1">
-                {sectionType === 'comunicati' ? 'Date passate (max oggi)' : 'Date future (min oggi)'}
-              </p>
-            </div>
-          )}
         </div>
 
         {/* Active section content */}
@@ -395,6 +385,11 @@ function AssembleaPage() {
         
         .assemblea-content tr:hover td {
           background: #f9fafb !important;
+        }
+        
+        /* Hide native date picker text, only show icon */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+          cursor: pointer;
         }
       `}</style>
     </div>
