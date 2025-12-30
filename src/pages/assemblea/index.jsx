@@ -51,7 +51,19 @@ function AssembleaPage() {
     
     const marks = contentRef.current.querySelectorAll('mark[data-search-match]');
     marks.forEach((mark, i) => {
-      mark.style.background = i === index - 1 ? '#fbbf24' : '#fef3c7';
+      if (i === index - 1) {
+        // Current match - bold orange
+        mark.style.background = '#f97316';
+        mark.style.color = '#000';
+        mark.style.fontWeight = 'bold';
+        mark.style.padding = '1px 4px';
+      } else {
+        // Other matches - light yellow
+        mark.style.background = '#fef3c7';
+        mark.style.color = 'inherit';
+        mark.style.fontWeight = 'inherit';
+        mark.style.padding = '0 2px';
+      }
     });
     
     if (marks[index - 1]) {
@@ -320,34 +332,34 @@ function AssembleaPage() {
 
       {/* Search Navigation Bar - Bottom Center */}
       {searchQuery && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-3 z-50">
-          <span className="text-sm font-medium min-w-[60px] text-center">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-2.5 rounded-full shadow-lg flex items-center gap-3 z-50">
+          <span className="text-sm font-semibold min-w-[50px] text-center bg-white text-gray-900 px-2 py-0.5 rounded">
             {matchCount > 0 ? `${currentMatch}/${matchCount}` : '0/0'}
           </span>
           <div className="flex items-center gap-1">
             <button
               onClick={goToPrevMatch}
               disabled={matchCount === 0}
-              className="w-8 h-8 rounded-full hover:bg-gray-700 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-8 h-8 rounded-full hover:bg-gray-700 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-bold"
               aria-label="Risultato precedente"
             >
-              <i className="fa-solid fa-chevron-up" aria-hidden="true"></i>
+              ↑
             </button>
             <button
               onClick={goToNextMatch}
               disabled={matchCount === 0}
-              className="w-8 h-8 rounded-full hover:bg-gray-700 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-8 h-8 rounded-full hover:bg-gray-700 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-bold"
               aria-label="Risultato successivo"
             >
-              <i className="fa-solid fa-chevron-down" aria-hidden="true"></i>
+              ↓
             </button>
           </div>
           <button
             onClick={clearSearch}
-            className="w-8 h-8 rounded-full hover:bg-gray-700 flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-full hover:bg-gray-700 flex items-center justify-center transition-colors text-lg font-bold"
             aria-label="Cancella ricerca"
           >
-            <i className="fa-solid fa-xmark" aria-hidden="true"></i>
+            ✕
           </button>
         </div>
       )}
