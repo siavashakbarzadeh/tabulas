@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "../../configs/axiosConfig.js";
+import swaggerApi from "../../configs/swaggerApiConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
 import SearchIcon from "../../assets/svg/search.svg";
 
@@ -26,8 +26,8 @@ function EbookPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // Fetch your ebook JSON from the backend
-      const res = await axios.get("tabulas/mobile/ebook");
+      // Fetch your ebook JSON from the Swagger API directly
+      const res = await swaggerApi.get("/v2/tabulas/mobile/ebook");
       // Assume the JSON structure contains docContentStreamContent
       setEbookHtml(res.data.docContentStreamContent || "");
       setLoading(false);

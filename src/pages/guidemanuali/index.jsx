@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "../../configs/axiosConfig.js";
+import swaggerApi from "../../configs/swaggerApiConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
 import SearchIcon from "../../assets/svg/search.svg";
 
@@ -18,7 +18,7 @@ function GuidemanualiPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("tabulas/mobile/guidemanuali");
+      const res = await swaggerApi.get("/v2/tabulas/mobile/guidemanuali");
       setData(res.data);
       setLoading(false);
     } catch (error) {

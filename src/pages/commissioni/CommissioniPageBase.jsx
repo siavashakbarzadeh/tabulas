@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import axios from "../../configs/axiosConfig.js";
+import swaggerApi from "../../configs/swaggerApiConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
 import "../../assets/css/custom/rich-text-content.css";
 
@@ -23,9 +23,9 @@ function CommissioniPageBase({ pageTitle }) {
                 const commName = topNode.name;
                 if (!commName) return;
 
-                axios
+                swaggerApi
                     .get(
-                        `https://svil-tabulas4.intra.senato.it/v1/tabulas/sinottico/?descTipoCommissione='${commName}'`
+                        `/v1/tabulas/sinottico/?descTipoCommissione='${commName}'`
                     )
                     .then((res) => {
                         setSinotticoData((prev) => ({
@@ -42,8 +42,8 @@ function CommissioniPageBase({ pageTitle }) {
 
     const fetchData = () => {
         setLoading(true);
-        axios
-            .get("tabulas/mobile/commissioni")
+        swaggerApi
+            .get("/v2/tabulas/mobile/commissioni")
             .then((res) => {
                 setData(res.data);
                 setLoading(false);

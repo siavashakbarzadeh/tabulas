@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "../../configs/axiosConfig.js";
+import swaggerApi from "../../configs/swaggerApiConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
 import SearchIcon from "../../assets/svg/search.svg";
 
@@ -18,7 +18,7 @@ function UltimiattiPage() {
     setLoading(true);
     try {
       // Endpoint returning your structured JSON (documentIdentifier, date, seduta, etc.)
-      const res = await axios.get("tabulas/mobile/ultimiatti");
+      const res = await swaggerApi.get("/v2/tabulas/mobile/ultimiatti");
       setRecords(res.data);
       setLoading(false);
     } catch (error) {

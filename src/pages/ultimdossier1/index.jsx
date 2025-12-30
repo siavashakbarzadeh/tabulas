@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "../../configs/axiosConfig.js";
+import swaggerApi from "../../configs/swaggerApiConfig.js";
 import Loading from "../../layout/components/Loading.jsx";
 import SearchIcon from "../../assets/svg/search.svg";
 
@@ -22,8 +22,8 @@ function Ultimidossierage1() {
 
     const fetchData = () => {
         setLoading(true);
-        axios
-            .get("tabulas/mobile/ultimdossier")
+        swaggerApi
+            .get("/v2/tabulas/mobile/ultimdossier")
             .then((res) => {
                 setRecords(res.data);
                 setLoading(false);
