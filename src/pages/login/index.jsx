@@ -162,13 +162,18 @@ function NewLoginPage() {
     };
 
     // Check if opened from mobile app (InAppBrowser) or in WebView
-    const urlParams = new URLSearchParams(window.location.search);
-    const isMobile = urlParams.has('mobile') || urlParams.get('mobile') === '1';
+    // Detect if user is on mobile device (Safari on iOS)
+    const userAgent = navigator.userAgent || '';
+    const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(userAgent);
     
-    // Use redirect for mobile/WebView (popups don't work there)
-    if (isMobile || isWebView()) {
-      console.log('[Login] Mobile or WebView detected, using loginRedirect');
-      // Set flag so we know to redirect to deep link after auth completes
+    // Also check URL params for explicit mobile flag
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasMobileParam = urlParams.has('mobile');
+    
+    // Use redirect for mobile devices (popups don't work there)
+    if (isMobileDevice || hasMobileParam || isWebView()) {
+      console.log('[Login] Mobile device detected, using loginRedirect');
+      // Set flag so we redirect to callback page after auth completes
       localStorage.setItem('mobileAuthPending', 'true');
       instance.loginRedirect(loginRequest);
       return;
