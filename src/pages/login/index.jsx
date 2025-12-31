@@ -118,15 +118,25 @@ function NewLoginPage() {
 
   /**
    * Detect if running inside a WebView (React Native app)
+   * The native app injects isNativeApp flag into window and localStorage
    */
   const isWebView = () => {
+    // Check the flag set by native app's TokenBridge
+    if (window.isNativeApp || localStorage.getItem('isNativeApp') === 'true') {
+      return true;
+    }
+    
+    // Check if ReactNativeWebView bridge exists
+    if (window.ReactNativeWebView !== undefined) {
+      return true;
+    }
+    
+    // Fallback user agent checks
     const userAgent = navigator.userAgent || '';
-    // React Native WebView adds these identifiers
     return userAgent.includes('ReactNative') || 
-           window.ReactNativeWebView !== undefined ||
-           // iOS WebView detection
+           // iOS WebView (no Safari in UA)
            (userAgent.includes('Mobile') && !userAgent.includes('Safari')) ||
-           // Generic WebView detection
+           // Android WebView
            userAgent.includes('wv');
   };
 
