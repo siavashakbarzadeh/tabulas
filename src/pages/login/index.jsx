@@ -163,9 +163,13 @@ function NewLoginPage() {
       ],
     };
 
-    // Use redirect in WebView, popup in browser
-    if (isWebView()) {
-      console.log('[Login] Detected WebView, using loginRedirect');
+    // Check if opened from mobile app (InAppBrowser) or in WebView
+    const urlParams = new URLSearchParams(window.location.search);
+    const isMobile = urlParams.has('mobile') || urlParams.get('mobile') === '1';
+    
+    // Use redirect for mobile/WebView (popups don't work there)
+    if (isMobile || isWebView()) {
+      console.log('[Login] Mobile or WebView detected, using loginRedirect');
       // Set flag so we know to redirect to deep link after auth completes
       localStorage.setItem('mobileAuthPending', 'true');
       instance.loginRedirect(loginRequest);
