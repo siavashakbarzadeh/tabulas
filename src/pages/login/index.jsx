@@ -35,11 +35,12 @@ function NewLoginPage() {
             localStorage.getItem('isNativeApp') === 'true';
           
           if (isMobileRequest) {
-            console.log('[Login] Mobile auth detected, redirecting to callback page');
+            console.log('[Login] Mobile auth detected, redirecting to app via deep link');
             localStorage.removeItem('mobileAuthPending');
-            // Store token and redirect to callback page with "Torna all'App" button
-            localStorage.setItem('mobileAuthToken', response.accessToken);
-            navigate(`/mobile-auth-callback?token=${encodeURIComponent(response.accessToken)}`);
+            localStorage.removeItem('isNativeApp');
+            // Redirect directly to native app with token via deep link
+            const deepLinkUrl = `tabulas://auth?token=${encodeURIComponent(response.accessToken)}`;
+            window.location.href = deepLinkUrl;
             return;
           }
           
