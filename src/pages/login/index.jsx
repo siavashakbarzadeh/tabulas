@@ -25,16 +25,19 @@ function NewLoginPage() {
           // Detect if user is on a mobile device (iOS or Android)
           const userAgent = navigator.userAgent || '';
           const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(userAgent);
+          console.log('[Login] User agent:', userAgent);
+          console.log('[Login] Is mobile device:', isMobileDevice);
           
-          // Also check for explicit mobile flags
-          const urlParams = new URLSearchParams(window.location.search);
+          // Check for pending mobile auth flag (set before redirect)
           const hasMobileFlag = 
-            urlParams.has('mobile') ||
-            localStorage.getItem('mobileAuthPending') === 'true' ||
-            localStorage.getItem('isNativeApp') === 'true';
+            sessionStorage.getItem('mobileAuthPending') === 'true' ||
+            localStorage.getItem('mobileAuthPending') === 'true';
+          console.log('[Login] Has mobile flag:', hasMobileFlag);
           
+          // If on mobile device OR if mobile flag was set, redirect to callback
           if (isMobileDevice || hasMobileFlag) {
-            console.log('[Login] Mobile device detected, redirecting to callback page');
+            console.log('[Login] Mobile detected! Redirecting to callback page');
+            sessionStorage.removeItem('mobileAuthPending');
             localStorage.removeItem('mobileAuthPending');
             // Store token and redirect to callback page
             localStorage.setItem('mobileAuthToken', response.accessToken);
@@ -173,7 +176,9 @@ function NewLoginPage() {
     // Use redirect for mobile devices (popups don't work there)
     if (isMobileDevice || hasMobileParam || isWebView()) {
       console.log('[Login] Mobile device detected, using loginRedirect');
-      // Set flag so we redirect to callback page after auth completes
+      console.log('[Login] Setting mobileAuthPending flags');
+      // Set flag in BOTH sessionStorage and localStorage for persistence
+      sessionStorage.setItem('mobileAuthPending', 'true');
       localStorage.setItem('mobileAuthPending', 'true');
       instance.loginRedirect(loginRequest);
       return;
