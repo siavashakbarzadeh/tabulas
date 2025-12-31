@@ -1,32 +1,64 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Mobile Auth Callback Page
- * Shows after successful MSAL login from native app
- * Displays "Torna all'App" button to redirect back to native app with token
+ * Shows after Microsoft OAuth login redirects here
+ * Reads access_token from URL hash and displays "Torna all'App" button
  */
 function MobileAuthCallback() {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [token, setToken] = useState(null);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Get token from URL or localStorage
-    const urlToken = searchParams.get('token');
-    const storedToken = localStorage.getItem('mobileAuthToken');
-    
-    if (urlToken) {
-      setToken(urlToken);
-      // Store for button click
-      localStorage.setItem('mobileAuthToken', urlToken);
-    } else if (storedToken) {
-      setToken(storedToken);
-    } else {
-      setError('Nessun token trovato. Riprova il login.');
-    }
-  }, [searchParams]);
+    const extractToken = () => {
+      console.log('[MobileAuthCallback] Extracting token from URL');
+      console.log('[MobileAuthCallback] Hash:', window.location.hash);
+      console.log('[MobileAuthCallback] Search:', window.location.search);
+      
+      // Try to get token from various sources
+      
+      // 1. Check URL query param (from our redirect)
+      const searchParams = new URLSearchParams(window.location.search);
+      let accessToken = searchParams.get('token');
+      
+      // 2. Check URL hash (OAuth implicit flow response)
+      if (!accessToken && window.location.hash) {
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        accessToken = hashParams.get('access_token');
+        
+        // Also check for error in hash
+        const hashError = hashParams.get('error');
+        if (hashError) {
+          const errorDesc = hashParams.get('error_description') || 'Login fallito';
+          console.error('[MobileAuthCallback] OAuth error:', hashError, errorDesc);
+          setError(decodeURIComponent(errorDesc));
+          setIsLoading(false);
+          return;
+        }
+      }
+      
+      // 3. Check localStorage (from MSAL redirect handling)
+      if (!accessToken) {
+        accessToken = localStorage.getItem('mobileAuthToken');
+      }
+      
+      if (accessToken) {
+        console.log('[MobileAuthCallback] Found token');
+        setToken(accessToken);
+        localStorage.setItem('mobileAuthToken', accessToken);
+      } else {
+        console.log('[MobileAuthCallback] No token found');
+        setError('Nessun token trovato. Riprova il login.');
+      }
+      
+      setIsLoading(false);
+    };
+
+    extractToken();
+  }, []);
 
   const handleReturnToApp = () => {
     if (!token) {
@@ -39,14 +71,24 @@ function MobileAuthCallback() {
     localStorage.removeItem('mobileAuthPending');
 
     // Redirect to native app via deep link
-    // Bundle: org.reactjs.native.example.TabulasNative
     const deepLinkUrl = `tabulas://auth?token=${encodeURIComponent(token)}`;
     
-    console.log('[MobileAuthCallback] Redirecting to app:', deepLinkUrl);
+    console.log('[MobileAuthCallback] Redirecting to app');
     
     // Try to open the app
     window.location.href = deepLinkUrl;
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white p-4">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-900 border-t-transparent"></div>
+          <p className="text-zinc-600">Elaborazione login...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (error) {
     return (
