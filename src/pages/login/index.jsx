@@ -20,27 +20,25 @@ function NewLoginPage() {
     instance.handleRedirectPromise()
       .then((response) => {
         if (response && response.accessToken) {
-          console.log('[Login] Got token from redirect, state:', response.state);
+          console.log('[Login] Got token from redirect');
           
-          // Check if this was a mobile request (came from native app)
-          // Native app sets state=mobile_auth in the auth URL
+          // Detect if user is on a mobile device (iOS or Android)
+          const userAgent = navigator.userAgent || '';
+          const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(userAgent);
+          
+          // Also check for explicit mobile flags
           const urlParams = new URLSearchParams(window.location.search);
-          const hashParams = new URLSearchParams(window.location.hash.replace('#', '?'));
-          const isMobileRequest = 
-            response.state === 'mobile_auth' ||
-            urlParams.get('state') === 'mobile_auth' ||
-            hashParams.get('state') === 'mobile_auth' ||
-            urlParams.has('mobile') || 
-            localStorage.getItem('mobileAuthPending') ||
+          const hasMobileFlag = 
+            urlParams.has('mobile') ||
+            localStorage.getItem('mobileAuthPending') === 'true' ||
             localStorage.getItem('isNativeApp') === 'true';
           
-          if (isMobileRequest) {
-            console.log('[Login] Mobile auth detected, redirecting to app via deep link');
+          if (isMobileDevice || hasMobileFlag) {
+            console.log('[Login] Mobile device detected, redirecting to callback page');
             localStorage.removeItem('mobileAuthPending');
-            localStorage.removeItem('isNativeApp');
-            // Redirect directly to native app with token via deep link
-            const deepLinkUrl = `tabulas://auth?token=${encodeURIComponent(response.accessToken)}`;
-            window.location.href = deepLinkUrl;
+            // Store token and redirect to callback page
+            localStorage.setItem('mobileAuthToken', response.accessToken);
+            navigate(`/mobile-auth-callback`);
             return;
           }
           
