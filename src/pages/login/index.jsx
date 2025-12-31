@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 function NewLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isProcessingAuth, setIsProcessingAuth] = useState(true); // Start true to show loading
   const { instance, accounts } = useMsal();
   const { login, logout: localLogout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -41,11 +42,15 @@ function NewLoginPage() {
             hideProgressBar: true,
           });
           navigate("/");
+        } else {
+          // No redirect response, show login form
+          setIsProcessingAuth(false);
         }
       })
       .catch((error) => {
         console.error('[Login] Redirect error:', error);
         localStorage.removeItem('mobileAuthPending');
+        setIsProcessingAuth(false);
       });
   }, [instance]);
 
@@ -179,7 +184,17 @@ function NewLoginPage() {
   };
 
 
-  
+  // Show loading while processing MSAL redirect
+  if (isProcessingAuth) {
+    return (
+      <div className="flex w-full h-screen items-center justify-center bg-white">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-900 border-t-transparent"></div>
+          <p className="text-zinc-600">Autenticazione in corso...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex w-full">
