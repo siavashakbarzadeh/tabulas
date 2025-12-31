@@ -133,7 +133,8 @@ import DirettaPage from "../pages/diretta/index.jsx";
 import ExportStorage from "../pages/ExportStorage/ExportStorage.jsx";
 import AccountPage from "../pages/AccountPage";
 import AssembleaPage from "../pages/assemblea";
-// Note: Kiosk page removed - file doesn't exist
+import MobileAuthCallback from "../pages/mobile-auth-callback";
+
 
 const ScrollToTop = (props) => {
   const location = useLocation();
@@ -181,6 +182,7 @@ function Router() {
               </Route>
             </Route>
             <Route path="login" element={<NewLoginPage />} />
+            <Route path="mobile-auth-callback" element={<MobileAuthCallback />} />
           </Route>
           <Route element={<ThemeProvider />}>
             <Route element={<FullScreenLayout />}>
