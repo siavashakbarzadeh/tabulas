@@ -40,9 +40,14 @@ function MobileAuthCallback() {
         }
       }
       
-      // 3. Check localStorage (from MSAL redirect handling)
+      // 3. Check localStorage (from MSAL redirect handling or normal login)
       if (!accessToken) {
         accessToken = localStorage.getItem('mobileAuthToken');
+      }
+      
+      // 4. Check auth-token (from normal web login)
+      if (!accessToken) {
+        accessToken = localStorage.getItem('auth-token');
       }
       
       if (accessToken) {
