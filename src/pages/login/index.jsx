@@ -20,11 +20,19 @@ function NewLoginPage() {
     instance.handleRedirectPromise()
       .then((response) => {
         if (response && response.accessToken) {
-          console.log('[Login] Got token from redirect');
+          console.log('[Login] Got token from redirect, state:', response.state);
           
           // Check if this was a mobile request (came from native app)
+          // Native app sets state=mobile_auth in the auth URL
           const urlParams = new URLSearchParams(window.location.search);
-          const isMobileRequest = urlParams.has('mobile') || localStorage.getItem('mobileAuthPending');
+          const hashParams = new URLSearchParams(window.location.hash.replace('#', '?'));
+          const isMobileRequest = 
+            response.state === 'mobile_auth' ||
+            urlParams.get('state') === 'mobile_auth' ||
+            hashParams.get('state') === 'mobile_auth' ||
+            urlParams.has('mobile') || 
+            localStorage.getItem('mobileAuthPending') ||
+            localStorage.getItem('isNativeApp') === 'true';
           
           if (isMobileRequest) {
             console.log('[Login] Mobile auth detected, redirecting to callback page');
