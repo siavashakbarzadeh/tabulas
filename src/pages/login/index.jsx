@@ -13,9 +13,35 @@ function NewLoginPage() {
   const navigate = useNavigate();
 
   /**
-   * Auto logout on page load if already logged in
+   * Handle MSAL redirect response (for WebView/native app flow)
    */
   useEffect(() => {
+    instance.handleRedirectPromise()
+      .then((response) => {
+        if (response && response.accessToken) {
+          console.log('[Login] Got token from redirect');
+          login(response.accessToken);
+          toast.success("Login effettuato con successo!", {
+            position: "bottom-right",
+            hideProgressBar: true,
+          });
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        console.error('[Login] Redirect error:', error);
+      });
+  }, [instance]);
+
+  /**
+   * Auto logout on page load if already logged in (but not after redirect)
+   */
+  useEffect(() => {
+    // Skip auto logout if we're handling a redirect response
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasAuthCode = urlParams.has('code') || urlParams.has('state');
+    if (hasAuthCode) return;
+
     if (isAuthenticated) {
       localLogout();
     }
@@ -70,8 +96,22 @@ function NewLoginPage() {
   };
 
   /**
-   * Handle Microsoft login via MSAL popup
-   * Gets an access token from Azure AD and stores it directly for Swagger API calls
+   * Detect if running inside a WebView (React Native app)
+   */
+  const isWebView = () => {
+    const userAgent = navigator.userAgent || '';
+    // React Native WebView adds these identifiers
+    return userAgent.includes('ReactNative') || 
+           window.ReactNativeWebView !== undefined ||
+           // iOS WebView detection
+           (userAgent.includes('Mobile') && !userAgent.includes('Safari')) ||
+           // Generic WebView detection
+           userAgent.includes('wv');
+  };
+
+  /**
+   * Handle Microsoft login via MSAL popup or redirect
+   * Uses redirect flow in WebView (native app) since popups don't work there
    */
   const handleMicrosoftLogin = () => {
     const loginRequest = {
@@ -82,6 +122,13 @@ function NewLoginPage() {
         "api://aa825561-377d-4414-8acc-2905cd587e98/Roles.Read"
       ],
     };
+
+    // Use redirect in WebView, popup in browser
+    if (isWebView()) {
+      console.log('[Login] Detected WebView, using loginRedirect');
+      instance.loginRedirect(loginRequest);
+      return;
+    }
 
     instance
       .loginPopup(loginRequest)
