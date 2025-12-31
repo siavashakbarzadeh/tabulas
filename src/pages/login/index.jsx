@@ -20,6 +20,21 @@ function NewLoginPage() {
       .then((response) => {
         if (response && response.accessToken) {
           console.log('[Login] Got token from redirect');
+          
+          // Check if this was a mobile request (came from native app)
+          const urlParams = new URLSearchParams(window.location.search);
+          const isMobileRequest = urlParams.has('mobile') || localStorage.getItem('mobileAuthPending');
+          
+          if (isMobileRequest) {
+            console.log('[Login] Mobile auth detected, redirecting to deep link');
+            localStorage.removeItem('mobileAuthPending');
+            // Redirect to native app with token via deep link
+            const deepLinkUrl = `tabulas://auth?token=${encodeURIComponent(response.accessToken)}`;
+            window.location.href = deepLinkUrl;
+            return;
+          }
+          
+          // Normal web flow
           login(response.accessToken);
           toast.success("Login effettuato con successo!", {
             position: "bottom-right",
@@ -30,6 +45,7 @@ function NewLoginPage() {
       })
       .catch((error) => {
         console.error('[Login] Redirect error:', error);
+        localStorage.removeItem('mobileAuthPending');
       });
   }, [instance]);
 
@@ -126,6 +142,8 @@ function NewLoginPage() {
     // Use redirect in WebView, popup in browser
     if (isWebView()) {
       console.log('[Login] Detected WebView, using loginRedirect');
+      // Set flag so we know to redirect to deep link after auth completes
+      localStorage.setItem('mobileAuthPending', 'true');
       instance.loginRedirect(loginRequest);
       return;
     }
