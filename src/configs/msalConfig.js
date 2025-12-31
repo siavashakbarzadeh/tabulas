@@ -14,8 +14,8 @@ const msalConfig = {
   auth: {
     clientId: "aa825561-377d-4414-8acc-2905cd587e98",
     authority: "https://login.microsoftonline.com/16c24428-0bd3-4bc1-a192-d315f43f5bb4",
-    // Use tabulas.vercel.app for redirect - it will handle the response
-    redirectUri: "https://tabulas.vercel.app/login",
+    // Use base URL - must match what's registered in Azure AD
+    redirectUri: "https://tabulas.vercel.app",
   },
   cache: {
     cacheLocation: isNativeApp ? "localStorage" : "sessionStorage",
