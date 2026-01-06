@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import swaggerApi from "../../configs/swaggerApiConfig.js";
+
+// Server address for VPN connectivity check
+const VPN_CHECK_URL = "https://80.64.127.251:8443";
 
 /**
  * Connection Check Page - Landing page for "/"
- * Checks VPN connectivity and token validity before redirecting
+ * Checks token validity and VPN connectivity before redirecting
  */
 function ConnectionCheckPage() {
   const navigate = useNavigate();
   const [status, setStatus] = useState("checking"); // checking, no-vpn, no-token, success
-  const [message, setMessage] = useState("Verifica connessione in corso...");
+  const [message, setMessage] = useState("Verifica sessione in corso...");
 
   useEffect(() => {
     checkConnection();
@@ -22,7 +24,7 @@ function ConnectionCheckPage() {
     if (!token) {
       console.log("[ConnectionCheck] No token found");
       setStatus("no-token");
-      setMessage("Sessione non valida. Reindirizzamento al login...");
+      setMessage("Sessione non trovata. Reindirizzamento al login...");
       setTimeout(() => navigate("/login", { replace: true }), 1500);
       return;
     }
@@ -53,23 +55,25 @@ function ConnectionCheckPage() {
       return;
     }
 
-    // Step 2: Check VPN connection by pinging the internal API
+    // Step 2: Check VPN connection
     setMessage("Verifica connessione VPN...");
     
     try {
-      // Try to reach the internal Senato API (requires VPN)
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
       
-      await swaggerApi.get("/v2/tabulas/kiosk/assemblea", {
+      // Try to reach the internal server (requires VPN)
+      const response = await fetch(`${VPN_CHECK_URL}/api/health`, {
+        method: 'GET',
         signal: controller.signal,
-        timeout: 5000
+        mode: 'no-cors', // This will work even with CORS restrictions
       });
       
       clearTimeout(timeoutId);
       
-      // Success - VPN is connected and token is valid
-      console.log("[ConnectionCheck] VPN connected, token valid");
+      // If we get here without error, VPN is connected
+      // (no-cors mode returns opaque response but no error means connection succeeded)
+      console.log("[ConnectionCheck] VPN check passed");
       setStatus("success");
       setMessage("Connessione verificata! Caricamento...");
       setTimeout(() => navigate("/assemblea", { replace: true }), 500);
@@ -77,24 +81,21 @@ function ConnectionCheckPage() {
     } catch (error) {
       console.error("[ConnectionCheck] VPN check error:", error);
       
-      // Check if it's an auth error (401/403) vs network error
-      if (error.response) {
-        // Server responded but with error
-        if (error.response.status === 401 || error.response.status === 403) {
-          setStatus("no-token");
-          setMessage("Sessione non autorizzata. Reindirizzamento al login...");
-          localStorage.removeItem("auth-token");
-          setTimeout(() => navigate("/login", { replace: true }), 1500);
-        } else {
-          // Other server error - might still be authorized
-          setStatus("success");
-          setMessage("Caricamento...");
-          setTimeout(() => navigate("/assemblea", { replace: true }), 500);
-        }
-      } else {
-        // Network error - VPN not connected
+      // Check error type
+      if (error.name === 'AbortError') {
+        // Timeout - likely not on VPN
         setStatus("no-vpn");
         setMessage("Connessione VPN non rilevata");
+      } else if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+        // Network error - not on VPN
+        setStatus("no-vpn");
+        setMessage("Connessione VPN non rilevata");
+      } else {
+        // Other error - might be connected, proceed anyway
+        console.log("[ConnectionCheck] Proceeding despite error");
+        setStatus("success");
+        setMessage("Caricamento...");
+        setTimeout(() => navigate("/assemblea", { replace: true }), 500);
       }
     }
   };
