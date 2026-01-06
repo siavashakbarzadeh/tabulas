@@ -135,6 +135,7 @@ import AccountPage from "../pages/AccountPage";
 import AssembleaPage from "../pages/assemblea";
 import MobileAuthCallback from "../pages/mobile-auth-callback";
 import ConnectionCheckPage from "../pages/connection-check";
+import KioskLayout from "../layout/kiosk";
 
 
 const ScrollToTop = (props) => {
@@ -184,6 +185,15 @@ function Router() {
             </Route>
             <Route path="login" element={<NewLoginPage />} />
             <Route path="mobile-auth-callback" element={<MobileAuthCallback />} />
+            {/* Kiosk Mode Routes */}
+            <Route element={<PrivateRoute />}>
+              <Route element={<KioskLayout />}>
+                <Route path="kiosk" element={<AssembleaPage />} />
+                <Route path="kiosk/assemblea" element={<AssembleaPage />} />
+                <Route path="kiosk/commissioni" element={<CommissioniPage />} />
+                <Route path="kiosk/ultimdossier" element={<Ultimidossierage />} />
+              </Route>
+            </Route>
           </Route>
           <Route element={<ThemeProvider />}>
             <Route element={<FullScreenLayout />}>
