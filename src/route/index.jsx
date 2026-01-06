@@ -134,6 +134,7 @@ import ExportStorage from "../pages/ExportStorage/ExportStorage.jsx";
 import AccountPage from "../pages/AccountPage";
 import AssembleaPage from "../pages/assemblea";
 import MobileAuthCallback from "../pages/mobile-auth-callback";
+import ConnectionCheckPage from "../pages/connection-check";
 
 
 const ScrollToTop = (props) => {
@@ -152,9 +153,9 @@ function Router() {
       <ScrollToTop>
         <Routes>
           <Route element={<ThemeProvider2 />}>
+            <Route path="/" element={<ConnectionCheckPage />} />
             <Route element={<PrivateRoute />}>
               <Route element={<DashboardLayout />}>
-                <Route path="/" element={<Navigate to="/assemblea" replace />} />
                 <Route path="/confirm/:id" element={<ConfirmPage />} />
                 <Route path="/finalize/:id" element={<FinalizePage />} />
                 <Route path="/account" element={<AccountPage />} />
