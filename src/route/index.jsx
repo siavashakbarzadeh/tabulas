@@ -154,7 +154,7 @@ function Router() {
           <Route element={<ThemeProvider2 />}>
             <Route element={<PrivateRoute />}>
               <Route element={<DashboardLayout />}>
-                <Route index element={<Navigate to="/assemblea" replace />} />
+                <Route path="/" element={<Navigate to="/assemblea" replace />} />
                 <Route path="/confirm/:id" element={<ConfirmPage />} />
                 <Route path="/finalize/:id" element={<FinalizePage />} />
                 <Route path="/account" element={<AccountPage />} />
