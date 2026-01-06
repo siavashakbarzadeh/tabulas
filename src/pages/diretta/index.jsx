@@ -132,22 +132,20 @@ function DirettaPage() {
       </div>
 
       {/* Main Content - Video Player */}
-      <div className="flex-1 bg-white lg:rounded-r-2xl p-4">
+      <div className="flex-1 bg-white lg:rounded-r-2xl p-4 flex flex-col">
         {/* Video Container - Full width */}
-        <div className="w-full bg-black rounded-xl overflow-hidden shadow-xl">
-          <div className="w-full aspect-video">
-            <iframe
-              src={`https://www.youtube.com/embed/${selectedChannel.youtubeId}?autoplay=1`}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              className="w-full h-full"
-              allowFullScreen
-            ></iframe>
-          </div>
+        <div className="w-full flex-1 bg-black rounded-xl overflow-hidden shadow-xl">
+          <iframe
+            src={`https://www.youtube.com/embed/${selectedChannel.youtubeId}?autoplay=1`}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            className="w-full h-full min-h-[400px] lg:min-h-[500px]"
+            allowFullScreen
+          ></iframe>
         </div>
 
         {/* Channel Info */}
-        <div className="mt-4 flex items-center gap-3">
+        <div className="mt-4 flex items-center gap-3 flex-shrink-0">
           <div className="w-12 h-12 rounded-xl bg-[#97002D] flex items-center justify-center text-white font-bold text-xl">
             {selectedChannel.id}
           </div>
