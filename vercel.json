@@ -1,1 +1,13 @@
-{ "rewrites": [{ "source": "/(.*)", "destination": "/" }] }
+{
+  "rewrites": [
+    { "source": "/assets/(.*)", "destination": "/assets/$1" },
+    { "source": "/icons/(.*)", "destination": "/icons/$1" },
+    { "source": "/(.*)\\.js", "destination": "/$1.js" },
+    { "source": "/(.*)\\.css", "destination": "/$1.css" },
+    { "source": "/(.*)\\.png", "destination": "/$1.png" },
+    { "source": "/(.*)\\.svg", "destination": "/$1.svg" },
+    { "source": "/(.*)\\.woff", "destination": "/$1.woff" },
+    { "source": "/(.*)\\.woff2", "destination": "/$1.woff2" },
+    { "source": "/(.*)", "destination": "/" }
+  ]
+}
