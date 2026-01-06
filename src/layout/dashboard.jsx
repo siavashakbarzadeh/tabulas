@@ -145,7 +145,7 @@ function DashboardLayout({ ...props }) {
   // Kiosk Mode Layout
   if (isKioskMode) {
     return (
-      <div className={`min-h-screen bg-gray-50 relative ${highContrast ? "wcag-aa" : ""} ${largeText ? "wcag-aa-large-text" : ""}`}>
+      <div className={`min-h-screen bg-gray-50 relative w-full ${highContrast ? "wcag-aa" : ""} ${largeText ? "wcag-aa-large-text" : ""}`}>
         {/* Kiosk header bar - minimal */}
         <div className="fixed top-0 left-0 right-0 h-12 bg-[#97002D] flex items-center justify-between px-4 z-50 shadow-lg">
           {/* Logo */}

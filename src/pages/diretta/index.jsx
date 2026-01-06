@@ -24,7 +24,7 @@ function DirettaPage() {
   );
 
   return (
-    <div className="flex w-full h-full bg-white rounded-2xl overflow-hidden">
+    <div className="flex w-full h-full bg-white overflow-hidden">
       {/* Left Sidebar - Channel List */}
       <div className="w-56 flex-shrink-0 border-r border-gray-200 p-3 overflow-y-auto">
         {/* Search Bar */}
