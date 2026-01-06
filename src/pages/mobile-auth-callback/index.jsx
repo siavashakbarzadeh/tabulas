@@ -10,7 +10,6 @@ function MobileAuthCallback() {
   const [token, setToken] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [showVersionDropdown, setShowVersionDropdown] = useState(false);
 
   useEffect(() => {
     const extractToken = () => {
@@ -67,17 +66,6 @@ function MobileAuthCallback() {
 
     const deepLinkUrl = `tabulas://auth?token=${encodeURIComponent(token)}`;
     window.location.href = deepLinkUrl;
-  };
-
-  const handleContinueBrowser = (version) => {
-    setShowVersionDropdown(false);
-    if (version === 'kiosk') {
-      // Navigate to kiosk mode (assemblea with kiosk param)
-      navigate('/assemblea?mode=kiosk');
-    } else {
-      // Normal app mode
-      navigate('/assemblea');
-    }
   };
 
   if (isLoading) {
@@ -155,51 +143,16 @@ function MobileAuthCallback() {
           Torna all'App
         </button>
 
-        {/* Continue in Browser Button with Dropdown */}
-        <div className="w-full relative">
-          <button
-            onClick={() => setShowVersionDropdown(!showVersionDropdown)}
-            className="w-full px-6 py-4 bg-white/20 text-white text-lg rounded-xl font-semibold hover:bg-white/30 transition-all flex items-center justify-center"
-          >
-            <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-            </svg>
-            Continua nel browser
-            <svg className={`h-5 w-5 ml-2 transition-transform ${showVersionDropdown ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          {/* Dropdown Menu */}
-          {showVersionDropdown && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl overflow-hidden z-10">
-              <button
-                onClick={() => handleContinueBrowser('app')}
-                className="w-full px-6 py-4 text-left text-gray-800 hover:bg-gray-100 transition-colors flex items-center border-b border-gray-100"
-              >
-                <svg className="h-5 w-5 mr-3 text-[#97002D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                <div>
-                  <div className="font-semibold">Versione App</div>
-                  <div className="text-sm text-gray-500">Interfaccia standard</div>
-                </div>
-              </button>
-              <button
-                onClick={() => handleContinueBrowser('kiosk')}
-                className="w-full px-6 py-4 text-left text-gray-800 hover:bg-gray-100 transition-colors flex items-center"
-              >
-                <svg className="h-5 w-5 mr-3 text-[#97002D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                <div>
-                  <div className="font-semibold">Versione Kiosk</div>
-                  <div className="text-sm text-gray-500">Schermo intero per totem</div>
-                </div>
-              </button>
-            </div>
-          )}
-        </div>
+        {/* Continue in Browser Button */}
+        <button
+          onClick={() => navigate('/assemblea')}
+          className="w-full px-6 py-4 bg-white/20 text-white text-lg rounded-xl font-semibold hover:bg-white/30 transition-all flex items-center justify-center"
+        >
+          <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+          </svg>
+          Continua nel browser
+        </button>
       </div>
     </div>
   );
