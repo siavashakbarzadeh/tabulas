@@ -173,7 +173,7 @@ function DashboardLayout({ ...props }) {
         </div>
 
         {/* Main Content */}
-        <div className="pt-12 pb-20 min-h-screen">
+        <div className="pt-12 pb-20 min-h-screen w-full">
           <Outlet />
         </div>
 
