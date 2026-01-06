@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Server address for VPN connectivity check
-const VPN_CHECK_URL = "https://80.64.127.251:8443";
-
 /**
  * Connection Check Page - Landing page for "/"
- * Checks token validity and VPN connectivity before redirecting
+ * Checks token validity and redirects accordingly
  */
 function ConnectionCheckPage() {
   const navigate = useNavigate();
-  const [status, setStatus] = useState("checking"); // checking, no-vpn, no-token, success
+  const [status, setStatus] = useState("checking"); // checking, no-token, success
   const [message, setMessage] = useState("Verifica sessione in corso...");
 
   useEffect(() => {
@@ -18,7 +15,7 @@ function ConnectionCheckPage() {
   }, []);
 
   const checkConnection = async () => {
-    // Step 1: Check if token exists and is valid
+    // Check if token exists and is valid
     const token = localStorage.getItem("auth-token");
     
     if (!token) {
@@ -55,55 +52,11 @@ function ConnectionCheckPage() {
       return;
     }
 
-    // Step 2: Check VPN connection
-    setMessage("Verifica connessione VPN...");
-    
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
-      
-      // Try to reach the internal server (requires VPN)
-      const response = await fetch(`${VPN_CHECK_URL}/api/health`, {
-        method: 'GET',
-        signal: controller.signal,
-        mode: 'no-cors', // This will work even with CORS restrictions
-      });
-      
-      clearTimeout(timeoutId);
-      
-      // If we get here without error, VPN is connected
-      // (no-cors mode returns opaque response but no error means connection succeeded)
-      console.log("[ConnectionCheck] VPN check passed");
-      setStatus("success");
-      setMessage("Connessione verificata! Caricamento...");
-      setTimeout(() => navigate("/assemblea", { replace: true }), 500);
-      
-    } catch (error) {
-      console.error("[ConnectionCheck] VPN check error:", error);
-      
-      // Check error type
-      if (error.name === 'AbortError') {
-        // Timeout - likely not on VPN
-        setStatus("no-vpn");
-        setMessage("Connessione VPN non rilevata");
-      } else if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-        // Network error - not on VPN
-        setStatus("no-vpn");
-        setMessage("Connessione VPN non rilevata");
-      } else {
-        // Other error - might be connected, proceed anyway
-        console.log("[ConnectionCheck] Proceeding despite error");
-        setStatus("success");
-        setMessage("Caricamento...");
-        setTimeout(() => navigate("/assemblea", { replace: true }), 500);
-      }
-    }
-  };
-
-  const retryConnection = () => {
-    setStatus("checking");
-    setMessage("Verifica connessione in corso...");
-    checkConnection();
+    // Token is valid - redirect to assemblea
+    console.log("[ConnectionCheck] Token valid, redirecting to assemblea");
+    setStatus("success");
+    setMessage("Sessione valida! Caricamento...");
+    setTimeout(() => navigate("/assemblea", { replace: true }), 500);
   };
 
   return (
@@ -149,26 +102,6 @@ function ConnectionCheckPage() {
               </svg>
             </div>
             <p className="text-lg font-medium">{message}</p>
-          </>
-        )}
-
-        {status === "no-vpn" && (
-          <>
-            <div className="mb-4">
-              <svg className="h-12 w-12 mx-auto text-red-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-              </svg>
-            </div>
-            <p className="text-xl font-bold mb-2">Accesso non autorizzato</p>
-            <p className="text-white/80 mb-6">
-              Per accedere a Tabulas è necessaria la connessione alla rete Senato (VPN)
-            </p>
-            <button
-              onClick={retryConnection}
-              className="px-6 py-3 bg-white text-[#97002D] rounded-lg font-semibold hover:bg-white/90 transition-colors"
-            >
-              Riprova
-            </button>
           </>
         )}
       </div>
