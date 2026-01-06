@@ -175,7 +175,7 @@ function MobileAuthCallback() {
                 </div>
               </button>
               <button
-                onClick={() => navigate('/kiosk')}
+                onClick={() => navigate('/assemblea?mode=kiosk')}
                 className="w-full px-6 py-4 text-left text-gray-800 hover:bg-gray-100 transition-colors flex items-center"
               >
                 <svg className="h-5 w-5 mr-3 text-[#97002D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
