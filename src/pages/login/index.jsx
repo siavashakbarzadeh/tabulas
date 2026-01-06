@@ -15,6 +15,7 @@ function NewLoginPage() {
 
   /**
    * Handle MSAL redirect response (for WebView/native app flow)
+   * For mobile devices: ALWAYS redirect to mobile-auth-callback, letting user choose how to proceed
    */
   useEffect(() => {
     instance.handleRedirectPromise()
@@ -28,15 +29,10 @@ function NewLoginPage() {
           console.log('[Login] User agent:', userAgent);
           console.log('[Login] Is mobile device:', isMobileDevice);
           
-          // Check for pending mobile auth flag (set before redirect)
-          const hasMobileFlag = 
-            sessionStorage.getItem('mobileAuthPending') === 'true' ||
-            localStorage.getItem('mobileAuthPending') === 'true';
-          console.log('[Login] Has mobile flag:', hasMobileFlag);
-          
-          // If on mobile device OR if mobile flag was set, redirect to callback
-          if (isMobileDevice || hasMobileFlag) {
-            console.log('[Login] Mobile detected! Redirecting to callback page');
+          // For mobile devices: ALWAYS redirect to mobile-auth-callback
+          // This lets the user choose to continue in app or browser
+          if (isMobileDevice) {
+            console.log('[Login] Mobile device detected! Redirecting to callback page');
             sessionStorage.removeItem('mobileAuthPending');
             localStorage.removeItem('mobileAuthPending');
             // Store token and redirect to callback page
@@ -45,7 +41,7 @@ function NewLoginPage() {
             return;
           }
           
-          // Normal web flow
+          // Normal desktop web flow
           login(response.accessToken);
           toast.success("Login effettuato con successo!", {
             position: "bottom-right",
