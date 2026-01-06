@@ -24,4 +24,12 @@ const msalConfig = {
 };
 
 export const msalInstance = new PublicClientApplication(msalConfig);
+
+// Export initialization promise for async flows
+export const msalInitPromise = msalInstance.initialize().catch((error) => {
+  console.error('[MSAL Config] Initialization error:', error);
+  // Don't throw - let the app continue without MSAL
+  return null;
+});
+
 export { isNativeApp };

@@ -2,26 +2,37 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './assets/css/app.css'
-import { msalInstance } from './configs/msalConfig.js'
+import { msalInitPromise } from './configs/msalConfig.js'
 
-// Initialize MSAL before rendering the app
-msalInstance.initialize().then(() => {
-  console.log('[MSAL] Initialized successfully');
-  
+// Render the app - we'll initialize MSAL but won't block on it
+const renderApp = () => {
+  console.log('[Main] Rendering app');
   ReactDOM.createRoot(document.getElementById('root')).render(
     <>
       <App />
     </>
   );
-}).catch((error) => {
-  console.error('[MSAL] Initialization error:', error);
-  // Render app anyway, MSAL features won't work
-  ReactDOM.createRoot(document.getElementById('root')).render(
-    <>
-      <App />
-    </>
-  );
+};
+
+// Wait for MSAL with a timeout (5 seconds max)
+const MSAL_TIMEOUT = 5000;
+const timeoutPromise = new Promise((resolve) => {
+  setTimeout(() => {
+    console.warn('[Main] MSAL initialization timed out, rendering anyway');
+    resolve(null);
+  }, MSAL_TIMEOUT);
 });
+
+// Race MSAL init against timeout
+Promise.race([msalInitPromise, timeoutPromise])
+  .then(() => {
+    console.log('[Main] MSAL ready or timed out, rendering app');
+    renderApp();
+  })
+  .catch((error) => {
+    console.error('[Main] Error during initialization:', error);
+    renderApp(); // Render anyway
+  });
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
