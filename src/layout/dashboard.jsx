@@ -179,61 +179,111 @@ function DashboardLayout({ ...props }) {
         </div>
 
         {/* Main Content */}
-        <div className="pt-12 pb-16 min-h-screen">
+        <div className="pt-12 pb-20 min-h-screen">
           <Outlet />
         </div>
 
-        {/* Footer Sidebar Menu */}
-        <div className={`fixed bottom-0 left-0 right-0 bg-[#97002D] z-40 transition-all duration-300 ${kioskMenuOpen ? 'h-auto max-h-[70vh]' : 'h-14'}`}>
-          {/* Toggle bar */}
-          <div 
-            className="h-14 flex items-center justify-between px-4 cursor-pointer"
-            onClick={() => setKioskMenuOpen(!kioskMenuOpen)}
+        {/* Fixed Bottom Navigation Bar */}
+        <div className="fixed bottom-0 left-0 right-0 h-16 bg-[#97002D] z-40 flex items-center justify-around px-2 shadow-lg">
+          <Link
+            to="/assemblea?mode=kiosk"
+            className={`flex flex-col items-center justify-center px-3 py-2 rounded-lg transition-colors ${
+              location.pathname === '/assemblea' || location.pathname === '/'
+                ? 'bg-white text-[#97002D]'
+                : 'text-white hover:bg-white/20'
+            }`}
           >
-            {/* User info */}
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 flex justify-center items-center rounded-lg bg-white">
-                <span className="text-sm font-bold text-zinc-900">
-                  {getInitials(user?.name, user?.email)}
-                </span>
-              </div>
-              <div className="text-white">
-                <div className="text-sm font-medium">{user?.name || 'Utente'}</div>
-              </div>
-            </div>
+            <i className="fa-duotone fa-poll-people text-lg"></i>
+            <span className="text-xs mt-1 font-medium">Assemblea</span>
+          </Link>
+          <Link
+            to="/commissioni?mode=kiosk"
+            className={`flex flex-col items-center justify-center px-3 py-2 rounded-lg transition-colors ${
+              location.pathname === '/commissioni'
+                ? 'bg-white text-[#97002D]'
+                : 'text-white hover:bg-white/20'
+            }`}
+          >
+            <i className="fa-duotone fa-users text-lg"></i>
+            <span className="text-xs mt-1 font-medium">Commissioni</span>
+          </Link>
+          <Link
+            to="/ultimiatti?mode=kiosk"
+            className={`flex flex-col items-center justify-center px-3 py-2 rounded-lg transition-colors ${
+              location.pathname === '/ultimiatti'
+                ? 'bg-white text-[#97002D]'
+                : 'text-white hover:bg-white/20'
+            }`}
+          >
+            <i className="fa-duotone fa-clock-rotate-left text-lg"></i>
+            <span className="text-xs mt-1 font-medium">Ultimi atti</span>
+          </Link>
+          <Link
+            to="/ultimdossier?mode=kiosk"
+            className={`flex flex-col items-center justify-center px-3 py-2 rounded-lg transition-colors ${
+              location.pathname === '/ultimdossier'
+                ? 'bg-white text-[#97002D]'
+                : 'text-white hover:bg-white/20'
+            }`}
+          >
+            <i className="fa-duotone fa-file-circle-exclamation text-lg"></i>
+            <span className="text-xs mt-1 font-medium">Dossier</span>
+          </Link>
+          <Link
+            to="/diretta?mode=kiosk"
+            className={`flex flex-col items-center justify-center px-3 py-2 rounded-lg transition-colors ${
+              location.pathname === '/diretta'
+                ? 'bg-white text-[#97002D]'
+                : 'text-white hover:bg-white/20'
+            }`}
+          >
+            <i className="fa-duotone fa-play text-lg"></i>
+            <span className="text-xs mt-1 font-medium">Diretta</span>
+          </Link>
+          <button
+            onClick={() => setKioskMenuOpen(!kioskMenuOpen)}
+            className={`flex flex-col items-center justify-center px-3 py-2 rounded-lg transition-colors ${
+              kioskMenuOpen ? 'bg-white text-[#97002D]' : 'text-white hover:bg-white/20'
+            }`}
+          >
+            <i className={`fa-duotone ${kioskMenuOpen ? 'fa-xmark' : 'fa-bars'} text-lg`}></i>
+            <span className="text-xs mt-1 font-medium">Menu</span>
+          </button>
+        </div>
 
-            {/* Menu toggle */}
-            <div className="flex items-center gap-3">
-              <span className="text-white/80 text-sm">Menu</span>
-              <svg 
-                className={`w-5 h-5 text-white transition-transform ${kioskMenuOpen ? 'rotate-180' : ''}`} 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-              </svg>
-            </div>
-          </div>
+        {/* Expanded Full Menu (overlay) */}
+        {kioskMenuOpen && (
+          <div className="fixed inset-0 z-50 bg-[#97002D] pt-12 pb-20 overflow-y-auto">
+            <div className="px-4 py-4">
+              {/* User info */}
+              <div className="flex items-center gap-3 mb-6 p-4 bg-white/10 rounded-xl">
+                <div className="w-12 h-12 flex justify-center items-center rounded-xl bg-white">
+                  <span className="text-xl font-bold text-zinc-900">
+                    {getInitials(user?.name, user?.email)}
+                  </span>
+                </div>
+                <div className="text-white flex-1">
+                  <div className="font-medium">{user?.name || 'Utente'}</div>
+                  <div className="text-sm text-white/60">{user?.email}</div>
+                </div>
+              </div>
 
-          {/* Expanded menu */}
-          {kioskMenuOpen && (
-            <div className="px-4 pb-4 overflow-y-auto max-h-[calc(70vh-3.5rem)]">
+              {/* Menu */}
               <Menu2 onNavigate={() => setKioskMenuOpen(false)} />
               
               {/* Logout button */}
               <button
                 onClick={handleKioskLogout}
-                className="w-full mt-4 px-4 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg flex items-center gap-3 transition-colors"
+                className="w-full mt-6 px-4 py-4 bg-white/10 hover:bg-white/20 text-white rounded-xl flex items-center gap-3 transition-colors"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
-                <span>Esci dall'account</span>
+                <span className="font-medium">Esci dall'account</span>
               </button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     );
   }
