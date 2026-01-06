@@ -169,12 +169,6 @@ function DashboardLayout({ ...props }) {
                 </svg>
               </button>
             )}
-            <button
-              onClick={exitKioskMode}
-              className="px-3 py-1.5 bg-white text-[#97002D] text-sm rounded-lg hover:bg-white/90 transition-colors font-semibold"
-            >
-              Esci
-            </button>
           </div>
         </div>
 
@@ -254,6 +248,16 @@ function DashboardLayout({ ...props }) {
         {/* Expanded Full Menu (overlay) */}
         {kioskMenuOpen && (
           <div className="fixed inset-0 z-50 bg-[#97002D] pt-12 pb-20 overflow-y-auto">
+            {/* Close button */}
+            <button
+              onClick={() => setKioskMenuOpen(false)}
+              className="absolute top-3 right-4 p-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            
             <div className="px-4 py-4">
               {/* User info */}
               <div className="flex items-center gap-3 mb-6 p-4 bg-white/10 rounded-xl">
