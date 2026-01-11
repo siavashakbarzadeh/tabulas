@@ -545,9 +545,30 @@ function AssembleaPage() {
       `}</style>
           </div>
 
-          {/* News Sidebar - Desktop only (mobile has inline version above) */}
+          {/* Sidebar - Desktop only (Diretta + Ultime Notizie) */}
           <div className="hidden lg:block lg:w-4/12 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto">
-            {/* Header */}
+            {/* Diretta - YouTube Live Stream */}
+            <div className="mb-6">
+              <div className="bg-gray-50 rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                <div className="aspect-video w-full">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${SENATO_YOUTUBE_VIDEO_ID}?autoplay=1&mute=1`}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    title="Senato TV - In diretta"
+                  />
+                </div>
+                <div className="px-3 py-2 flex items-center gap-2 bg-white border-t border-gray-100">
+                  <span className="inline-flex items-center gap-1.5 text-red-600 font-medium text-sm">
+                    <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+                    In diretta
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Ultime Notizie Header */}
             <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-100">
               <i className="fa-duotone fa-newspaper text-red-800 text-lg" aria-hidden="true"></i>
               <h2 className="text-lg font-semibold text-gray-800">Ultime Notizie</h2>
