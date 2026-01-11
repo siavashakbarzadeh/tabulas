@@ -52,11 +52,11 @@ function ConnectionCheckPage() {
       return;
     }
 
-    // Token is valid - redirect to assemblea
-    console.log("[ConnectionCheck] Token valid, redirecting to assemblea");
+    // Token is valid - redirect to mobile auth callback for user choice
+    console.log("[ConnectionCheck] Token valid, redirecting to mobile-auth-callback");
     setStatus("success");
     setMessage("Sessione valida! Caricamento...");
-    setTimeout(() => navigate("/assemblea", { replace: true }), 500);
+    setTimeout(() => navigate("/mobile-auth-callback", { replace: true }), 500);
   };
 
   return (

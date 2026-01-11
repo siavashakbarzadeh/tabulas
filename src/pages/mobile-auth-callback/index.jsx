@@ -103,7 +103,7 @@ function MobileAuthCallback() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#97002D]">
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#97002D]">
       <div className="flex flex-col items-center text-center px-6 w-full max-w-md">
         {/* Senato Logo */}
         <div className="mb-6">
@@ -133,7 +133,7 @@ function MobileAuthCallback() {
           Scegli come continuare:
         </p>
 
-        {/* Return to App Button */}
+        {/* Torna all'App Button */}
         <button
           onClick={handleReturnToApp}
           className="w-full px-6 py-4 bg-white text-[#97002D] text-lg rounded-xl font-semibold hover:bg-white/90 transition-all shadow-lg mb-4 flex items-center justify-center"
@@ -144,51 +144,27 @@ function MobileAuthCallback() {
           Torna all'App
         </button>
 
-        {/* Continue in Browser Button with Dropdown */}
-        <div className="w-full relative">
-          <button
-            onClick={() => setShowDropdown(!showDropdown)}
-            className="w-full px-6 py-4 bg-white/20 text-white text-lg rounded-xl font-semibold hover:bg-white/30 transition-all flex items-center justify-center"
-          >
-            <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-            </svg>
-            Continua nel browser
-            <svg className={`h-5 w-5 ml-2 transition-transform ${showDropdown ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
+        {/* Web Mode Button */}
+        <button
+          onClick={() => navigate('/assemblea')}
+          className="w-full px-6 py-4 bg-white/20 text-white text-lg rounded-xl font-semibold hover:bg-white/30 transition-all mb-4 flex items-center justify-center"
+        >
+          <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+          </svg>
+          Web Mode
+        </button>
 
-          {/* Dropdown Menu */}
-          {showDropdown && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl overflow-hidden z-10">
-              <button
-                onClick={() => navigate('/assemblea')}
-                className="w-full px-6 py-4 text-left text-gray-800 hover:bg-gray-100 transition-colors flex items-center border-b border-gray-100"
-              >
-                <svg className="h-5 w-5 mr-3 text-[#97002D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                <div>
-                  <div className="font-semibold">Versione App</div>
-                  <div className="text-sm text-gray-500">Interfaccia standard con menu</div>
-                </div>
-              </button>
-              <button
-                onClick={() => navigate('/assemblea?mode=kiosk')}
-                className="w-full px-6 py-4 text-left text-gray-800 hover:bg-gray-100 transition-colors flex items-center"
-              >
-                <svg className="h-5 w-5 mr-3 text-[#97002D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                </svg>
-                <div>
-                  <div className="font-semibold">Versione Kiosk</div>
-                  <div className="text-sm text-gray-500">Schermo intero per totem</div>
-                </div>
-              </button>
-            </div>
-          )}
-        </div>
+        {/* Kiosk Mode Button */}
+        <button
+          onClick={() => navigate('/kiosk')}
+          className="w-full px-6 py-4 bg-white/20 text-white text-lg rounded-xl font-semibold hover:bg-white/30 transition-all flex items-center justify-center"
+        >
+          <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          </svg>
+          Kiosk Mode
+        </button>
       </div>
     </div>
   );
