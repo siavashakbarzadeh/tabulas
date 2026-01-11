@@ -7,17 +7,11 @@ import DateInput from "../../componenets/forms/DateInput";
 import CustomButton from "../../componenets/forms/CustomButton";
 import FileInput from "../../componenets/forms/FileInput";
 import axios from "../../configs/axiosConfig.js";
+import presentaAttiApi, { presentaAttiEndpoints } from "../../configs/presentaAttiApi.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const act_types = ["DDL 1", "DDL 2", "DDL 3", "DDL 4", "DDL 5"];
-const recipient_offices = [
-  "Ufficio 1",
-  "Ufficio 2",
-  "Ufficio 3",
-  "Ufficio 4",
-  "Ufficio 5",
-];
+const act_types = ["DDL", "Interrogazione", "Interpellanza", "Mozione", "Ordine del giorno"];
 
 function FormPage() {
   const { user } = useAuth();
@@ -48,8 +42,31 @@ function FormPage() {
   // Holds the API search results
   const [searchResults, setSearchResults] = useState([]);
 
+  // Recipient offices/folders loaded from Tabulas4 API
+  const [recipientOffices, setRecipientOffices] = useState([]);
+  const [loadingOffices, setLoadingOffices] = useState(true);
+
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+
+  // Fetch available folders/offices from Tabulas4 API on mount
+  useEffect(() => {
+    const fetchFolders = async () => {
+      try {
+        const response = await presentaAttiApi.post(presentaAttiEndpoints.getFolders);
+        // API should return list of folders where user can deposit
+        const folders = response.data?.folders || response.data || [];
+        setRecipientOffices(Array.isArray(folders) ? folders : []);
+      } catch (error) {
+        console.error("[FormPage] Error fetching folders:", error);
+        toast.error("Errore nel caricamento degli uffici destinatari", { position: "bottom-right" });
+        setRecipientOffices([]);
+      } finally {
+        setLoadingOffices(false);
+      }
+    };
+    fetchFolders();
+  }, []);
 
   const handleUpdateFormData = (fieldName, value) => {
     setFormData((prev) => ({ ...prev, [fieldName]: value }));
@@ -104,49 +121,64 @@ function FormPage() {
     }));
   };
 
-  // Handle form submission
-  const handleSubmit = () => {
+  // Handle form submission - save document via Tabulas4 API
+  const handleSubmit = async () => {
     setIsLoading(true);
-    const formDataObj = new FormData();
-    formDataObj.append("name", formData.name);
-    formDataObj.append("act_type", formData.act_type);
-    formDataObj.append("recipient_office", formData.recipient_office);
-    formDataObj.append("submission_date", formData.submission_date);
-    formDataObj.append("document", formData.document);
+    setErrors({});
 
-    // Append each firmatario's ID
-    formData.firmatarios.forEach((f) => {
-      formDataObj.append("firmatarios[]", f.id);
-    });
 
-    axios
-      .post("/applications", formDataObj, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-      .then((res) => {
-        // Extract the application ID from the response
-        const applicationId = res.data.data.application.id;
-        navigate(`/confirm/${applicationId}`);
-      })
-      .catch((error) => {
-        if (error.response?.status === 422) {
-          const responseErrors = error.response.data.errors;
-          const result = Object.keys(responseErrors).reduce((acc, key) => {
-            const item = responseErrors[key];
-            if (item && item.length) {
-              acc[key] = item[0];
-            }
-            return acc;
-          }, {});
-          setErrors(result);
-        } else {
-          toast.error(
-            error.response?.data?.data?.message || "Error",
-            { position: "bottom-right", hideProgressBar: true }
-          );
-        }
-      })
-      .finally(() => setIsLoading(false));
+    try {
+      // Prepare the payload for /fs/salva endpoint
+      const formDataObj = new FormData();
+      formDataObj.append("documento", formData.document);
+      formDataObj.append("tipoAtto", formData.act_type);
+      formDataObj.append("ufficioDestinatario", formData.recipient_office);
+      formDataObj.append("dataInvio", formData.submission_date);
+      
+      // Add firmatari IDs
+      formData.firmatarios.forEach((f, index) => {
+        formDataObj.append(`firmatari[${index}]`, f.id);
+      });
+
+      // Call Tabulas4 API to save document and generate signed PDF
+      const response = await presentaAttiApi.post(
+        presentaAttiEndpoints.saveDocument,
+        formDataObj,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      // API returns metadata with archived file names
+      const result = response.data;
+      toast.success("Atto salvato con successo!", { position: "bottom-right" });
+      
+      // Navigate to confirmation or details page
+      if (result?.id) {
+        navigate(`/confirm/${result.id}`);
+      } else {
+        navigate("/outbox");
+      }
+    } catch (error) {
+      console.error("[FormPage] Submission error:", error);
+      
+      if (error.response?.status === 422) {
+        const responseErrors = error.response.data.errors || {};
+        const result = Object.keys(responseErrors).reduce((acc, key) => {
+          const item = responseErrors[key];
+          if (item && item.length) {
+            acc[key] = item[0];
+          }
+          return acc;
+        }, {});
+        setErrors(result);
+      } else {
+        toast.error(
+          error.response?.data?.message || "Errore durante l'invio dell'atto",
+          { position: "bottom-right", hideProgressBar: true }
+        );
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -258,7 +290,9 @@ function FormPage() {
                       onChange={(e) =>
                         handleUpdateFormData("recipient_office", e.target.value)
                       }
-                      options={recipient_offices}
+                      options={recipientOffices.map(o => typeof o === 'string' ? o : o.name || o.label || o.id)}
+                      disabled={loadingOffices}
+                      placeholder={loadingOffices ? "Caricamento..." : "Seleziona ufficio"}
                     />
                   </div>
                   {/* Data Invio */}

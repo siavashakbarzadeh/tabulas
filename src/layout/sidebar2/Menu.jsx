@@ -44,10 +44,10 @@ const Menu = [
   },
   {
     id: 8,
-    title: "Le Firme",
-    icon: <i className="fa-duotone text-xl fa-pen-to-square w-6 h-6" />,
+    title: "Presenta Atti",
+    icon: <i className="fa-duotone text-xl fa-file-signature w-6 h-6" />,
     subMenu: [
-      { id: 1, title: "Nuova", icon: <i className="fa-duotone text-sm fa-file-pen w-6 h-6" />, link: "/form" },
+      { id: 1, title: "Nuovo Atto", icon: <i className="fa-duotone text-sm fa-file-pen w-6 h-6" />, link: "/form" },
       { id: 2, title: "Inbox", icon: <i className="fa-duotone text-sm fa-inbox w-6 h-6" />, link: "/inbox" },
       { id: 3, title: "Outbox", icon: <i className="fa-duotone text-sm fa-paper-plane w-6 h-6" />, link: "/outbox" },
     ],
