@@ -292,26 +292,7 @@ function AssembleaPage() {
             </div>
           </div>
 
-          {/* YouTube Live Stream - Diretta */}
-          <div className="mb-6">
-            <div className="bg-gray-50 rounded-xl overflow-hidden shadow-sm border border-gray-100">
-              <div className="aspect-video w-full lg:max-w-sm">
-                <iframe
-                  src={`https://www.youtube.com/embed/${SENATO_YOUTUBE_VIDEO_ID}?autoplay=1&mute=1`}
-                  className="w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  title="Senato TV - In diretta"
-                />
-              </div>
-              <div className="px-3 py-2 flex items-center gap-2 bg-white border-t border-gray-100">
-                <span className="inline-flex items-center gap-1.5 text-red-600 font-medium text-sm">
-                  <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
-                  In diretta
-                </span>
-              </div>
-            </div>
-          </div>
+
 
           {/* Mobile News Section - Ultime Notizie */}
           <div className="lg:hidden mb-6">
