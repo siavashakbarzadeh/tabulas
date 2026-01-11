@@ -154,7 +154,7 @@ function Router() {
       <ScrollToTop>
         <Routes>
           <Route element={<ThemeProvider2 />}>
-            <Route path="/" element={<ConnectionCheckPage />} />
+            <Route path="/" element={<Navigate to="/assemblea" replace />} />
             <Route element={<PrivateRoute />}>
               <Route element={<DashboardLayout />}>
                 <Route path="/confirm/:id" element={<ConfirmPage />} />
